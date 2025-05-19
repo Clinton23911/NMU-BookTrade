@@ -1,0 +1,92 @@
+﻿/* General Styles */
+body {
+    background: linear-gradient(135deg, #36b9b4, #649897, #02353c, #baefe6, #02353c);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;    
+    padding: 15px 100px;
+    color: white;
+}
+
+/* Logo and Title */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 120px;
+  
+}
+
+.site-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Navigation Menu */
+.nav-menu {
+    display: flex;
+    gap: 25px;
+}
+
+.nav a {
+    color: white !important;
+    text-decoration: none !important;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+    .nav a:hover {
+        color:white;
+        text-decoration:none;
+        border-bottom: 2px solid #c1f6ed;
+    }
+
+/* Search and Authentication */
+.auth-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+
+.search-bar {
+    padding: 7px;
+    border-radius: 17px;
+    border: 1px solid #cccccc;
+    width: 180px;
+}
+
+.search-btn {
+    background-color: transparent;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.login-btn, .register-btn {
+    background-color: white;
+    color: #02353c;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+    .login-btn:hover, .register-btn:hover {
+        background-color: #c1f6ed;
+        color: #02353c;
+    }

@@ -1,0 +1,106 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.master.cs" Inherits="NMU_BookTrade.Site1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title>NMU BookTrade</title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link href="Stylesheet1.css" rel="stylesheet" type="text/css" /> 
+</head>
+
+<body>
+    <form id="form1" runat="server">
+
+        <!-- Navigation Header -->
+        <nav class="header">
+            <div class="logo-container">
+                <a href="Home.aspx">
+                    <img class="logo" src="Images/NMU BOOKTRADE.png"/>
+                <asp:Menu ID="MenuAnonymous" runat="server" Orientation="Horizontal" StaticMenuItemStyle-ItemSpacing="10">
+                    <Items>
+                        <asp:MenuItem Text="Home" NavigateUrl="~/Home.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="About Us" NavigateUrl="~/About Us.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Book Conditions" NavigateUrl="~/Book Conditions.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Contact" NavigateUrl="~/Contact.aspx"></asp:MenuItem>
+                    </Items>
+                    <StaticHoverStyle BorderColor="#C1F6ED" BorderStyle="Solid" BorderWidth="2px" />
+
+<StaticMenuItemStyle CssClass="nav-menu" ForeColor="White" HorizontalPadding="30px"   ></StaticMenuItemStyle>
+                    <StaticMenuStyle HorizontalPadding="20px" />
+                </asp:Menu>
+
+               </a>
+              
+            </div>
+
+            <!-- Navigation Links -->
+            <div>
+                
+                <!-- Anonymous User Menu -->
+
+                <!-- Admin User Menu -->
+                <asp:Menu ID="MenuAdmin" runat="server" Orientation="Horizontal" CssClass="nav">
+                    <Items>
+                        <asp:MenuItem Text="Dashboard" NavigateUrl="~/AdminDashboard.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Inbox" NavigateUrl="~/Inbox.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Assign Driver" NavigateUrl="~/AssignDriver.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Manage Genres" NavigateUrl="~/ManageGenres.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Profile" NavigateUrl="~/AdminProfile.aspx"></asp:MenuItem>
+                    </Items>
+                </asp:Menu>
+
+                <!-- Buyer User Menu -->
+                <asp:Menu ID="MenuBuyer" runat="server" Orientation="Horizontal" CssClass="nav">
+                    <Items>
+                        <asp:MenuItem Text="Home" NavigateUrl="~/Home.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="My Orders" NavigateUrl="~/MyOrders.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Reviews" NavigateUrl="~/Reviews.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Contact Us" NavigateUrl="~/Contact.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Profile" NavigateUrl="~/BuyerProfile.aspx"></asp:MenuItem>
+                    </Items>
+                </asp:Menu>
+
+                <!-- Seller User Menu -->
+                <asp:Menu ID="MenuSeller" runat="server" Orientation="Horizontal" CssClass="nav">
+                    <Items>
+                        <asp:MenuItem Text="Home" NavigateUrl="~/Home.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Create Listings" NavigateUrl="~/CreateListings.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Manage Listings" NavigateUrl="~/ManageListings.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Contact" NavigateUrl="~/Contact.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Profile" NavigateUrl="~/SellerProfile.aspx"></asp:MenuItem>
+                    </Items>
+                </asp:Menu>
+
+                <!-- Driver User Menu -->
+                <asp:Menu ID="MenuDriver" runat="server" Orientation="Horizontal" CssClass="nav">
+                    <Items>
+                        <asp:MenuItem Text="Home" NavigateUrl="~/Home.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Manage Deliveries" NavigateUrl="~/ManageDeliveries.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="View Schedule" NavigateUrl="~/ViewSchedule.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Profile" NavigateUrl="~/DriverProfile.aspx"></asp:MenuItem>
+                    </Items>
+                </asp:Menu>
+            </div>
+
+            <!-- Search and Authentication -->
+            <div class="auth-section">
+                <input type="text" class="search-bar" placeholder="Search for book title" />
+                <button class="search-btn">🔍</button>
+                <asp:Button ID="LogInbtn" runat="server" Text="Log In" OnClick="btnLogIn_Click" />
+                <asp:Button ID="Regbtn" class="register-btn" runat="server" Text="Register" OnClick="btnRegister_Click"/>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="MainContainer">
+            <div class="middle-section">
+                <asp:ContentPlaceHolder ID="middle_section" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+        </main>
+
+    </form>
+</body>
+</html>

@@ -1,5 +1,5 @@
 /* =========================================================
-  Template Name: Carelax
+  Template Name: SOS Chidren's Vilages
   Description: NonProfit & Charity Foundation HTML5 Template
   Author: Youtoview
   Version: 1.1

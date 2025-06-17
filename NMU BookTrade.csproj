@@ -67,24 +67,132 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\NMU BOOKTRADE.png" />
+    <Content Include="Admin\Clinton UseCases\AssignDriver.aspx" />
+    <Content Include="Admin\Clinton UseCases\Manage Categories.aspx" />
+    <Content Include="Admin\Nyasha UseCases\AdminDashboard.aspx" />
+    <Content Include="Admin\Nyasha UseCases\AdminProfile.aspx" />
+    <Content Include="Admin\Nyasha UseCases\Inbox.aspx" />
+    <Content Include="Admin\Nyasha UseCases\ManageGenres.aspx" />
+    <Content Include="Buyer\Nyasha UseCases\Reviews.aspx" />
+    <Content Include="Buyer\Paballo UseCases\BuyerDashboard.aspx" />
+    <Content Include="Buyer\Paballo UseCases\BuyerProfile.aspx" />
+    <Content Include="Buyer\Paballo UseCases\Cart.aspx" />
+    <Content Include="Driver\Clinton UseCases\DriverDashboard.aspx" />
+    <Content Include="Driver\Clinton UseCases\DriverProfile.aspx" />
+    <Content Include="Images\NMUBOOKTRADE.png" />
+    <Content Include="Images\Person reading.png" />
+    <Content Include="Seller\Clinton UseCases\SellerDashboard.aspx" />
+    <Content Include="Seller\Clinton UseCases\SellerProfile.aspx" />
     <Content Include="StyleSheet1.css" />
+    <Content Include="User Management\AboutUs.aspx" />
+    <Content Include="User Management\BookConditions.aspx" />
+    <Content Include="User Management\Contact.aspx" />
+    <Content Include="User Management\Home.aspx" />
+    <Content Include="User Management\Login.aspx" />
+    <Content Include="User Management\LogOut.aspx" />
+    <Content Include="User Management\Register.aspx" />
     <Content Include="Web.config" />
-    <Content Include="Home.aspx" />
-    <Content Include="About Us.aspx" />
-    <Content Include="Book Conditions.aspx" />
-    <Content Include="Contact.aspx" />
-    <Content Include="Log In.aspx" />
-    <Content Include="Register.aspx" />
-    <Content Include="Reviews and Ratings.aspx" />
-    <Content Include="Manage Genres.aspx" />
-    <Content Include="Inbox.aspx" />
-    <Content Include="Home-Admin.aspx" />
-    <Content Include="Home-Seller.aspx" />
-    <Content Include="Home-Driver.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\Clinton UseCases\AssignDriver.aspx.cs">
+      <DependentUpon>AssignDriver.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Clinton UseCases\AssignDriver.aspx.designer.cs">
+      <DependentUpon>AssignDriver.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Clinton UseCases\Manage Categories.aspx.cs">
+      <DependentUpon>Manage Categories.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Clinton UseCases\Manage Categories.aspx.designer.cs">
+      <DependentUpon>Manage Categories.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Nyasha UseCases\AdminDashboard.aspx.cs">
+      <DependentUpon>AdminDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Nyasha UseCases\AdminDashboard.aspx.designer.cs">
+      <DependentUpon>AdminDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Nyasha UseCases\AdminProfile.aspx.cs">
+      <DependentUpon>AdminProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Nyasha UseCases\AdminProfile.aspx.designer.cs">
+      <DependentUpon>AdminProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Nyasha UseCases\Inbox.aspx.cs">
+      <DependentUpon>Inbox.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Nyasha UseCases\Inbox.aspx.designer.cs">
+      <DependentUpon>Inbox.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Nyasha UseCases\ManageGenres.aspx.cs">
+      <DependentUpon>ManageGenres.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Nyasha UseCases\ManageGenres.aspx.designer.cs">
+      <DependentUpon>ManageGenres.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Buyer\Nyasha UseCases\Reviews.aspx.cs">
+      <DependentUpon>Reviews.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\Nyasha UseCases\Reviews.aspx.designer.cs">
+      <DependentUpon>Reviews.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Buyer\Paballo UseCases\BuyerDashboard.aspx.cs">
+      <DependentUpon>BuyerDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\Paballo UseCases\BuyerDashboard.aspx.designer.cs">
+      <DependentUpon>BuyerDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Buyer\Paballo UseCases\BuyerProfile.aspx.cs">
+      <DependentUpon>BuyerProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\Paballo UseCases\BuyerProfile.aspx.designer.cs">
+      <DependentUpon>BuyerProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Buyer\Paballo UseCases\Cart.aspx.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\Paballo UseCases\Cart.aspx.designer.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Driver\Clinton UseCases\DriverDashboard.aspx.cs">
+      <DependentUpon>DriverDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Driver\Clinton UseCases\DriverDashboard.aspx.designer.cs">
+      <DependentUpon>DriverDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Driver\Clinton UseCases\DriverProfile.aspx.cs">
+      <DependentUpon>DriverProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Driver\Clinton UseCases\DriverProfile.aspx.designer.cs">
+      <DependentUpon>DriverProfile.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Seller\Clinton UseCases\SellerDashboard.aspx.cs">
+      <DependentUpon>SellerDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Seller\Clinton UseCases\SellerDashboard.aspx.designer.cs">
+      <DependentUpon>SellerDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Seller\Clinton UseCases\SellerProfile.aspx.cs">
+      <DependentUpon>SellerProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Seller\Clinton UseCases\SellerProfile.aspx.designer.cs">
+      <DependentUpon>SellerProfile.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Site1.Master.cs">
       <DependentUpon>Site1.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -92,89 +200,54 @@
     <Compile Include="Site1.Master.designer.cs">
       <DependentUpon>Site1.Master</DependentUpon>
     </Compile>
-    <Compile Include="Home.aspx.cs">
-      <DependentUpon>Home.aspx</DependentUpon>
+    <Compile Include="User Management\AboutUs.aspx.cs">
+      <DependentUpon>AboutUs.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Home.aspx.designer.cs">
-      <DependentUpon>Home.aspx</DependentUpon>
+    <Compile Include="User Management\AboutUs.aspx.designer.cs">
+      <DependentUpon>AboutUs.aspx</DependentUpon>
     </Compile>
-    <Compile Include="About Us.aspx.cs">
-      <DependentUpon>About Us.aspx</DependentUpon>
+    <Compile Include="User Management\BookConditions.aspx.cs">
+      <DependentUpon>BookConditions.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="About Us.aspx.designer.cs">
-      <DependentUpon>About Us.aspx</DependentUpon>
+    <Compile Include="User Management\BookConditions.aspx.designer.cs">
+      <DependentUpon>BookConditions.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Book Conditions.aspx.cs">
-      <DependentUpon>Book Conditions.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Book Conditions.aspx.designer.cs">
-      <DependentUpon>Book Conditions.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Contact.aspx.cs">
+    <Compile Include="User Management\Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Contact.aspx.designer.cs">
+    <Compile Include="User Management\Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Log In.aspx.cs">
-      <DependentUpon>Log In.aspx</DependentUpon>
+    <Compile Include="User Management\Home.aspx.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Log In.aspx.designer.cs">
-      <DependentUpon>Log In.aspx</DependentUpon>
+    <Compile Include="User Management\Home.aspx.designer.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Register.aspx.cs">
+    <Compile Include="User Management\Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User Management\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User Management\LogOut.aspx.cs">
+      <DependentUpon>LogOut.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User Management\LogOut.aspx.designer.cs">
+      <DependentUpon>LogOut.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User Management\Register.aspx.cs">
       <DependentUpon>Register.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Register.aspx.designer.cs">
+    <Compile Include="User Management\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Reviews and Ratings.aspx.cs">
-      <DependentUpon>Reviews and Ratings.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Reviews and Ratings.aspx.designer.cs">
-      <DependentUpon>Reviews and Ratings.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Manage Genres.aspx.cs">
-      <DependentUpon>Manage Genres.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Manage Genres.aspx.designer.cs">
-      <DependentUpon>Manage Genres.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Inbox.aspx.cs">
-      <DependentUpon>Inbox.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Inbox.aspx.designer.cs">
-      <DependentUpon>Inbox.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Home-Admin.aspx.cs">
-      <DependentUpon>Home-Admin.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Home-Admin.aspx.designer.cs">
-      <DependentUpon>Home-Admin.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Home-Seller.aspx.cs">
-      <DependentUpon>Home-Seller.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Home-Seller.aspx.designer.cs">
-      <DependentUpon>Home-Seller.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Home-Driver.aspx.cs">
-      <DependentUpon>Home-Driver.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Home-Driver.aspx.designer.cs">
-      <DependentUpon>Home-Driver.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +260,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace NMU_BookTrade
 {
-    public partial class WebForm6 : System.Web.UI.Page
+    public partial class DriverProfile : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

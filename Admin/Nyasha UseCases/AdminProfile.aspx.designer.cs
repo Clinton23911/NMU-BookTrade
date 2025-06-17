@@ -11,7 +11,7 @@ namespace NMU_BookTrade
 {
 
 
-    public partial class WebForm6
+    public partial class WebForm16
     {
     }
 }

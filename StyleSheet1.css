@@ -1,11 +1,11 @@
 ﻿/* General Styles */
 body {
-    background: linear-gradient(135deg, #36b9b4, #649897, #02353c, #baefe6, #02353c);
+    background: radial-gradient( circle at 0% 0%, #3fd0c9, #02353c, #02353c, #c1f6ed );
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: Verdana;
 }
 
 /* Header Styling */
@@ -33,30 +33,43 @@ body {
     font-weight: bold;
 }
 
-/* Navigation Menu */
-.nav-menu {
+/* Navigation Menu 
+.menu-link{
     display: flex;
     gap: 25px;
+}*/
+
+/* Remove list/table styles */
+.nav, .nav ul, .nav li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
 }
 
-.nav a {
-    color: white !important;
-    text-decoration: none !important;
-    font-size: 16px;
-    transition: 0.3s;
-}
-
-    .nav a:hover {
-        color:white;
-        text-decoration:none;
-        border-bottom: 2px solid #c1f6ed;
+    /* Menu item default look */
+    .nav a.menu-link {
+        color: white;
+        text-decoration: none;
+        padding: 10px 15px;
+        display: inline-block;
+        border-bottom: 2px solid transparent;
+        transition: border-bottom 0.3s;
     }
+
+        /* Hover effect (bottom border only) */
+        .nav a.menu-link:hover {
+            border-bottom: 2px solid #A2F5E9;
+        }
 
 /* Search and Authentication */
 .auth-section {
     display: flex;
     gap: 10px;
     align-items: center;
+    padding-right:20px;
+    margin-left: auto; 
 }
 
 
@@ -76,17 +89,296 @@ body {
     font-size: 14px;
 }
 
-.login-btn, .register-btn {
-    background-color: white;
-    color: #02353c;
-    padding: 8px 15px;
-    border-radius: 5px;
+
+.cart-link {
+    color: black;
+    margin: 0 10px;
+    font-size: 20px;
     text-decoration: none;
-    font-size: 14px;
-    transition: 0.3s;
 }
 
-    .login-btn:hover, .register-btn:hover {
-        background-color: #c1f6ed;
+.btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+/* Shared button base style */
+.btn {
+    text-decoration: none;
+    background-color: transparent;
+    color: whitesmoke;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    /* Hover: soft teal background, white text */
+    .btn:hover {
+        background-color: #3fd0c9;
+        color: white;
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------*/
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1000px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    padding: 0;
+}
+
+/* ===== Left Image Side ===== */
+.left-side {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.person-reading {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 10px;
+}
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form_errormessage {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: red;
+}
+
+.right-side {
+    /* align-items: center; */
+    /* align-content: center; */
+    flex: 1.2;
+    padding-left: 60px;
+}
+
+    .right-side h2 {
+        font-size: 26px;
+        margin-bottom: 5px;
+        color: #ffffff;
+    }
+
+    .right-side p {
+        margin-bottom: 25px;
+        font-size: 14px;
+        color: #c1f6ed;
+    }
+
+label {
+    color: #c1f6ed;
+    padding-bottom: 10px;
+}
+
+/* ===== Table Layout ===== */
+.register-table {
+    width: 100%;
+}
+
+    .register-table td {
+        padding: 10px 0;
+    }
+
+/* ===== Input With Icons ===== */
+.input-icon {
+    position: relative;
+    width: 100%;
+}
+
+    .input-icon i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #3fd0c9;
+        font-size: 16px;
+    }
+
+.input-field {
+    width: 83%;
+    padding: 10px 10px 10px 38px;
+    font-size: 14px;
+    border: none;
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: #02353c;
+    transition: box-shadow 0.3s ease;
+}
+
+    .input-field:focus {
+        box-shadow: 0 0 10px #3fd0c9;
+        outline: none;
+    }
+
+/* ===== Validation Styling ===== */
+asp\:RequiredFieldValidator,
+asp\:RegularExpressionValidator,
+asp\:CompareValidator,
+span[style*="color:Red"] {
+    font-size: 12px;
+    color: #ffc6c6;
+    display: block;
+    margin-top: 4px;
+}
+
+/* ===== Confirm Password Row Fix ===== */
+.register-table tr:nth-last-child(1) td {
+    display: block;
+}
+
+/* ===== Submit Button ===== */
+.register-btn {
+    margin-top: 25px;
+    padding: 12px;
+    width: 100%;
+    background-color: transparent;
+    color: white;
+    font-size: 16px;
+    border: 2px solid #3fd0c9;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    .register-btn:hover {
+        background-color: #3fd0c9;
         color: #02353c;
     }
+
+
+
+/*Log In Section */
+
+h3.LR-formheadings {
+    color: #c1f6ed;
+    text-align: center;
+}
+
+h2.LR-formheadings {
+    text-align: center;
+}
+
+/* Common button base */
+
+input#middle_section_btnLogin {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+input#middle_section_btnRegister {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+input#middle_section_btnClear {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+input#middle_section_btnLogin:hover {
+    background-color: rgb(181, 221, 219);
+    box-shadow: rgba(2, 117, 216, 0.19) 0px 0px 4.71936px 0px;
+    color: white;
+}
+
+input#middle_section_btnRegister:hover {
+    background-color: rgb(181, 221, 219);
+    box-shadow: rgba(2, 117, 216, 0.19) 0px 0px 4.71936px 0px;
+    color:white;
+}
+
+input#middle_section_btnClear:hover {
+    background-color: #c9302c;
+    box-shadow: rgba(2, 117, 216, 0.19) 0px 0px 4.71936px 0px;
+    color: white;
+}
+
+.input-note {
+    font-size: 12px;
+    color:#c1f6ed; 
+    margin-top: 4px;
+    display: block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== Responsive Design ===== */
+@media screen and (max-width: 900px) {
+    .register-container {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .left-side, .right-side {
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .person-reading {
+        max-width: 300px;
+    }
+
+    .input-field {
+        font-size: 16px;
+    }
+}

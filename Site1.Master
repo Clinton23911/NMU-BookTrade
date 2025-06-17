@@ -4,10 +4,14 @@
 
 <html>
 <head runat="server">
+     <link href="Stylesheet1.css" rel="stylesheet" type="text/css" /> 
     <title>NMU BookTrade</title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
-    <link href="Stylesheet1.css" rel="stylesheet" type="text/css" /> 
+    <!-- Font Awesome CDN (latest version) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+   
 </head>
 
 <body>
@@ -15,83 +19,124 @@
 
         <!-- Navigation Header -->
         <nav class="header">
-            <div class="logo-container">
-                <a href="Home.aspx">
-                    <img class="logo" src="Images/NMU BOOKTRADE.png"/>
-                <asp:Menu ID="MenuAnonymous" runat="server" Orientation="Horizontal" StaticMenuItemStyle-ItemSpacing="10">
-                    <Items>
-                        <asp:MenuItem Text="Home" NavigateUrl="~/Home.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="About Us" NavigateUrl="~/About Us.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Book Conditions" NavigateUrl="~/Book Conditions.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Contact" NavigateUrl="~/Contact.aspx"></asp:MenuItem>
-                    </Items>
-                    <StaticHoverStyle BorderColor="#C1F6ED" BorderStyle="Solid" BorderWidth="2px" />
+    <!-- Logo -->
+    <div class="logo-container">
+       <asp:HyperLink 
+            ID="hlLogo" 
+            runat="server" 
+            NavigateUrl="~/User Management/Home.aspx">
+          <asp:Image 
+              ID="imgLogo" 
+              runat="server" 
+              CssClass="logo"
+              ImageUrl="~/Images/NMUBOOKTRADE.png"
+              AlternateText="NMU BookTrade Logo"/>
+</asp:HyperLink>
 
-<StaticMenuItemStyle CssClass="nav-menu" ForeColor="White" HorizontalPadding="30px"   ></StaticMenuItemStyle>
-                    <StaticMenuStyle HorizontalPadding="20px" />
-                </asp:Menu>
+    </div>
 
-               </a>
-              
-            </div>
+    <!-- Menus -->
+    <asp:Menu ID="MenuDriver" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
+        <Items>
+            <asp:MenuItem Text="Home" NavigateUrl="~/Driver/Clinton UseCases/DriverDashboard.aspx"/>
+            <asp:MenuItem Text="Manage Deliveries" NavigateUrl="~/Driver/Clinton UseCases/ManageDeliveries.aspx"/>
+            <asp:MenuItem Text="View Schedule" NavigateUrl="~/Driver/Clinton UseCases/ViewSchedule.aspx"/>
+            
+        </Items>
+        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+    </asp:Menu>
 
-            <!-- Navigation Links -->
-            <div>
-                
-                <!-- Anonymous User Menu -->
 
-                <!-- Admin User Menu -->
-                <asp:Menu ID="MenuAdmin" runat="server" Orientation="Horizontal" CssClass="nav">
-                    <Items>
-                        <asp:MenuItem Text="Dashboard" NavigateUrl="~/AdminDashboard.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Inbox" NavigateUrl="~/Inbox.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Assign Driver" NavigateUrl="~/AssignDriver.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Manage Genres" NavigateUrl="~/ManageGenres.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Profile" NavigateUrl="~/AdminProfile.aspx"></asp:MenuItem>
-                    </Items>
-                </asp:Menu>
 
-                <!-- Buyer User Menu -->
-                <asp:Menu ID="MenuBuyer" runat="server" Orientation="Horizontal" CssClass="nav">
-                    <Items>
-                        <asp:MenuItem Text="Home" NavigateUrl="~/Home.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="My Orders" NavigateUrl="~/MyOrders.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Reviews" NavigateUrl="~/Reviews.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Contact Us" NavigateUrl="~/Contact.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Profile" NavigateUrl="~/BuyerProfile.aspx"></asp:MenuItem>
-                    </Items>
-                </asp:Menu>
+    <asp:Menu ID="MenuSeller" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
+        <Items>
+            <asp:MenuItem Text="Home" NavigateUrl="~/Seller/Clinton UseCases/SellerDashboard.aspx"/>
+            <asp:MenuItem Text="Create Listings" NavigateUrl="~/Seller/Clinton UseCases/CreateListings.aspx"/>
+            <asp:MenuItem Text="Manage Listings" NavigateUrl="~/Seller/Clinton UseCases/ManageListings.aspx"/>
+            <asp:MenuItem Text="Contact" NavigateUrl="~/User Management/Contact.aspx"/>
+            
+        </Items>
+        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+    </asp:Menu>
 
-                <!-- Seller User Menu -->
-                <asp:Menu ID="MenuSeller" runat="server" Orientation="Horizontal" CssClass="nav">
-                    <Items>
-                        <asp:MenuItem Text="Home" NavigateUrl="~/Home.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Create Listings" NavigateUrl="~/CreateListings.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Manage Listings" NavigateUrl="~/ManageListings.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Contact" NavigateUrl="~/Contact.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Profile" NavigateUrl="~/SellerProfile.aspx"></asp:MenuItem>
-                    </Items>
-                </asp:Menu>
+    <asp:Menu ID="MenuAdmin" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
+        <Items>
+            <asp:MenuItem Text="Dashboard" NavigateUrl="~/Admin/Nyasha UseCases/AdminDashboard.aspx"/>
+            <asp:MenuItem Text="Inbox" NavigateUrl="~/Admin/Nyasha UseCases/Inbox.aspx"/>
+            <asp:MenuItem Text="Assign Driver" NavigateUrl="~/Admin/Clinton UseCases/AssignDriver.aspx"/>
+            <asp:MenuItem Text="Manage Categories" NavigateUrl="~/Admin/Clinton UseCases/ManageCategories.aspx"/>
+            <asp:MenuItem Text="Manage Genres" NavigateUrl="~/Admin/Nyasha UseCases/ManageGenres.aspx"/>
+           
+        </Items>
+        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+    </asp:Menu>
 
-                <!-- Driver User Menu -->
-                <asp:Menu ID="MenuDriver" runat="server" Orientation="Horizontal" CssClass="nav">
-                    <Items>
-                        <asp:MenuItem Text="Home" NavigateUrl="~/Home.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Manage Deliveries" NavigateUrl="~/ManageDeliveries.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="View Schedule" NavigateUrl="~/ViewSchedule.aspx"></asp:MenuItem>
-                        <asp:MenuItem Text="Profile" NavigateUrl="~/DriverProfile.aspx"></asp:MenuItem>
-                    </Items>
-                </asp:Menu>
-            </div>
+    <asp:Menu ID="MenuBuyer" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
+        <Items>
+            <asp:MenuItem Text="Home" NavigateUrl="~/Buyer/Paballo UseCases/BuyerDashboard.aspx"/>
+            <asp:MenuItem Text="About Us" NavigateUrl="~/User Management/AboutUs.aspx"/>
+            <asp:MenuItem Text="Reviews" NavigateUrl="~/Buyer/Nyasha UseCases/Reviews.aspx"/>
+            <asp:MenuItem Text="Contact Us" NavigateUrl="~/User Management/Contact.aspx"/>
+            
+        </Items>
+        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+    </asp:Menu>
 
-            <!-- Search and Authentication -->
-            <div class="auth-section">
-                <input type="text" class="search-bar" placeholder="Search for book title" />
-                <button class="search-btn">🔍</button>
-                <asp:Button ID="LogInbtn" runat="server" Text="Log In" OnClick="btnLogIn_Click" />
-                <asp:Button ID="Regbtn" class="register-btn" runat="server" Text="Register" OnClick="btnRegister_Click"/>
-            </div>
-        </nav>
+    <asp:Menu ID="MenuAnonymous" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
+        <Items>
+        <asp:MenuItem Text="Home" NavigateUrl="~/User Management/Home.aspx"/>
+        <asp:MenuItem Text="About Us" NavigateUrl="~/User Management/AboutUs.aspx"/>
+        <asp:MenuItem Text="Book Conditions" NavigateUrl="~/User Management/BookConditions.aspx" />
+        <asp:MenuItem Text="Contact" NavigateUrl="~/User Management/Contact.aspx"/>
+
+        </Items>
+        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+    </asp:Menu>
+
+    <!-- Auth section: Right side -->
+    <div id="divAuthenticated_Buyer" runat="server" class="auth-section">
+        <input type="text" class="search-bar" placeholder="Search for book title"/>
+        <button class="search-btn">🔍</button>
+        <asp:HyperLink ID="hlCart" runat="server" NavigateUrl="~/Buyer/Paballo UseCases/Cart.aspx" CssClass="cart-link">
+             <i class="fas fa-shopping-cart"></i>
+        </asp:HyperLink>
+
+        <asp:HyperLink ID="hlBuyerProfile" runat="server" NavigateUrl="~/Buyer/Paballo UseCases/BuyerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
+        <asp:Button ID="btnLogout" CssClass="btn" runat="server" Text="LogOut" OnClick="btnLogout_Click" CausesValidation="false"/>
+    </div>
+
+    <div id="divAnonymous" runat="server" class="auth-section">
+        <input type="text" class="search-bar" placeholder="Search for book title" />
+        <button class="search-btn">🔍</button>
+
+        <asp:Button ID="LogInbtn" CssClass="btn" runat="server" Text="Login" OnClick="btnLogIn_Click" CausesValidation="false"/>
+        <asp:Button ID="Regbtn" CssClass="btn" runat="server" Text="Register" OnClick="btnRegister_Click" CausesValidation="false"/>
+    </div>
+
+    <div id="divAuthenticated_driver" runat="server" class="auth-section">
+        
+       <asp:HyperLink ID="hlDriverProfile" runat="server" NavigateUrl="~/Driver/Clinton UseCases/DriverProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
+
+        <asp:Button ID="btnLogout2" CssClass="btn" runat="server" Text="Log Out" OnClick="btnLogout_Click" CausesValidation="false"/>
+    </div>
+
+    <div id="divAuthenticator_seller" runat="server" class="auth-section">
+     
+         <asp:HyperLink ID="hlSellerProfile" runat="server" NavigateUrl="~/Seller/Clinton UseCases/SellerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
+
+         <asp:Button ID="btnLogout3" CssClass="btn" runat="server" Text="Log Out" OnClick="btnLogout_Click" CausesValidation="false"/>
+    </div>
+
+    <div id="divAuthenticator_Admin" runat="server" class="auth-section">
+     
+         <asp:HyperLink ID="hlAdminProfile" runat="server" NavigateUrl="~/Admin/Nyasha UseCases/AdminProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
+
+         <asp:Button ID="btnLogout4" CssClass="btn" runat="server" Text="Log Out" OnClick="btnLogout_Click" CausesValidation="false"/>
+    </div>
+
+
+</nav>
+
 
         <!-- Main Content -->
         <main class="MainContainer">

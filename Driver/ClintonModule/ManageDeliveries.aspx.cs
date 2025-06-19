@@ -5,15 +5,13 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace NMU_BookTrade
+namespace NMU_BookTrade.Driver.ClintonModule
 {
-    public partial class WebForm18 : System.Web.UI.Page
+    public partial class ManageDeliveries : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session.Clear();
-            Response.Redirect("~/User Management/Home.aspx");
-        }
 
+        }
     }
 }

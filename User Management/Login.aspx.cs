@@ -6,7 +6,6 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Xml.Linq;
 
 namespace NMU_BookTrade
 {
@@ -78,7 +77,7 @@ namespace NMU_BookTrade
                 {
                     Session["AccessID"] = "3";
                     Session["UserID"] = reader["sellerID"].ToString();
-                    Response.Redirect("~/Seller/Clinton UseCases/SellerDashboard.aspx");
+                    Response.Redirect("~/Seller/SellerDashboard.aspx");
                     return;
                 }
                 reader.Close();

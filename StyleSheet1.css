@@ -1,4 +1,5 @@
-﻿/* General Styles */
+﻿
+﻿ /* General Styles */
 body {
     background: radial-gradient( circle at 0% 0%, #3fd0c9, #02353c, #02353c, #c1f6ed );
     background-size: cover;
@@ -12,7 +13,7 @@ body {
 .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;    
+    align-items: center;
     padding: 15px 100px;
     color: white;
 }
@@ -25,7 +26,6 @@ body {
 
 .logo {
     width: 120px;
-  
 }
 
 .site-title {
@@ -68,8 +68,8 @@ body {
     display: flex;
     gap: 10px;
     align-items: center;
-    padding-right:20px;
-    margin-left: auto; 
+    padding-right: 20px;
+    margin-left: auto;
 }
 
 
@@ -125,7 +125,7 @@ body {
         color: white;
     }
 
-    /* -------------------------------------------------------------------------------------------------------------------------------*/
+/* -------------------------------------------------------------------------------------------------------------------------------*/
 
 .register-container {
     display: flex;
@@ -157,6 +157,7 @@ body {
     height: auto;
     border-radius: 10px;
 }
+
 .input-wrapper {
     display: flex;
     flex-direction: column;
@@ -320,7 +321,7 @@ input#middle_section_btnLogin:hover {
 input#middle_section_btnRegister:hover {
     background-color: rgb(181, 221, 219);
     box-shadow: rgba(2, 117, 216, 0.19) 0px 0px 4.71936px 0px;
-    color:white;
+    color: white;
 }
 
 input#middle_section_btnClear:hover {
@@ -331,7 +332,7 @@ input#middle_section_btnClear:hover {
 
 .input-note {
     font-size: 12px;
-    color:#c1f6ed; 
+    color: #c1f6ed;
     margin-top: 4px;
     display: block;
 }

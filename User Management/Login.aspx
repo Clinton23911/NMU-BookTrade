@@ -49,13 +49,22 @@
              </tr>
                 <tr>
                     <td>
-                        <asp:Button ID="btnLogin" runat="server" Text="Log In" CssClass="form-button" OnClick="btnLogin_Click" />
-                        <asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="form-button" OnClick="btnClear_Click" CausesValidation="false" />
+                        <asp:Button ID="btnLogin" runat="server" Text="Log In" CssClass="form-button" OnClick="btnLogin_Click"/>
+                        <asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="form-button" OnClick="btnClear_Click" CausesValidation="false"/>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <asp:Label ID="lblMessage" runat="server" CssClass="form_errormessage" ForeColor="Red" />
+                        <br />
+                        <asp:Label ID="lblNote" runat="server" CssClass="input-note"  Text="If you forgot your password click on the link below"/>
+                        <br />
+                        <asp:HyperLink 
+                            ID="lnkForgotPassword" 
+                            runat="server" 
+                            NavigateUrl="~/User Management/ForgotPassword.aspx" 
+                            CssClass="input-note" 
+                            Text="Forgot Password?"/>
                     </td>
                 </tr>            
 

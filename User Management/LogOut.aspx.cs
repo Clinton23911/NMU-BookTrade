@@ -14,20 +14,28 @@ namespace NMU_BookTrade
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack && Request.UrlReferrer != null)
+            if (!IsPostBack)
             {
-                Session["PrevPage"] = Request.UrlReferrer.ToString();
+                if (Session["UserID"] != null)
+                {
+                    string userId = Session["UserID"].ToString();
+                    string customerName = GetBuyerName(userId).ToUpper();
+                    lblCustomerName.Text = customerName;
+                }
+                if (!IsPostBack && Request.UrlReferrer != null)
+                {
+                    Session["PrevPage"] = Request.UrlReferrer.ToString();
+                }
             }
         }
-
-        private string GetCustomerName(string userId)
+            public string GetBuyerName(string userId)
         {
-            string name = "User";
+            string name = "Buyer";
             string connectionString = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string query = "SELECT FullName FROM Buyer WHERE BuyerID = buyerID";
+                string query = "SELECT buyerName FROM Buyer WHERE BuyerID = @UserId";
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@UserId", userId);
 
@@ -35,13 +43,14 @@ namespace NMU_BookTrade
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    name = reader["FullName"].ToString();
+                    name = reader["buyerName"].ToString();
                 }
                 con.Close();
             }
 
             return name;
         }
+
 
         protected void btnYes_Click(object sender, EventArgs e)
         {

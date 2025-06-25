@@ -91,10 +91,12 @@
     <Content Include="User Management\AboutUs.aspx" />
     <Content Include="User Management\BookConditions.aspx" />
     <Content Include="User Management\Contact.aspx" />
+    <Content Include="User Management\ForgotPassword.aspx" />
     <Content Include="User Management\Home.aspx" />
     <Content Include="User Management\Login.aspx" />
     <Content Include="User Management\LogOut.aspx" />
     <Content Include="User Management\Register.aspx" />
+    <Content Include="User Management\ResetPassword.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +255,13 @@
     <Compile Include="User Management\Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
+    <Compile Include="User Management\ForgotPassword.aspx.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User Management\ForgotPassword.aspx.designer.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+    </Compile>
     <Compile Include="User Management\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -280,6 +289,13 @@
     </Compile>
     <Compile Include="User Management\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User Management\ResetPassword.aspx.cs">
+      <DependentUpon>ResetPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User Management\ResetPassword.aspx.designer.cs">
+      <DependentUpon>ResetPassword.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

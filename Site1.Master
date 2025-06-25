@@ -4,7 +4,10 @@
 
 <html>
 <head runat="server">
-     <link href="Stylesheet1.css" rel="stylesheet" type="text/css" /> 
+  <link href="StyleSheet1.css" rel="stylesheet" type="text/css" />
+   
+
+
     <title>NMU BookTrade</title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>

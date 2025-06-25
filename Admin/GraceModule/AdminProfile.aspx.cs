@@ -21,7 +21,7 @@ namespace NMU_BookTrade
 
             if (!IsPostBack) {
 
-                LoadAdminProfile();
+               // LoadAdminProfile();
             }
 
         }
@@ -55,7 +55,7 @@ namespace NMU_BookTrade
 
                     //Here we now load the picture, or show the default image if not set
 
-                    string imageName = reader[]
+                  //  string imageName = reader[]
                     
                 }
                 

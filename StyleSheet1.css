@@ -1,4 +1,4 @@
-﻿/* General Styles */
+﻿                                            /* General Styles */
 body {
     background: radial-gradient( circle at 0% 0%, #3fd0c9, #02353c, #02353c, #c1f6ed );
     background-size: cover;
@@ -110,11 +110,11 @@ body {
 .btn {
     text-decoration: none;
     background-color: transparent;
-    color: whitesmoke;
+    color: white;
     padding: 8px 15px;
     border: none;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16.5px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -126,7 +126,7 @@ body {
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------*/
-
+                                          /*Registration page and Login page */
 .register-container {
     display: flex;
     justify-content: center;
@@ -139,6 +139,7 @@ body {
     backdrop-filter: blur(12px);
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
     padding: 0;
+    padding-right:20px
 }
 
 /* ===== Left Image Side ===== */
@@ -279,6 +280,7 @@ h3.LR-formheadings {
 
 h2.LR-formheadings {
     text-align: center;
+    color:ghostwhite;
 }
 
 /* Common button base */
@@ -331,20 +333,140 @@ input#middle_section_btnClear:hover {
 
 .input-note {
     font-size: 12px;
-    color:#c1f6ed; 
+    color:ghostwhite; 
     margin-top: 4px;
     display: block;
 }
 
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-box h3 {
+    margin-top: 0;
+    color: #4CAF50;
+}
+
+.modal-box button {
+    background-color: #4CAF50;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 15px;
+    border-radius: 5px;
+}
 
 
 
+    /*Password toggle*/
 
 
+.toggle-password {
+    position: absolute;
+    right: 42px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #3fd0c9; /* Bluish tint to match your theme */
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 10;
+    padding: 2px;
+}
+
+/* Adjust input field padding to prevent overlap with eye icon */
+.input-field {
+    padding-right: 40px; /* Makes space for the eye icon */
+}
+
+.toggle-password:hover {
+    color: #A2F5E9; /* lighter teal on hover */
+}
 
 
+/* ForgotPassword and ResetPassword Pages */
 
+input#middle_section_btnSubmit {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
 
+    input#middle_section_btnSubmit:hover {
+        
+        background-color: rgb(181, 221, 219);
+        box-shadow: rgba(2, 117, 216, 0.19) 0px 0px 4.71936px 0px;
+        color: white;
+    }
+
+    p-Passwordpages{
+        color:ghostwhite;
+    }
+
+p.p-Passwordpages {
+    color: ghostwhite;
+}
+
+input#middle_section_btnReset {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+    input#middle_section_btnReset:hover {
+        background-color: rgb(181, 221, 219);
+        box-shadow: rgba(2, 117, 216, 0.19) 0px 0px 4.71936px 0px;
+        color: white;
+    }
+
+span.toggle-password-reset {
+    position: absolute;
+    right: 73px;
+    top: 47%;
+    transform: translateY(-50%);
+    color: #3fd0c9;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 10;
+    padding: 2px;
+}
+
+span.toggle-password-reset2 {
+    position: absolute;
+    right: 73px;
+    top: 59%;
+    transform: translateY(-50%);
+    color: #3fd0c9;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 10;
+    padding: 2px;
+}
 
 
 

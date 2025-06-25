@@ -125,11 +125,14 @@
                         <div class="input-wrapper">
                             <div class="input-icon">
                                 <i class="fas fa-lock"></i>
-                                <asp:TextBox ID="txtPassword" runat="server" CssClass="input-field" ToolTip="Password" placeholder="Password"></asp:TextBox>
+                                <asp:TextBox ID="txtPassword" ClientIDMode ="static"  runat="server" CssClass="input-field" ToolTip="Password" placeholder="Password" TextMode="Password"></asp:TextBox>
+                                <span class="toggle-password" onclick="toggleVisibility('txtPassword', this)">
+                                    <i class="fas fa-eye"></i>
+                                </span>
                             </div>
-                            <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ErrorMessage="Enter your password, it's required" ControlToValidate="txtPassword" CssClass="form_errormessage"  ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                            <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ErrorMessage="Enter your password, it's required" ControlToValidate="txtPassword" CssClass="form_errormessage" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                         </div>
-                    </td>  
+                    </td>
                 </tr>
 
                 <tr>
@@ -138,9 +141,12 @@
                             <label>Confirm Password:</label>
                             <div class="input-icon">
                                 <i class="fas fa-lock"></i>
-                                <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" CssClass="input-field" placeholder="Re-enter your password" />
+                                <asp:TextBox ID="txtConfirmPassword" ClientIDMode ="Static" runat="server" TextMode="Password" CssClass="input-field" placeholder="Re-enter your password" />
+                                <span class="toggle-password" onclick="toggleVisibility('txtConfirmPassword', this)">
+                                    <i class="fas fa-eye"></i>
+                                </span>
                             </div>
-                            <asp:RequiredFieldValidator ID="rfvConfirmPassword" runat="server" ControlToValidate="txtConfirmPassword"
+                            <asp:RequiredFieldValidator ID="rfvConfirmPassword"  runat="server" ControlToValidate="txtConfirmPassword"
                                 ErrorMessage="Please confirm your password" ForeColor="Red" Display="Dynamic" />
                             <asp:CompareValidator ID="cvPasswords" runat="server"
                                 ControlToCompare="txtPassword"
@@ -153,6 +159,7 @@
                         </div>
                     </td>
                 </tr>
+
 
                 <tr>
                     <td>
@@ -171,5 +178,58 @@
             </table>
         </div>
     </div>
+
+    <!-- Registration Confirmation Modal
+  The popup box that will appear after registration and the id = roleType will identify whether its a seller/buyer/driver/admin       
+        -->
+        <div id="confirmationModal" class="modal-overlay" style="display:none;">
+            <div class="modal-box">
+                <h3>Registration Successful!</h3>
+                <p>Congratulations! Your registration as a <span id="roleType"></span> has been completed successfully.<br/>
+                You can now log in to access your account.</p>
+                <p>Click OK to proceed to the login page.</p>
+                <button onclick="redirectToLogin()">OK ➤</button>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+ <script type="text/javascript">
+              // Show confirmation popup modal
+              function showConfirmation(role) {
+                  document.getElementById("roleType").innerText = role;
+                  document.getElementById("confirmationModal").style.display = "flex";
+              }
+
+              // Redirect to login page
+              function redirectToLogin() {
+                  // Use absolute URL (ASP.NET won't process the ~ here in JS)
+                  window.location.href = "~/User Management/Login.aspx";
+              }
+
+              // Toggle password visibility for input fields
+              function toggleVisibility(inputId, iconSpan) {
+                  var input = document.getElementById(inputId);
+
+                  if (input.type === "password") {
+                      input.type = "text"; // Show password
+                      iconSpan.innerHTML = '<i class="fas fa-eye-slash"></i>'; // Switch to slashed eye
+                  } else {
+                      input.type = "password"; // Hide password
+                      iconSpan.innerHTML = '<i class="fas fa-eye"></i>'; // Switch back to eye
+                  }
+              }
+ </script>
+
+
+  
+        
+   
+
 
 </asp:Content>

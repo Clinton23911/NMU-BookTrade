@@ -13,7 +13,10 @@ namespace NMU_BookTrade
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack && Request.UrlReferrer != null)
+            {
+                Session["PrevPage"] = Request.UrlReferrer.ToString();
+            }
         }
 
         private string GetCustomerName(string userId)
@@ -23,7 +26,7 @@ namespace NMU_BookTrade
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string query = "SELECT FullName FROM Customers WHERE UserId = @UserId";
+                string query = "SELECT FullName FROM Buyer WHERE BuyerID = buyerID";
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@UserId", userId);
 
@@ -42,12 +45,19 @@ namespace NMU_BookTrade
         protected void btnYes_Click(object sender, EventArgs e)
         {
             Session.Abandon();
-            Response.Redirect("~/Login.aspx");
+            Response.Redirect("Login.aspx");
         }
 
         protected void btnNo_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/BuyersProfile.aspx");
+            if (Session["PreviousPage"] != null)
+            {
+                Response.Redirect(Session["PreviousPage"].ToString());
+            }
+            else
+            {
+                Response.Redirect("Home.aspx");
+            }
         }
     }
 }

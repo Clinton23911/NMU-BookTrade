@@ -67,22 +67,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Admin\Clinton UseCases\AssignDriver.aspx" />
-    <Content Include="Admin\Clinton UseCases\Manage Categories.aspx" />
-    <Content Include="Admin\Nyasha UseCases\AdminDashboard.aspx" />
-    <Content Include="Admin\Nyasha UseCases\AdminProfile.aspx" />
-    <Content Include="Admin\Nyasha UseCases\Inbox.aspx" />
-    <Content Include="Admin\Nyasha UseCases\ManageGenres.aspx" />
-    <Content Include="Buyer\Nyasha UseCases\Reviews.aspx" />
-    <Content Include="Buyer\Paballo UseCases\BuyerDashboard.aspx" />
-    <Content Include="Buyer\Paballo UseCases\BuyerProfile.aspx" />
-    <Content Include="Buyer\Paballo UseCases\Cart.aspx" />
-    <Content Include="Driver\Clinton UseCases\DriverDashboard.aspx" />
-    <Content Include="Driver\Clinton UseCases\DriverProfile.aspx" />
+    <Content Include="Admin\GraceModule\AdminDashboard.aspx" />
+    <Content Include="Admin\GraceModule\AdminProfile.aspx" />
+    <Content Include="Admin\GraceModule\AssignDriver.aspx" />
+    <Content Include="Admin\GraceModule\Inbox.aspx" />
+    <Content Include="Admin\GraceModule\ManageCategories.aspx" />
+    <Content Include="Admin\GraceModule\ManageGenres.aspx" />
+    <Content Include="Buyer\pabiModule\BuyerDashboard.aspx" />
+    <Content Include="Buyer\pabiModule\BuyerProfile.aspx" />
+    <Content Include="Buyer\pabiModule\Cart.aspx" />
+    <Content Include="Buyer\pabiModule\Reviews.aspx" />
+    <Content Include="Driver\ClintonModule\DriverDashboard.aspx" />
+    <Content Include="Driver\ClintonModule\DriverProfile.aspx" />
+    <Content Include="Driver\ClintonModule\ManageDeliveries.aspx" />
+    <Content Include="Driver\ClintonModule\ViewSchedule.aspx" />
+    <Content Include="Images\goodbye.png" />
     <Content Include="Images\NMUBOOKTRADE.png" />
     <Content Include="Images\Person reading.png" />
-    <Content Include="Seller\Clinton UseCases\SellerDashboard.aspx" />
-    <Content Include="Seller\Clinton UseCases\SellerProfile.aspx" />
+    <Content Include="Buyer\pabiModule\SearchTextBook.aspx" />
+    <Content Include="Seller\ClintonModule\CreateListings.aspx" />
+    <Content Include="Seller\ClintonModule\ManageListings.aspx" />
+    <Content Include="Seller\ClintonModule\SellerDashboard.aspx" />
+    <Content Include="Seller\ClintonModule\SellerProfile.aspx" />
     <Content Include="StyleSheet1.css" />
     <Content Include="User Management\AboutUs.aspx" />
     <Content Include="User Management\BookConditions.aspx" />
@@ -94,103 +100,138 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\Clinton UseCases\AssignDriver.aspx.cs">
-      <DependentUpon>AssignDriver.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Clinton UseCases\AssignDriver.aspx.designer.cs">
-      <DependentUpon>AssignDriver.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\Clinton UseCases\Manage Categories.aspx.cs">
-      <DependentUpon>Manage Categories.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Clinton UseCases\Manage Categories.aspx.designer.cs">
-      <DependentUpon>Manage Categories.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\Nyasha UseCases\AdminDashboard.aspx.cs">
+    <Compile Include="Admin\GraceModule\AdminDashboard.aspx.cs">
       <DependentUpon>AdminDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Nyasha UseCases\AdminDashboard.aspx.designer.cs">
+    <Compile Include="Admin\GraceModule\AdminDashboard.aspx.designer.cs">
       <DependentUpon>AdminDashboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Nyasha UseCases\AdminProfile.aspx.cs">
+    <Compile Include="Admin\GraceModule\AdminProfile.aspx.cs">
       <DependentUpon>AdminProfile.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Nyasha UseCases\AdminProfile.aspx.designer.cs">
+    <Compile Include="Admin\GraceModule\AdminProfile.aspx.designer.cs">
       <DependentUpon>AdminProfile.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Nyasha UseCases\Inbox.aspx.cs">
+    <Compile Include="Admin\GraceModule\AssignDriver.aspx.cs">
+      <DependentUpon>AssignDriver.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\GraceModule\AssignDriver.aspx.designer.cs">
+      <DependentUpon>AssignDriver.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\GraceModule\Inbox.aspx.cs">
       <DependentUpon>Inbox.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Nyasha UseCases\Inbox.aspx.designer.cs">
+    <Compile Include="Admin\GraceModule\Inbox.aspx.designer.cs">
       <DependentUpon>Inbox.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Nyasha UseCases\ManageGenres.aspx.cs">
+    <Compile Include="Admin\GraceModule\ManageCategories.aspx.cs">
+      <DependentUpon>ManageCategories.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\GraceModule\ManageCategories.aspx.designer.cs">
+      <DependentUpon>ManageCategories.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\GraceModule\ManageGenres.aspx.cs">
       <DependentUpon>ManageGenres.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Nyasha UseCases\ManageGenres.aspx.designer.cs">
+    <Compile Include="Admin\GraceModule\ManageGenres.aspx.designer.cs">
       <DependentUpon>ManageGenres.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Buyer\Nyasha UseCases\Reviews.aspx.cs">
-      <DependentUpon>Reviews.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Buyer\Nyasha UseCases\Reviews.aspx.designer.cs">
-      <DependentUpon>Reviews.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Buyer\Paballo UseCases\BuyerDashboard.aspx.cs">
+    <Compile Include="Buyer\pabiModule\BuyerDashboard.aspx.cs">
       <DependentUpon>BuyerDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Buyer\Paballo UseCases\BuyerDashboard.aspx.designer.cs">
+    <Compile Include="Buyer\pabiModule\BuyerDashboard.aspx.designer.cs">
       <DependentUpon>BuyerDashboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Buyer\Paballo UseCases\BuyerProfile.aspx.cs">
+    <Compile Include="Buyer\pabiModule\BuyerProfile.aspx.cs">
       <DependentUpon>BuyerProfile.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Buyer\Paballo UseCases\BuyerProfile.aspx.designer.cs">
+    <Compile Include="Buyer\pabiModule\BuyerProfile.aspx.designer.cs">
       <DependentUpon>BuyerProfile.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Buyer\Paballo UseCases\Cart.aspx.cs">
+    <Compile Include="Buyer\pabiModule\Cart.aspx.cs">
       <DependentUpon>Cart.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Buyer\Paballo UseCases\Cart.aspx.designer.cs">
+    <Compile Include="Buyer\pabiModule\Cart.aspx.designer.cs">
       <DependentUpon>Cart.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Driver\Clinton UseCases\DriverDashboard.aspx.cs">
+    <Compile Include="Buyer\pabiModule\Reviews.aspx.cs">
+      <DependentUpon>Reviews.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\Reviews.aspx.designer.cs">
+      <DependentUpon>Reviews.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Driver\ClintonModule\DriverDashboard.aspx.cs">
       <DependentUpon>DriverDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Driver\Clinton UseCases\DriverDashboard.aspx.designer.cs">
+    <Compile Include="Driver\ClintonModule\DriverDashboard.aspx.designer.cs">
       <DependentUpon>DriverDashboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Driver\Clinton UseCases\DriverProfile.aspx.cs">
+    <Compile Include="Driver\ClintonModule\DriverProfile.aspx.cs">
       <DependentUpon>DriverProfile.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Driver\Clinton UseCases\DriverProfile.aspx.designer.cs">
+    <Compile Include="Driver\ClintonModule\DriverProfile.aspx.designer.cs">
       <DependentUpon>DriverProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Driver\ClintonModule\ManageDeliveries.aspx.cs">
+      <DependentUpon>ManageDeliveries.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Driver\ClintonModule\ManageDeliveries.aspx.designer.cs">
+      <DependentUpon>ManageDeliveries.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Driver\ClintonModule\ViewSchedule.aspx.cs">
+      <DependentUpon>ViewSchedule.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Driver\ClintonModule\ViewSchedule.aspx.designer.cs">
+      <DependentUpon>ViewSchedule.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Seller\Clinton UseCases\SellerDashboard.aspx.cs">
+    <Compile Include="Buyer\pabiModule\SearchTextBook.aspx.cs">
+      <DependentUpon>SearchTextBook.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\SearchTextBook.aspx.designer.cs">
+      <DependentUpon>SearchTextBook.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Seller\ClintonModule\CreateListings.aspx.cs">
+      <DependentUpon>CreateListings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Seller\ClintonModule\CreateListings.aspx.designer.cs">
+      <DependentUpon>CreateListings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Seller\ClintonModule\ManageListings.aspx.cs">
+      <DependentUpon>ManageListings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Seller\ClintonModule\ManageListings.aspx.designer.cs">
+      <DependentUpon>ManageListings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Seller\ClintonModule\SellerDashboard.aspx.cs">
       <DependentUpon>SellerDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Seller\Clinton UseCases\SellerDashboard.aspx.designer.cs">
+    <Compile Include="Seller\ClintonModule\SellerDashboard.aspx.designer.cs">
       <DependentUpon>SellerDashboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Seller\Clinton UseCases\SellerProfile.aspx.cs">
+    <Compile Include="Seller\ClintonModule\SellerProfile.aspx.cs">
       <DependentUpon>SellerProfile.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Seller\Clinton UseCases\SellerProfile.aspx.designer.cs">
+    <Compile Include="Seller\ClintonModule\SellerProfile.aspx.designer.cs">
       <DependentUpon>SellerProfile.aspx</DependentUpon>
     </Compile>
     <Compile Include="Site1.Master.cs">
@@ -299,4 +340,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <UseRoslyn>true</UseRoslyn>
+  </PropertyGroup>
 </Project>

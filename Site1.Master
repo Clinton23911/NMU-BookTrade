@@ -38,9 +38,9 @@
     <!-- Menus -->
     <asp:Menu ID="MenuDriver" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
         <Items>
-            <asp:MenuItem Text="Home" NavigateUrl="~/Driver/Clinton UseCases/DriverDashboard.aspx"/>
-            <asp:MenuItem Text="Manage Deliveries" NavigateUrl="~/Driver/Clinton UseCases/ManageDeliveries.aspx"/>
-            <asp:MenuItem Text="View Schedule" NavigateUrl="~/Driver/Clinton UseCases/ViewSchedule.aspx"/>
+            <asp:MenuItem Text="Home" NavigateUrl="~/Driver/ClintonModule/DriverDashboard.aspx"/>
+            <asp:MenuItem Text="Manage Deliveries" NavigateUrl="~/Driver/ClintonModule/ManageDeliveries.aspx"/>
+            <asp:MenuItem Text="View Schedule" NavigateUrl="~/Driver/ClintonModule/ViewSchedule.aspx"/>
             
         </Items>
         <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
@@ -50,9 +50,9 @@
 
     <asp:Menu ID="MenuSeller" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
         <Items>
-            <asp:MenuItem Text="Home" NavigateUrl="~/Seller/Clinton UseCases/SellerDashboard.aspx"/>
-            <asp:MenuItem Text="Create Listings" NavigateUrl="~/Seller/Clinton UseCases/CreateListings.aspx"/>
-            <asp:MenuItem Text="Manage Listings" NavigateUrl="~/Seller/Clinton UseCases/ManageListings.aspx"/>
+            <asp:MenuItem Text="Home" NavigateUrl="~/Seller/ClintonModule/SellerDashboard.aspx"/>
+            <asp:MenuItem Text="Create Listings" NavigateUrl="~/Seller/ClintonModule/CreateListings.aspx"/>
+            <asp:MenuItem Text="Manage Listings" NavigateUrl="~/Seller/ClintonModule/ManageListings.aspx"/>
             <asp:MenuItem Text="Contact" NavigateUrl="~/User Management/Contact.aspx"/>
             
         </Items>
@@ -61,11 +61,11 @@
 
     <asp:Menu ID="MenuAdmin" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
         <Items>
-            <asp:MenuItem Text="Dashboard" NavigateUrl="~/Admin/Nyasha UseCases/AdminDashboard.aspx"/>
-            <asp:MenuItem Text="Inbox" NavigateUrl="~/Admin/Nyasha UseCases/Inbox.aspx"/>
-            <asp:MenuItem Text="Assign Driver" NavigateUrl="~/Admin/Clinton UseCases/AssignDriver.aspx"/>
-            <asp:MenuItem Text="Manage Categories" NavigateUrl="~/Admin/Clinton UseCases/ManageCategories.aspx"/>
-            <asp:MenuItem Text="Manage Genres" NavigateUrl="~/Admin/Nyasha UseCases/ManageGenres.aspx"/>
+            <asp:MenuItem Text="Dashboard" NavigateUrl="~/Admin/GraceModule/AdminDashboard.aspx"/>
+            <asp:MenuItem Text="Inbox" NavigateUrl="~/Admin/GraceModule/Inbox.aspx"/>
+            <asp:MenuItem Text="Assign Driver" NavigateUrl="~/Admin/GraceModule/AssignDriver.aspx"/>
+            <asp:MenuItem Text="Manage Categories" NavigateUrl="~/Admin/GraceModule/ManageCategories.aspx"/>
+            <asp:MenuItem Text="Manage Genres" NavigateUrl="~/Admin/GraceModule/ManageGenres.aspx"/>
            
         </Items>
         <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
@@ -73,9 +73,9 @@
 
     <asp:Menu ID="MenuBuyer" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
         <Items>
-            <asp:MenuItem Text="Home" NavigateUrl="~/Buyer/Paballo UseCases/BuyerDashboard.aspx"/>
+            <asp:MenuItem Text="Home" NavigateUrl="~/Buyer/pabiModule/BuyerDashboard.aspx"/>
             <asp:MenuItem Text="About Us" NavigateUrl="~/User Management/AboutUs.aspx"/>
-            <asp:MenuItem Text="Reviews" NavigateUrl="~/Buyer/Nyasha UseCases/Reviews.aspx"/>
+            <asp:MenuItem Text="Reviews" NavigateUrl="~/Buyer/pabiModule/Reviews.aspx"/>
             <asp:MenuItem Text="Contact Us" NavigateUrl="~/User Management/Contact.aspx"/>
             
         </Items>
@@ -97,11 +97,11 @@
     <div id="divAuthenticated_Buyer" runat="server" class="auth-section">
         <input type="text" class="search-bar" placeholder="Search for book title"/>
         <button class="search-btn">🔍</button>
-        <asp:HyperLink ID="hlCart" runat="server" NavigateUrl="~/Buyer/Paballo UseCases/Cart.aspx" CssClass="cart-link">
+        <asp:HyperLink ID="hlCart" runat="server" NavigateUrl="~/Buyer/pabiModule/Cart.aspx" CssClass="cart-link">
              <i class="fas fa-shopping-cart"></i>
         </asp:HyperLink>
 
-        <asp:HyperLink ID="hlBuyerProfile" runat="server" NavigateUrl="~/Buyer/Paballo UseCases/BuyerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
+        <asp:HyperLink ID="hlBuyerProfile" runat="server" NavigateUrl="~/Buyer/pabiModule/BuyerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
         <asp:Button ID="btnLogout" CssClass="btn" runat="server" Text="LogOut" OnClick="btnLogout_Click" CausesValidation="false"/>
     </div>
 
@@ -115,21 +115,21 @@
 
     <div id="divAuthenticated_driver" runat="server" class="auth-section">
         
-       <asp:HyperLink ID="hlDriverProfile" runat="server" NavigateUrl="~/Driver/Clinton UseCases/DriverProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
+       <asp:HyperLink ID="hlDriverProfile" runat="server" NavigateUrl="~/Driver/ClintonModule/DriverProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
 
         <asp:Button ID="btnLogout2" CssClass="btn" runat="server" Text="Log Out" OnClick="btnLogout_Click" CausesValidation="false"/>
     </div>
 
     <div id="divAuthenticator_seller" runat="server" class="auth-section">
      
-         <asp:HyperLink ID="hlSellerProfile" runat="server" NavigateUrl="~/Seller/Clinton UseCases/SellerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
+         <asp:HyperLink ID="hlSellerProfile" runat="server" NavigateUrl="~/Seller/ClintonModule/SellerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
 
          <asp:Button ID="btnLogout3" CssClass="btn" runat="server" Text="Log Out" OnClick="btnLogout_Click" CausesValidation="false"/>
     </div>
 
     <div id="divAuthenticator_Admin" runat="server" class="auth-section">
      
-         <asp:HyperLink ID="hlAdminProfile" runat="server" NavigateUrl="~/Admin/Nyasha UseCases/AdminProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
+         <asp:HyperLink ID="hlAdminProfile" runat="server" NavigateUrl="~/Admin/GraceModule/AdminProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
 
          <asp:Button ID="btnLogout4" CssClass="btn" runat="server" Text="Log Out" OnClick="btnLogout_Click" CausesValidation="false"/>
     </div>

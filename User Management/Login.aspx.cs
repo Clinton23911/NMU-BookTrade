@@ -41,7 +41,7 @@ namespace NMU_BookTrade
                 {
                     Session["AccessID"] = "1";
                     Session["UserID"] = reader["adminID"].ToString();
-                    Response.Redirect("~/Admin/Nyasha UseCases/AdminDashboard.aspx");
+                    Response.Redirect("~/Admin/GraceModule/AdminDashboard.aspx");
                     return;
                 }
 
@@ -60,7 +60,7 @@ namespace NMU_BookTrade
                 {
                     Session["AccessID"] = "2";
                     Session["UserID"] = reader["buyerID"].ToString();
-                    Response.Redirect("~/Buyer/Paballo UseCases/BuyerDashboard.aspx");
+                    Response.Redirect("~/Buyer/pabiModule/BuyerDashboard.aspx");
                     return;
                 }
                 reader.Close();
@@ -78,7 +78,7 @@ namespace NMU_BookTrade
                 {
                     Session["AccessID"] = "3";
                     Session["UserID"] = reader["sellerID"].ToString();
-                    Response.Redirect("~/Seller/Clinton UseCases/SellerDashboard.aspx");
+                    Response.Redirect("~/Seller/ClintonModule/SellerDashboard.aspx");
                     return;
                 }
                 reader.Close();
@@ -96,7 +96,7 @@ namespace NMU_BookTrade
                 {
                     Session["AccessID"] = "4";
                     Session["UserID"] = reader["driverID"].ToString();
-                    Response.Redirect("~/Driver/Clinton UseCases/DriverDashboard.aspx");
+                    Response.Redirect("~/Driver/ClintonModule/DriverDashboard.aspx");
                     return;
                 }
                 reader.Close();

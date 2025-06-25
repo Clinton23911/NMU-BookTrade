@@ -93,7 +93,8 @@ namespace NMU_BookTrade
                             lblMessage.Text = "Registration successful! Redirecting to login in 4 seconds...";
 
                             // Redirect after 4 seconds
-                            Response.AddHeader("REFRESH", "4;URL=Login.aspx");
+                            Response.AddHeader("REFRESH", "4;URL=" + ResolveUrl("~/User Management/Login.aspx"));
+
                         }
                         else
                         {

@@ -1,6 +1,6 @@
 ﻿
 ﻿ /* General Styles */
-body {
+html, body {
     background: radial-gradient( circle at 0% 0%, #3fd0c9, #02353c, #02353c, #c1f6ed );
     background-size: cover;
     background-repeat: no-repeat;

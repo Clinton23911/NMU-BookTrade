@@ -105,7 +105,7 @@
         </asp:HyperLink>
 
         <asp:HyperLink ID="hlBuyerProfile" runat="server" NavigateUrl="~/Buyer/pabiModule/BuyerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
-        <asp:Button ID="btnLogout" CssClass="btn" runat="server" Text="LogOut" OnClick="btnLogout_Click" CausesValidation="false"/>
+<asp:Button ID="btnLogout" CssClass="btn" runat="server" Text="LogOut" PostBackUrl="~/User Management/LogOut.aspx" CausesValidation="false"/>
     </div>
 
     <div id="divAnonymous" runat="server" class="auth-section">
@@ -120,21 +120,21 @@
         
        <asp:HyperLink ID="hlDriverProfile" runat="server" NavigateUrl="~/Driver/ClintonModule/DriverProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
 
-        <asp:Button ID="btnLogout2" CssClass="btn" runat="server" Text="Log Out" OnClick="btnLogout_Click" CausesValidation="false"/>
+<asp:Button ID="btnLogout2" CssClass="btn" runat="server" Text="LogOut" PostBackUrl="~/User Management/LogOut.aspx" CausesValidation="false"/>
     </div>
 
     <div id="divAuthenticator_seller" runat="server" class="auth-section">
      
          <asp:HyperLink ID="hlSellerProfile" runat="server" NavigateUrl="~/Seller/ClintonModule/SellerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
 
-         <asp:Button ID="btnLogout3" CssClass="btn" runat="server" Text="Log Out" OnClick="btnLogout_Click" CausesValidation="false"/>
+<asp:Button ID="btnLogout3" CssClass="btn" runat="server" Text="LogOut" PostBackUrl="~/User Management/LogOut.aspx" CausesValidation="false"/>
     </div>
 
     <div id="divAuthenticator_Admin" runat="server" class="auth-section">
      
          <asp:HyperLink ID="hlAdminProfile" runat="server" NavigateUrl="~/Admin/GraceModule/AdminProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
 
-         <asp:Button ID="btnLogout4" CssClass="btn" runat="server" Text="Log Out" OnClick="btnLogout_Click" CausesValidation="false"/>
+<asp:Button ID="btnLogout4" CssClass="btn" runat="server" Text="LogOut" PostBackUrl="~/User Management/LogOut.aspx" CausesValidation="false"/>
     </div>
 
 

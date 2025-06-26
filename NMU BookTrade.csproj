@@ -85,6 +85,7 @@
     <Content Include="Images\NMUBOOKTRADE.png" />
     <Content Include="Images\Person reading.png" />
     <Content Include="Buyer\pabiModule\SearchTextBook.aspx" />
+    <Content Include="Images\User.png" />
     <Content Include="Seller\ClintonModule\CreateListings.aspx" />
     <Content Include="Seller\ClintonModule\ManageListings.aspx" />
     <Content Include="Seller\ClintonModule\SellerDashboard.aspx" />

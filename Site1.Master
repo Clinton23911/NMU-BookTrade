@@ -1,10 +1,12 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.master.cs" Inherits="NMU_BookTrade.Site1" %>
-
 <!DOCTYPE html>
 
 <html>
 <head runat="server">
-     <link href="Stylesheet1.css" rel="stylesheet" type="text/css" /> 
+  <link href="StyleSheet1.css" rel="stylesheet" type="text/css" />
+   
+
+
     <title>NMU BookTrade</title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
@@ -89,12 +91,23 @@
         <Items>
         <asp:MenuItem Text="Home" NavigateUrl="~/User Management/Home.aspx"/>
         <asp:MenuItem Text="About Us" NavigateUrl="~/User Management/AboutUs.aspx"/>
-        <asp:MenuItem Text="Book Conditions" NavigateUrl="~/User Management/BookConditions.aspx" />
+        <asp:MenuItem Text="Book Conditions" NavigateUrl="~/User Management/BookConditions.aspx"/>
         <asp:MenuItem Text="Contact" NavigateUrl="~/User Management/Contact.aspx"/>
 
         </Items>
         <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
     </asp:Menu>
+
+             <!-- Dynamic Profile Picture Panel -->
+<asp:Panel ID="pnlProfileImage" runat="server" CssClass="top-profile-pic">
+
+ <asp:HyperLink ID="hlDynamicProfile" runat="server">
+    <asp:Image ID="imgProfile" runat="server" CssClass="profile-circle" />
+</asp:HyperLink>
+
+
+
+            </asp:Panel>
 
     <!-- Auth section: Right side -->
     <div id="divAuthenticated_Buyer" runat="server" class="auth-section">

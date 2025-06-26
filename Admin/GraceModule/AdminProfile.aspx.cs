@@ -21,7 +21,7 @@ namespace NMU_BookTrade
 
             if (!IsPostBack) {
 
-               // LoadAdminProfile();
+                //LoadAdminProfile();
             }
 
         }
@@ -46,7 +46,7 @@ namespace NMU_BookTrade
                 constring.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 // now we have the data from the database
-                if (reader.Read()) 
+                if (reader.Read())
                 {
                     // we have to fill that into the input fields with data from the database
                     txtEmail.Text = reader["adminEmail"].ToString();
@@ -55,9 +55,10 @@ namespace NMU_BookTrade
 
                     //Here we now load the picture, or show the default image if not set
 
-                  //  string imageName = reader[]
-                    
+                    //string imageName = reader[];
                 }
+                    
+                
                 
 
 

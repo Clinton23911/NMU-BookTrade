@@ -105,7 +105,6 @@ namespace NMU_BookTrade
                 lblMessage.Text = "Invalid login. Please try again.";
            
             }
-
          
         }
 

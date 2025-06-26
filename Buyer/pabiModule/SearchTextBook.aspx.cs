@@ -1,73 +1,95 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Data;
-using System.Diagnostics;
-using System.Web.UI.WebControls;
-using System.Runtime.Remoting.Messaging;
+﻿//using System;
+//using System.Configuration;
+//using System.Data;
+//using System.Data.SqlClient;
+//using System.Web.UI.WebControls;
 
-namespace NMU_BookTrade
-{
-    public partial class SearchTextBook : System.Web.UI.Page
-    {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!IsPostBack && Request.QueryString["q"] != null)
-            {
-                string query = Request.QueryString["q"];
-                txtSearch.Text = query;
-                SearchBooks(query);
-            }
-        }
+//namespace NMU_BookTrade
+//{
+//    public partial class SearchTextBook : System.Web.UI.Page
+//    {
+//        protected void Page_Load(object sender, EventArgs e)
+//        {
+//            if (!IsPostBack)
+//            {
+//                LoadCategories();
+//                LoadOutNowTextbooks();
+//                LoadRecentlyAddedTextbooks();
+//            }
+//        }
 
-        protected void btnSearch_Click(object sender, EventArgs e)
-        {
-            string keyword = txtSearch.Text.Trim();
-            SearchBooks(keyword);
-        }
+//        private void LoadCategories()
+//        {
+//            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+//            {
+//                SqlCommand cmd = new SqlCommand("SELECT DISTINCT categoryName FROM Category", con);
+//                con.Open();
+//                SqlDataReader reader = cmd.ExecuteReader();
+//                DataTable dt = new DataTable();
+//                dt.Load(reader);
+//                rptCategory.DataSource = dt;
+//                rptCategory.DataBind();
+//            }
+//        }
 
-        private void SearchBooks(string keyword)
-        {
-            string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+//        private void LoadOutNowTextbooks()
+//        {
+//            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+//            {
+//                SqlCommand cmd = new SqlCommand("SELECT CategoryID, CategoryName FROM Category", con);
+//                con.Open();
+//                SqlDataReader reader = cmd.ExecuteReader();
+//                DataTable dt = new DataTable();
+//                dt.Load(reader);
+//                rptOutNow.DataSource = dt;
+//                rptOutNow.DataBind();
+//            }
+//        }
 
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                string sql = "SELECT Title, Author, Price FROM Book WHERE Title LIKE @keyword";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
+//        private void LoadRecentlyAddedTextbooks()
+//        {
+//            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+//            {
+//                SqlCommand cmd = new SqlCommand("SELECT CategoryID, CategoryName FROM Category", con);
+//                con.Open();
+//                SqlDataReader reader = cmd.ExecuteReader();
+//                DataTable dt = new DataTable();
+//                dt.Load(reader);
+//                rptRecentlyAdded.DataSource = dt;
+//                rptRecentlyAdded.DataBind();
+//            }
+//        }
 
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+//        protected void btnSearch_Click(object sender, EventArgs e)
+//        {
+//            string searchTerm = txtSearch.Text.Trim();
+//            lblSearchResults.Text = $"Search results for \"{searchTerm}\"";
 
-            }
+//            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+//            {
+//                SqlCommand cmd = new SqlCommand("SELECT * FROM Book WHERE title LIKE @SearchTerm", con);
+//                cmd.Parameters.AddWithValue("@SearchTerm", "%" + searchTerm + "%");
+//                con.Open();
+//                SqlDataReader reader = cmd.ExecuteReader();
+//                DataTable dt = new DataTable();
+//                dt.Load(reader);
+//                rptOutNow.DataSource = dt;  
+//                rptOutNow.DataBind();
+//            }
+//        }
 
-        }
-        
+//        protected void lnkViewAllResults_Click(object sender, EventArgs e)
+//        {
+//            Response.Redirect("~/SearchResult.aspx?query=" + Server.UrlEncode(txtSearch.Text.Trim()));
+//        }
 
-
-        public class Book
-        {
-            public long bookISBN { get; set; }
-            public string title { get; set; }
-            public string author { get; set; }
-            public int genreID { get; set; }
-
-            public double price { get; set; }
-
-            public string condition { get; set; }
-
-            public int driverID { get; set; }
-
-            public int sellerID { get; set; }
-
-            public string coverImg { get; set; }
-
-            public string pdfFile { get; set; }
-
-            public int reviewsCount { get; set; }
-
-        }
-    }
-}
+//        protected void rptCategory_ItemCommand(object source, RepeaterCommandEventArgs e)
+//        {
+//            if (e.CommandName == "SelectCategory")
+//            {
+//                string faculty = e.CommandArgument.ToString();
+//                Response.Redirect("~/Category.aspx?category=" + Server.UrlEncode(faculty));
+//            }
+//        }
+//    }
+//}

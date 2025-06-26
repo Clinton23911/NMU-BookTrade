@@ -1,12 +1,7 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace NMU_BookTrade
 {
@@ -16,40 +11,73 @@ namespace NMU_BookTrade
         {
             if (!IsPostBack)
             {
-                if (Session["UserID"] != null)
+                try
                 {
-                    string userId = Session["UserID"].ToString();
-                    string customerName = GetBuyerName(userId).ToUpper();
-                    lblCustomerName.Text = customerName;
+                    lblCustomerName.Text = GetUserName().ToUpper();
                 }
-                if (!IsPostBack && Request.UrlReferrer != null)
+                catch (Exception ex)
                 {
-                    Session["PrevPage"] = Request.UrlReferrer.ToString();
+                    lblCustomerName.Text = "GUEST";
                 }
             }
         }
-            public string GetBuyerName(string userId)
+        private string GetUserName()
         {
-            string name = "Buyer";
-            string connectionString = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            if (Session["AccessID"] == null || Session["UserID"] == null)
             {
-                string query = "SELECT buyerName FROM Buyer WHERE BuyerID = @UserId";
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@UserId", userId);
-
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    name = reader["buyerName"].ToString();
-                }
-                con.Close();
+                throw new Exception("Session expired or user not logged in.");
             }
 
-            return name;
+            string accessId = Session["AccessID"].ToString();
+            string userId = Session["UserID"].ToString();
+            string Name = "User";
+            string query = "";
+           
+
+            switch (accessId)
+            {
+                case "1":
+                 
+                    query = "SELECT adminUsername FROM Admin WHERE adminID = @UserID";
+                    break;
+
+                case "2":
+                    query = "SELECT buyerName FROM Buyer WHERE buyerID = @UserID";
+                    break;
+
+                case "3":
+                    query = "SELECT sellerName FROM Seller WHERE sellerID = @UserID";
+                    break;
+
+                case "4":
+                    query = "SELECT driverName FROM Driver WHERE driverID = @UserID";
+                    break;
+
+                default:
+                    throw new Exception("Invalid Access ID.");
+            }
+
+            string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserID", userId);
+
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        Name = reader[0].ToString();
+                    }
+                    conn.Close();
+                }
+            }
+
+            return Name;
         }
+
 
 
         protected void btnYes_Click(object sender, EventArgs e)

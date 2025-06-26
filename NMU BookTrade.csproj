@@ -81,6 +81,7 @@
     <Content Include="Driver\ClintonModule\DriverProfile.aspx" />
     <Content Include="Driver\ClintonModule\ManageDeliveries.aspx" />
     <Content Include="Driver\ClintonModule\ViewSchedule.aspx" />
+    <Content Include="Images\database.png" />
     <Content Include="Images\goodbye.png" />
     <Content Include="Images\NMUBOOKTRADE.png" />
     <Content Include="Images\Person reading.png" />
@@ -204,7 +205,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Buyer\pabiModule\SearchTextBook.aspx.cs">
       <DependentUpon>SearchTextBook.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Buyer\pabiModule\SearchTextBook.aspx.designer.cs">
       <DependentUpon>SearchTextBook.aspx</DependentUpon>

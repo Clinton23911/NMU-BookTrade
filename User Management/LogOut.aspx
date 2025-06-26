@@ -1,5 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="LogOut.aspx.cs" Inherits="NMU_BookTrade.WebForm18" %>
+<<<<<<< HEAD
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">  
+=======
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+>>>>>>> f95f0fc (worked on Admin page, sitemaster and stylesheet.css, and fixed the LogOut page)
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
         <h1 class="h1-logout">Leaving so soon!</h1>

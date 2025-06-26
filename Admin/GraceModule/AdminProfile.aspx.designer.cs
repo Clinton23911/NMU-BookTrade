@@ -24,6 +24,7 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.Image imgProfile;
 
         /// <summary>
+<<<<<<< HEAD
         /// fuProfileImage control.
         /// </summary>
         /// <remarks>
@@ -33,6 +34,8 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.FileUpload fuProfileImage;
 
         /// <summary>
+=======
+>>>>>>> f95f0fc (worked on Admin page, sitemaster and stylesheet.css, and fixed the LogOut page)
         /// txtEmail control.
         /// </summary>
         /// <remarks>
@@ -42,6 +45,7 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
 
         /// <summary>
+<<<<<<< HEAD
         /// rfvEmail control.
         /// </summary>
         /// <remarks>
@@ -60,6 +64,8 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.RegularExpressionValidator revEmail;
 
         /// <summary>
+=======
+>>>>>>> f95f0fc (worked on Admin page, sitemaster and stylesheet.css, and fixed the LogOut page)
         /// txtUsername control.
         /// </summary>
         /// <remarks>
@@ -69,13 +75,21 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.TextBox txtUsername;
 
         /// <summary>
+<<<<<<< HEAD
         /// rfvUsername control.
+=======
+        /// fuProfileImage control.
+>>>>>>> f95f0fc (worked on Admin page, sitemaster and stylesheet.css, and fixed the LogOut page)
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
+<<<<<<< HEAD
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvUsername;
+=======
+        protected global::System.Web.UI.WebControls.FileUpload fuProfileImage;
+>>>>>>> f95f0fc (worked on Admin page, sitemaster and stylesheet.css, and fixed the LogOut page)
 
         /// <summary>
         /// btnUpdate control.

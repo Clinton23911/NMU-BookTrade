@@ -400,12 +400,195 @@ input#middle_section_btnClear:hover {
     background-color: white;
 }
 
+<<<<<<< HEAD
 .yes-btn {
     color: red;
 }
 
 .no-btn {
     color: #003f4d;
+=======
+/*Logout Section*/
+.h1-logout {
+    color: ghostwhite;
+    text-align: center;
+}
+
+.logoutMessage-container {
+    text-align: center;
+    margin-top: 80px;
+    padding: 30px;
+    position: relative;
+}
+
+.emoji-wrapper {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.emoji-img {
+    width: 255px;
+    height: auto;
+    padding-left: 35px;
+}
+
+.message-box {
+    background-color: rgba(47, 183, 183, 0.95);
+    color: white;
+    border-radius: 20px;
+    padding: 30px 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+    .message-box h3 {
+        margin-bottom: 20px;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+
+.goodbye-buttons {
+    margin-top: 20px;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.yes-btn, .no-btn {
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    background-color: white;
+}
+
+    .yes-btn:hover, .no-btn:hover {
+        opacity: 0.9;
+    }
+
+/*Admin Profile page */
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px auto;
+    padding: 30px;
+    width: 500px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .profile-container:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0 30px rgba(63, 208, 201, 0.5);
+    }
+
+    .profile-container h2 {
+        color: #ffffff;
+        margin-bottom: 20px;
+    }
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+    .form-group label {
+        display: block;
+        color: #c1f6ed;
+        margin-bottom: 6px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 12px;
+        border: none;
+        font-size: 14px;
+        background-color: #ffffff;
+        color: #02353c;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .form-group input[type="file"] {
+        color: #ffffff;
+    }
+
+    .form-group input:focus {
+        box-shadow: 0 0 8px #3fd0c9;
+        outline: none;
+    }
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #3fd0c9;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+    .profile-image:hover {
+        transform: scale(1.05);
+    }
+
+.btn-update {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    border: 2px solid #3fd0c9;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 16px;
+}
+
+    .btn-update:hover {
+        background-color: #3fd0c9;
+        color: #02353c;
+    }
+
+.message {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.profile-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-left: 15px;
+    border: 2px solid #00bfa6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.top-profile-pic {
+    position: absolute;
+    top: 51px;
+    right: 35px;
+    z-index: 999;
+>>>>>>> f95f0fc (worked on Admin page, sitemaster and stylesheet.css, and fixed the LogOut page)
 }
 
     .yes-btn:hover, .no-btn:hover {

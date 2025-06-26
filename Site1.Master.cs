@@ -30,15 +30,21 @@ namespace NMU_BookTrade
                 divAuthenticated_driver.Visible = false;
                 divAuthenticator_seller.Visible = false;
                 divAuthenticator_Admin.Visible = false;
-
+                pnlProfileImage.Visible = false; // hide by default
                 if (Session["AccessID"] != null)
                 {
                     MenuAnonymous.Visible = false; // Hide Anonymous if user is logged in
                     divAnonymous.Visible = false;  // Hide login/register section
                     divAuthenticated_Buyer.Visible = true; // Show cart/profile/logout section
+                    pnlProfileImage.Visible = true; // Show only for authenticated users
 
-                  string accessID = Session["AccessID"].ToString();
+                    string accessID = Session["AccessID"].ToString();
+
                     string userID = Session["UserID"].ToString();
+
+                    string profileUrl = "~/User Management/Login.aspx"; // Default fallback
+
+
                     // Load profile image
                     LoadProfileImage(accessID, userID);
 
@@ -53,6 +59,7 @@ namespace NMU_BookTrade
                             divAuthenticated_Buyer.Visible = false;   // Hide cart/profile/logout by default
                             divAuthenticated_driver.Visible = false;
                             divAuthenticator_seller.Visible = false;
+                            profileUrl = "~/Admin/GraceModule/AdminProfile.aspx";
                             break;
                         case "2":
 
@@ -61,7 +68,7 @@ namespace NMU_BookTrade
                             divAuthenticator_seller.Visible = false;
                             divAuthenticator_Admin.Visible = false;
                             divAnonymous.Visible = false;
-                            
+                            profileUrl = "~/Buyer/pabiModule/BuyerProfile.aspx";
                             break;
                         case "3":
                             MenuSeller.Visible = true;
@@ -70,7 +77,7 @@ namespace NMU_BookTrade
                             divAuthenticated_Buyer.Visible = false;
                             divAuthenticated_Buyer.Visible = false;   // Hide cart/profile/logout by default
                             divAuthenticated_driver.Visible = false;
-
+                            profileUrl = "~/Seller/ClintonModule/SellerProfile.aspx";
                             break;
                         case "4":
                             MenuDriver.Visible = true;
@@ -78,7 +85,7 @@ namespace NMU_BookTrade
                             divAnonymous.Visible = false;
                             divAuthenticated_Buyer.Visible = false;
                             divAuthenticator_seller.Visible = false;
-
+                            profileUrl = "~/Driver/ClintonModule/DriverProfile.aspx";
                             break;
                         default:
                             MenuAnonymous.Visible = true; // Fallback to Anonymous if AccessID is unexpected
@@ -93,6 +100,8 @@ namespace NMU_BookTrade
                             MenuSeller.Visible=false;
                             break;
                     }
+                    hlDynamicProfile.NavigateUrl = ResolveUrl(profileUrl);
+
                 }
             }
         }

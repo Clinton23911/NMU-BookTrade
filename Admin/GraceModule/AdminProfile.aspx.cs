@@ -6,15 +6,10 @@ using System.Net.NetworkInformation;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-<<<<<<< HEAD
-using System.Data.SqlClient;
+using System.Data.SqlClient;          
 using System.IO;
 
-=======
-using System.Data.SqlClient;          // For SQL Server operations
-using System.IO;
-using System.Configuration;
->>>>>>> f95f0fc (worked on Admin page, sitemaster and stylesheet.css, and fixed the LogOut page)
+
 
 namespace NMU_BookTrade
 {
@@ -23,21 +18,14 @@ namespace NMU_BookTrade
         // When the page loads this methode will be first to run
         protected void Page_Load(object sender, EventArgs e)
         {
-<<<<<<< HEAD
-            //but first we check if the page has loaded for  the first time( not from a button click)
 
-            if (!IsPostBack) {
-
-                //LoadAdminProfile();
-            }
-=======
             // Only run the profile loading code once (not every button click)
             if (!IsPostBack)
             {
                 LoadAdminProfile();  // Load current admin's data
             }
         }
->>>>>>> f95f0fc (worked on Admin page, sitemaster and stylesheet.css, and fixed the LogOut page)
+
 
         // Loads the current admin's email, username, and profile image
         private void LoadAdminProfile()

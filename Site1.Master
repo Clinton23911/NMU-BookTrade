@@ -1,5 +1,4 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.master.cs" Inherits="NMU_BookTrade.Site1" %>
-
 <!DOCTYPE html>
 
 <html>
@@ -100,10 +99,14 @@
     </asp:Menu>
 
              <!-- Dynamic Profile Picture Panel -->
-            <asp:Panel ID="pnlProfileImage" runat="server" Visible="true" CssClass="top-profile-pic">
-                <a href="~/Admin/GraceModule/AdminProfile.aspx">
-                    <asp:Image ID="imgProfile" runat="server" CssClass="profile-circle" />
-                </a>
+<asp:Panel ID="pnlProfileImage" runat="server" CssClass="top-profile-pic">
+
+ <asp:HyperLink ID="hlDynamicProfile" runat="server">
+    <asp:Image ID="imgProfile" runat="server" CssClass="profile-circle" />
+</asp:HyperLink>
+
+
+
             </asp:Panel>
 
     <!-- Auth section: Right side -->

@@ -2,8 +2,6 @@
 ﻿ /* General Styles */
 html, body {
     background: radial-gradient( circle at 0% 0%, #3fd0c9, #02353c, #02353c, #c1f6ed );
-html,body {
-    background: radial-gradient( circle at 0% 0%, #3fd0c9, #02353c, #02353c, #c1f6ed ) !important;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -282,6 +280,7 @@ h3.LR-formheadings {
 
 h2.LR-formheadings {
     text-align: center;
+    color: #c1f6ed;
 }
 
 /* Common button base */
@@ -334,10 +333,15 @@ input#middle_section_btnClear:hover {
 
 .input-note {
     font-size: 12px;
-    color: #c1f6ed;
+    color:ghostwhite;
     margin-top: 4px;
     display: block;
 }
+
+p.p-Passwordpages {
+    color: ghostwhite;
+}
+
 
 /*logout section
 */
@@ -400,14 +404,6 @@ input#middle_section_btnClear:hover {
     background-color: white;
 }
 
-<<<<<<< HEAD
-.yes-btn {
-    color: red;
-}
-
-.no-btn {
-    color: #003f4d;
-=======
 /*Logout Section*/
 .h1-logout {
     color: ghostwhite;
@@ -588,7 +584,7 @@ input#middle_section_btnClear:hover {
     top: 51px;
     right: 35px;
     z-index: 999;
->>>>>>> f95f0fc (worked on Admin page, sitemaster and stylesheet.css, and fixed the LogOut page)
+
 }
 
     .yes-btn:hover, .no-btn:hover {
@@ -658,6 +654,76 @@ input#middle_section_btnClear:hover {
     color: #f5c518;
     font-size: 14px;
 }
+
+/*ForgotPassword and Resset Password Pages */
+input#middle_section_btnSubmit {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+    input#middle_section_btnSubmit:hover {
+        background-color: rgb(181, 221, 219);
+        box-shadow: rgba(2, 117, 216, 0.19) 0px 0px 4.71936px 0px;
+        color: white;
+    }
+
+input#middle_section_btnReset {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+    input#middle_section_btnReset:hover {
+        background-color: rgb(181, 221, 219);
+        box-shadow: rgba(2, 117, 216, 0.19) 0px 0px 4.71936px 0px;
+        color: white;
+    }
+
+/* Container for password input and toggle icon */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Input styling remains the same */
+.input-field-forgotpassword {
+    width: 100%;
+    padding: 12px 11px 12px 15px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+}
+
+/* Icon (eye) inside input */
+.toggle-password-reset,
+.toggle-password-reset2 {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    color: #c1f6ed;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease-in-out;
+}
+
+    
+
+
+
+
+
+
+
+
 
 
 

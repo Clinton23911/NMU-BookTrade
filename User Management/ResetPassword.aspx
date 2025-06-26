@@ -18,17 +18,22 @@
                         <h2 class="LR-formheadings">Reset Your Password</h2>
                         <p class="p-Passwordpages">Now you can reset your password below. Remember to save it so that you do not forget it again.</p>
 
-                        <asp:TextBox ID="txtNewPassword" ClientIDMode="Static" runat="server" TextMode="Password" placeholder="Enter your new password" CssClass="input-field" />
-                        <span class="toggle-password-reset" onclick="toggleVisibility('txtNewPassword', this)">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                        <br />
-                        <br />
-                        <asp:TextBox ID="txtConfirmPassword" ClientIDMode="Static" runat="server" TextMode="Password" placeholder="Confirm your new password" CssClass="input-field" />
-                        <span class="toggle-password-reset2" onclick="toggleVisibility('txtConfirmPassword', this)">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                        <br />
+            <div class="password-wrapper">
+                            <asp:TextBox ID="txtNewPassword" ClientIDMode="Static" runat="server" TextMode="Password" placeholder="Enter your new password" CssClass="input-field-forgotpassword " />
+                            <span class="toggle-password-reset" onclick="toggleVisibility('txtNewPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </span>
+             </div>
+
+<br />
+
+<div class="password-wrapper">
+            <asp:TextBox ID="txtConfirmPassword" ClientIDMode="Static" runat="server" TextMode="Password" placeholder="Confirm your new password" CssClass="input-field-forgotpassword " />
+            <span class="toggle-password-reset2" onclick="toggleVisibility('txtConfirmPassword', this)">
+                <i class="fas fa-eye"></i>
+            </span>
+</div>
+                        <br />  
                         <br />
                         <asp:Button ID="btnReset" runat="server" Text="Reset Password" OnClick="btnReset_Click" CssClass="form-button" />
                         <asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="btnClear_forgetPasswordpage" OnClick="btnClear4_Click" CausesValidation="false" Width="89px" />

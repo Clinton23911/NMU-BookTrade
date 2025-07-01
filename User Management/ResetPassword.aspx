@@ -21,6 +21,15 @@
             <div class="password-wrapper">
                             <asp:TextBox ID="txtNewPassword" ClientIDMode="Static" runat="server" TextMode="Password" placeholder="Enter your new password" CssClass="input-field-forgotpassword " />
                             <span class="toggle-password-reset" onclick="toggleVisibility('txtNewPassword', this)">
+                                <asp:RequiredFieldValidator 
+                                    ID="rfvNewPassword" 
+                                    runat="server" 
+                                    ControlToValidate="txtNewPassword" 
+                                    ErrorMessage="New password is required." 
+                                    CssClass="form_errormessage" 
+                                    Display="Dynamic" 
+                                    ForeColor="Red" />
+
                                 <i class="fas fa-eye"></i>
                             </span>
              </div>
@@ -29,10 +38,18 @@
 
 <div class="password-wrapper">
             <asp:TextBox ID="txtConfirmPassword" ClientIDMode="Static" runat="server" TextMode="Password" placeholder="Confirm your new password" CssClass="input-field-forgotpassword " />
+                <asp:RequiredFieldValidator 
+                    ID="rfvConfirmPassword" 
+                    runat="server" 
+                    ControlToValidate="txtConfirmPassword" 
+                    ErrorMessage="Please confirm your password." 
+                    CssClass="form_errormessage" 
+                    Display="Dynamic" 
+                    ForeColor="Red" />
             <span class="toggle-password-reset2" onclick="toggleVisibility('txtConfirmPassword', this)">
                 <i class="fas fa-eye"></i>
             </span>
-</div>
+       </div>
                         <br />  
                         <br />
                         <asp:Button ID="btnReset" runat="server" Text="Reset Password" OnClick="btnReset_Click" CssClass="form-button" />

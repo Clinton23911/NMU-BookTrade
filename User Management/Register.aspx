@@ -182,7 +182,7 @@
     <!-- Registration Confirmation Modal
   The popup box that will appear after registration and the id = roleType will identify whether its a seller/buyer/driver/admin       
         -->
-        <div id="confirmationModal" class="modal-overlay" style="display:none;">
+        <div id="confirmationModal" class="modal-overlay" >
             <div class="modal-box">
                 <h3>Registration Successful!</h3>
                 <p>Congratulations! Your registration as a <span id="roleType"></span> has been completed successfully.<br/>
@@ -203,7 +203,8 @@
               // Show confirmation popup modal
               function showConfirmation(role) {
                   document.getElementById("roleType").innerText = role;
-                  document.getElementById("confirmationModal").style.display = "flex";
+                  const modal = document.getElementById("confirmationModal");
+                  modal.classList.add("show");
               }
 
               // Redirect to login page
@@ -230,6 +231,7 @@
   
         
    
+    
 
 
 </asp:Content>

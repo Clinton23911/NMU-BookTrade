@@ -70,9 +70,11 @@
     <Content Include="Admin\GraceModule\AdminDashboard.aspx" />
     <Content Include="Admin\GraceModule\AdminProfile.aspx" />
     <Content Include="Admin\GraceModule\AssignDriver.aspx" />
+    <Content Include="Admin\GraceModule\AddDriver.aspx" />
     <Content Include="Admin\GraceModule\Inbox.aspx" />
     <Content Include="Admin\GraceModule\ManageCategories.aspx" />
     <Content Include="Admin\GraceModule\ManageGenres.aspx" />
+    <Content Include="Admin\GraceModule\ViewDriver.aspx" />
     <Content Include="Buyer\pabiModule\BuyerDashboard.aspx" />
     <Content Include="Buyer\pabiModule\BuyerProfile.aspx" />
     <Content Include="Buyer\pabiModule\Cart.aspx" />
@@ -125,6 +127,13 @@
     <Compile Include="Admin\GraceModule\AssignDriver.aspx.designer.cs">
       <DependentUpon>AssignDriver.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\GraceModule\AddDriver.aspx.cs">
+      <DependentUpon>AddDriver.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\GraceModule\AddDriver.aspx.designer.cs">
+      <DependentUpon>AddDriver.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\GraceModule\Inbox.aspx.cs">
       <DependentUpon>Inbox.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -145,6 +154,13 @@
     </Compile>
     <Compile Include="Admin\GraceModule\ManageGenres.aspx.designer.cs">
       <DependentUpon>ManageGenres.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\GraceModule\ViewDriver.aspx.cs">
+      <DependentUpon>ViewDriver.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\GraceModule\ViewDriver.aspx.designer.cs">
+      <DependentUpon>ViewDriver.aspx</DependentUpon>
     </Compile>
     <Compile Include="Buyer\pabiModule\BuyerDashboard.aspx.cs">
       <DependentUpon>BuyerDashboard.aspx</DependentUpon>
@@ -318,7 +334,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="UploadedImages\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

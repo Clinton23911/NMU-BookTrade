@@ -59,7 +59,8 @@ namespace NMU_BookTrade
                 if (reader.Read())
                 {
                     Session["AccessID"] = "2";
-                    Session["UserID"] = reader["buyerID"].ToString();
+                    Session["UserID"] = reader["buyerID"].ToString();// used for general user tracking 
+                    Session["BuyerID"] = reader["buyerID"].ToString();// used for deletion
                     Response.Redirect("~/Buyer/pabiModule/BuyerDashboard.aspx");
                     return;
                 }
@@ -77,7 +78,8 @@ namespace NMU_BookTrade
                 if (reader.Read())
                 {
                     Session["AccessID"] = "3";
-                    Session["UserID"] = reader["sellerID"].ToString();
+                    Session["UserID"] = reader["sellerID"].ToString();// used for general user tracking 
+                    Session["SellerID"] = reader["sellerID"].ToString();// used for deletion
                     Response.Redirect("~/Seller/ClintonModule/SellerDashboard.aspx");
                     return;
                 }
@@ -95,7 +97,8 @@ namespace NMU_BookTrade
                 if (reader.Read())
                 {
                     Session["AccessID"] = "4";
-                    Session["UserID"] = reader["driverID"].ToString();
+                    Session["UserID"] = reader["driverID"].ToString();// used for general user tracking 
+                    Session["DriverID"] = reader["driverID"].ToString();// used for deletion
                     Response.Redirect("~/Driver/ClintonModule/DriverDashboard.aspx");
                     return;
                 }

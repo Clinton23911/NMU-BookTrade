@@ -105,8 +105,9 @@ namespace NMU_BookTrade
                             SendConfirmationEmail(email, fullName, roleText,username);
 
                             //  Trigger modal popup after successful registration
-                            string script = $"showConfirmation('{roleText}');";
-                            ClientScript.RegisterStartupScript(this.GetType(), "ShowModal", script, true);
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowModal", $"showConfirmation('{roleText}');", true);
+
+
 
                         }
                         else

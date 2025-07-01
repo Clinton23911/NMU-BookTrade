@@ -2,4 +2,54 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
+
+        <div class ="profile-container">
+    <h2>Driver Profile</h2>
+    <asp:Image ID="imgProfile" runat="server" CssClass="profile-image" />
+
+    <br />
+
+    <div class="form-group">
+                <label>Username</label>
+                <asp:TextBox ID="txtUsername" runat="server" CssClass="input-field" />
+                <asp:RequiredFieldValidator ID="rfvUsername" runat="server" ControlToValidate="txtUsername" ErrorMessage="Username is required." CssClass="form_errormessage" ForeColor="Red" Display="Dynamic" />
+            </div>
+
+            <div class="form-group">
+                <label>Name</label>
+                <asp:TextBox ID="txtName" runat="server" CssClass="input-field" />
+                <asp:RequiredFieldValidator ID="rfvName" runat="server" ControlToValidate="txtName" ErrorMessage="Name is required." CssClass="form_errormessage" ForeColor="Red" Display="Dynamic" />
+            </div>
+
+            <div class="form-group">
+                <label>Surname</label>
+                <asp:TextBox ID="txtSurname" runat="server" CssClass="input-field" />
+                <asp:RequiredFieldValidator ID="rfvSurname" runat="server" ControlToValidate="txtSurname" ErrorMessage="Surname is required." CssClass="form_errormessage" ForeColor="Red" Display="Dynamic" />
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <asp:TextBox ID="txtEmail" runat="server" CssClass="input-field" TextMode="Email" />
+                <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="txtEmail" ErrorMessage="Email is required." CssClass="form_errormessage" ForeColor="Red" Display="Dynamic" />
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <asp:TextBox ID="txtNumber" runat="server" CssClass="input-field" />
+                <asp:RequiredFieldValidator ID="rfvNumber" runat="server" ControlToValidate="txtNumber" ErrorMessage="Phone number is required." CssClass="form_errormessage" ForeColor="Red" Display="Dynamic" />
+            </div>
+        
+
+
+    <div class="form-group"><label>Change Profile Picture</label><asp:FileUpload ID="fuProfileImage" runat="server" /></div>
+
+    <br />
+    <br />
+
+     <asp:Button ID="btnUpdate" runat="server" Text="Update Profile" CssClass="btn-update" OnClick="btnUpdate_Click" />
+    <br />
+    <br />
+     <asp:Label ID="lblMessage" runat="server" CssClass="message" />
+
+</div>
 </asp:Content>

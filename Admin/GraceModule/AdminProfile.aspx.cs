@@ -55,9 +55,13 @@ namespace NMU_BookTrade
 
                     // Load the profile picture, or show default image if not set
                     string imageName = reader["adminProfileImage"].ToString();
-                    imgProfile.ImageUrl = string.IsNullOrEmpty(imageName)
+
+                    //This line sets the ImageUrl property of the imgProfile image control on the aspx.page
+                    imgProfile.ImageUrl = string.IsNullOrEmpty(imageName) 
                         ? "~/Images/default.png"
                         : "~/UploadedImages/" + imageName;
+                    //If the admin has uploaded a profile picture → it will show it.
+                    //If not,  it will fall back to showing a generic placeholder image
                 }
             }
         }
@@ -135,44 +139,7 @@ namespace NMU_BookTrade
             }
         }
 
-        protected void LoadAdminProfile(object sender, EventArgs e)
-        {
-            // we want to get the session value and convert it into int
-            int adminID = Convert.ToInt32(Session["UserID"]);  
-
-            // now we grab the connection string from web.config
-
-            string connectionString = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-
-            using (SqlConnection constring = new SqlConnection(connectionString))
-            {
-                // Query the admin details to check the current user's details in the database
-                string query = "SELECT adminEmail, adminUsername, adminProfileImage FROM Admin WHERE adminID = @adminID";
-                SqlCommand cmd = new SqlCommand(query, constring);
-
-                cmd.Parameters.AddWithValue("@adminID",adminID);
-
-                constring.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                // now we have the data from the database
-                if (reader.Read())
-                {
-                    // we have to fill that into the input fields with data from the database
-                    txtEmail.Text = reader["adminEmail"].ToString();
-                    txtUsername.Text = reader["adminUsername"].ToString();
-
-
-                    //Here we now load the picture, or show the default image if not set
-
-                    //string imageName = reader[];
-                }
-                    
-                
-                
-
-
-            }
-        }
+        
 
 
     }

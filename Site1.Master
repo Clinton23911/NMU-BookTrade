@@ -12,8 +12,7 @@
     </asp:ContentPlaceHolder>
     <!-- Font Awesome CDN (latest version) -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-    <!-- Font Awesome 6.4 CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 
 
    
@@ -46,6 +45,7 @@
             <asp:MenuItem Text="Home" NavigateUrl="~/Driver/ClintonModule/DriverDashboard.aspx"/>
             <asp:MenuItem Text="Manage Deliveries" NavigateUrl="~/Driver/ClintonModule/ManageDeliveries.aspx"/>
             <asp:MenuItem Text="View Schedule" NavigateUrl="~/Driver/ClintonModule/ViewSchedule.aspx"/>
+            <asp:MenuItem Text="Contact Us" NavigateUrl="~/User Management/Contact.aspx"/>
             
         </Items>
         <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
@@ -67,8 +67,7 @@
     <asp:Menu ID="MenuAdmin" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
         <Items>
             <asp:MenuItem Text="Dashboard" NavigateUrl="~/Admin/GraceModule/AdminDashboard.aspx"/>
-            <asp:MenuItem Text="Inbox" NavigateUrl="~/Admin/GraceModule/Inbox.aspx"/>
-            <asp:MenuItem Text="Assign Driver" NavigateUrl="~/Admin/GraceModule/AssignDriver.aspx"/>
+            <asp:MenuItem Text="Inbox" NavigateUrl="~/Admin/GraceModule/Inbox.aspx"/>           
             <asp:MenuItem Text="Manage Categories" NavigateUrl="~/Admin/GraceModule/ManageCategories.aspx"/>
             <asp:MenuItem Text="Manage Genres" NavigateUrl="~/Admin/GraceModule/ManageGenres.aspx"/>
            
@@ -122,9 +121,6 @@
     </div>
 
     <div id="divAnonymous" runat="server" class="auth-section">
-        <input type="text" class="search-bar" placeholder="Search for book title" />
-        <button class="search-btn">🔍</button>
-
         <asp:Button ID="LogInbtn" CssClass="btn" runat="server" Text="Login" OnClick="btnLogIn_Click" CausesValidation="false"/>
         <asp:Button ID="Regbtn" CssClass="btn" runat="server" Text="Register" OnClick="btnRegister_Click" CausesValidation="false"/>
     </div>
@@ -163,5 +159,38 @@
         </main>
 
     </form>
+
+
+
+    <!-- Footer -->
+<footer class="footer">
+    <div class="footer-logo">
+        <asp:Image ID="Image1" runat="server" ImageUrl="~/Images/NMUBOOKTRADE.png" />
+        <br />
+        <strong>NMU<br /><span>BookTrade</span></strong>
+        <p>Thanks for choosing us!</p>
+    </div>
+    <div class="footer-links">
+      <div>
+            <h4>Company</h4>
+            <asp:HyperLink runat="server" NavigateUrl="~/User Management/Home.aspx" Text="Home" /><br />
+            <asp:HyperLink runat="server" NavigateUrl="~/User Management/AboutUs.aspx" Text="About" /><br />
+            <asp:HyperLink runat="server" NavigateUrl="~/User Management/BookConditions.aspx" Text="Book Conditions" /><br />
+            <asp:HyperLink runat="server" NavigateUrl="~/User Management/Contact.aspx" Text="Contact Support" />
+        </div>
+
+        <div>
+            <h4>Documentation</h4>
+            <asp:HyperLink runat="server" NavigateUrl="~/User Management/BookConditions.aspx" Text="FAQ" /><br />
+            <asp:HyperLink runat="server" NavigateUrl="~/User Management/BookConditions.aspx" Text="Privacy Policy" />
+        </div>
+
+        <div>
+            <h4>Social</h4>
+            <asp:HyperLink runat="server" NavigateUrl="~/User Management/Contact.aspx" Text="WhatsApp" />
+        </div>
+
+    </div>
+</footer>
 </body>
 </html>

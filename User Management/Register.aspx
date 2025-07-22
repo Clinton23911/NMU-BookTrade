@@ -120,64 +120,77 @@
                     </td>  
                 </tr>
 
-                <tr>
-                    <td>
-                        <div class="input-wrapper">
-                            <div class="input-icon">
-                                <i class="fas fa-lock"></i>
-                                <asp:TextBox ID="txtPassword" ClientIDMode ="static"  runat="server" CssClass="input-field" ToolTip="Password" placeholder="Password" TextMode="Password"></asp:TextBox>
-                                <span class="toggle-password" onclick="toggleVisibility('txtPassword', this)">
-                                    <i class="fas fa-eye"></i>
-                                </span>
+              <tr>
+                        <td>
+                            <div class="input-wrapper">
+                                <label>Password:</label>
+                                <div class="password-wrapper">
+                                    <asp:TextBox ID="txtPassword" ClientIDMode="Static" runat="server"
+                                        CssClass="input-field password-input" TextMode="Password"
+                                        ToolTip="Password" placeholder="Password"></asp:TextBox>
+
+                                    <span class="toggle-password" onclick="toggleVisibility('txtPassword', this)">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
+                                </div>
+
+                                <asp:RequiredFieldValidator ID="rfvPassword" runat="server"
+                                    ErrorMessage="Enter your password, it's required"
+                                    ControlToValidate="txtPassword"
+                                    CssClass="form_errormessage" ForeColor="Red" Display="Dynamic" />
                             </div>
-                            <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ErrorMessage="Enter your password, it's required" ControlToValidate="txtPassword" CssClass="form_errormessage" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <div class="input-wrapper">
-                            <label>Confirm Password:</label>
-                            <div class="input-icon">
-                                <i class="fas fa-lock"></i>
-                                <asp:TextBox ID="txtConfirmPassword" ClientIDMode ="Static" runat="server" TextMode="Password" CssClass="input-field" placeholder="Re-enter your password" />
-                                <span class="toggle-password" onclick="toggleVisibility('txtConfirmPassword', this)">
-                                    <i class="fas fa-eye"></i>
-                                </span>
+                    <tr>
+                        <td>
+                            <div class="input-wrapper">
+                                <label>Confirm Password:</label>
+                                <div class="password-wrapper">
+                                    <asp:TextBox ID="txtConfirmPassword" ClientIDMode="Static" runat="server"
+                                        CssClass="input-field password-input" TextMode="Password"
+                                        placeholder="Re-enter your password"></asp:TextBox>
+
+                                    <span class="toggle-password" onclick="toggleVisibility('txtConfirmPassword', this)">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
+                                </div>
+
+                                <asp:RequiredFieldValidator ID="rfvConfirmPassword" runat="server"
+                                    ControlToValidate="txtConfirmPassword"
+                                    ErrorMessage="Please confirm your password"
+                                    ForeColor="Red" Display="Dynamic" />
+
+                                <asp:CompareValidator ID="cvPasswords" runat="server"
+                                    ControlToCompare="txtPassword"
+                                    ControlToValidate="txtConfirmPassword"
+                                    ErrorMessage="Passwords do not match"
+                                    Operator="Equal"
+                                    Type="String"
+                                    ForeColor="Red" Display="Dynamic" />
                             </div>
-                            <asp:RequiredFieldValidator ID="rfvConfirmPassword"  runat="server" ControlToValidate="txtConfirmPassword"
-                                ErrorMessage="Please confirm your password" ForeColor="Red" Display="Dynamic" />
-                            <asp:CompareValidator ID="cvPasswords" runat="server"
-                                ControlToCompare="txtPassword"
-                                ControlToValidate="txtConfirmPassword"
-                                ErrorMessage="Passwords do not match"
-                                Operator="Equal"
-                                Type="String"
-                                ForeColor="Red"
-                                Display="Dynamic" />
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
 
 
-                <tr>
-                    <td>
-                        <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="form-button" OnClick="btnRegister_Click" />
-                        <asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="form-button" OnClick="btnClear_Click" CausesValidation="false" />
-                    </td>
 
-                </tr>
+                                    <tr>
+                                        <td>
+                                            <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="form-button" OnClick="btnRegister_Click" />
+                                            <asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="form-button" OnClick="btnClear_Click" CausesValidation="false" />
+                                        </td>
+
+                                    </tr>
                
-                <tr>
-                    <td>
-                        <asp:Label ID="lblMessage" runat="server" CssClass="form_errormessage" ForeColor="Red" />
-                    </td>
-                </tr>
+                                    <tr>
+                                        <td>
+                                            <asp:Label ID="lblMessage" runat="server" CssClass="form_errormessage" ForeColor="Red" />
+                                        </td>
+                                    </tr>
 
-            </table>
-        </div>
-    </div>
+                                </table>
+                            </div>
+                        </div>
 
     <!-- Registration Confirmation Modal
   The popup box that will appear after registration and the id = roleType will identify whether its a seller/buyer/driver/admin       
@@ -214,17 +227,19 @@
               }
 
               // Toggle password visibility for input fields
-              function toggleVisibility(inputId, iconSpan) {
-                  var input = document.getElementById(inputId);
+                 function toggleVisibility(inputId, iconSpan) {
+                     var input = document.getElementById(inputId);
+                     var isHidden = input.type === "password";
 
-                  if (input.type === "password") {
-                      input.type = "text"; // Show password
-                      iconSpan.innerHTML = '<i class="fas fa-eye-slash"></i>'; // Switch to slashed eye
-                  } else {
-                      input.type = "password"; // Hide password
-                      iconSpan.innerHTML = '<i class="fas fa-eye"></i>'; // Switch back to eye
-                  }
-              }
+                     // Toggle input type
+                     input.type = isHidden ? "text" : "password";
+
+                     // Update icon based on new state
+                     iconSpan.innerHTML = isHidden
+                         ? '<i class="fas fa-eye"></i>'       // Password is now visible, show open eye
+                         : '<i class="fas fa-eye-slash"></i>'; // Password is now hidden, show slashed eye
+                 }
+
  </script>
 
 

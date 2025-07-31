@@ -57,7 +57,7 @@ namespace NMU_BookTrade
             using (SqlCommand cmd = new SqlCommand(query, con))
             {
                 con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                SqlDataReader reader = cmd.ExecuteReader();  //  Reads multiple rows of data.
                // rptTestimonials.DataSource = reader;
                // rptTestimonials.DataBind();
             }

@@ -15,36 +15,61 @@ namespace NMU_BookTrade
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            string firstName = txtFirstName.Text.Trim();
-            string lastName = txtLastName.Text.Trim();
-            string email = txtEmail.Text.Trim();
-            string message = txtMessage.Text.Trim();
-
-            // Determine role from session
-            string role = "Anonymous";
-            if (Session["AccessID"] != null)
+            try
             {
-                role = GetUserRole(Session["AccessID"].ToString());
+                string firstName = txtFirstName.Text.Trim();
+                string lastName = txtLastName.Text.Trim();
+                string email = txtEmail.Text.Trim();
+                string message = txtMessage.Text.Trim();
+
+                // Role from session
+                string role = "Anonymous";
+                if (Session["AccessID"] != null)
+                {
+                    role = GetUserRole(Session["AccessID"].ToString());
+                }
+
+                string fullMessage = $"From: {firstName} {lastName} ({role})\nEmail: {email}\n\n{message}";
+
+                // Save message to DB
+                SaveMessageToDatabase(fullMessage, email);
+
+                // Send email
+                SendEmail(fullMessage);
+
+                // Clear inputs
+                txtFirstName.Text = "";
+                txtLastName.Text = "";
+                txtEmail.Text = "";
+                txtMessage.Text = "";
+
+                // ✅ Show success message
+                lblStatus.Visible = true;
+                lblStatus.ForeColor = System.Drawing.Color.GhostWhite;
+                lblStatus.Text = "✅ Your message has been sent successfully!";
             }
+            catch (Exception ex)
+            {
+                // ❌ Show error message
+                lblStatus.Visible = true;
+                lblStatus.ForeColor = System.Drawing.Color.Red;
+                lblStatus.Text = "❌ Error: Something went wrong. Please try again later.";
+            }
+        }
 
-            // Compose full message content
-            string fullMessage = $"From: {firstName} {lastName} ({role})\nEmail: {email}\n\n{message}";
 
-            // Save to database with senderEmail
-            SaveMessageToDatabase(fullMessage, email);
-
-            // Optionally send a notification email
-            SendEmail(fullMessage);
-
-            // Clear form inputs
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
+            // Clear all form fields
             txtFirstName.Text = "";
             txtLastName.Text = "";
             txtEmail.Text = "";
             txtMessage.Text = "";
 
-            // Show success alert
-            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Your message has been sent successfully.');", true);
+            // Optional: Show an alert that form was cleared
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Form has been cleared.');", true);
         }
+
 
         private string GetUserRole(string accessID)
         {
@@ -68,6 +93,11 @@ namespace NMU_BookTrade
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@dateSent", DateTime.Now);
                 cmd.Parameters.AddWithValue("@messageContent", content);
+
+                //preventing admin email from being treated as user email
+                if (email.ToLower() == "gracamanyonganise@gmail.com")
+                    email = "anonymous@nmu.local";  // or any placeholder to avoid confusion
+
                 cmd.Parameters.AddWithValue("@senderEmail", email);
 
                 conn.Open();

@@ -12,6 +12,7 @@ namespace NMU_BookTrade
 {
     public partial class WebForm9 : System.Web.UI.Page
     {
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -29,9 +30,9 @@ namespace NMU_BookTrade
         {
             string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
             string query = "SELECT messageID, dateSent, messageContent, senderEmail, isRead FROM SupportMessages WHERE senderEmail IS NOT NULL AND senderEmail != @adminEmail ORDER BY dateSent DESC";
+            // we are going to display the messages that are in the SupportMessages Table from newest to oldest 
 
-
-            StringBuilder htmlBuilder = new StringBuilder();
+            StringBuilder htmlBuilder = new StringBuilder(); // we use it to build the long string in html for our message 
 
             using (SqlConnection conn = new SqlConnection(connStr))
             using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -41,8 +42,9 @@ namespace NMU_BookTrade
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
-                while (reader.Read())
+                while (reader.Read()) // we are looping through each and every row in the SupportMessages table
                 {
+                    // here we are now accessing the data from the column read e.g. reader['column'].
                     string id = reader["messageID"].ToString();
                     DateTime dateSent = Convert.ToDateTime(reader["dateSent"]);
                     string content = reader["messageContent"].ToString();
@@ -59,11 +61,13 @@ namespace NMU_BookTrade
                     else if (senderInfo.ToLower().Contains("(driver)")) role = "driver";
                     else if (senderInfo.ToLower().Contains("(admin)")) role = "admin";
 
-                    string bodySafe = preview.Replace("\"", "&quot;").Replace("'", "&apos;").Replace("\n", "<br>");
-                    string readClass = isRead ? "read" : "unread";
+                    string bodySafe = preview.Replace("\"", "&quot;").Replace("'", "&apos;").Replace("\n", "<br>"); // Cleans the html and replaces double quotes and single quotes with safe HTML entities to prevent breaking HTML attributes.
+                    string readClass = isRead ? "read" : "unread"; // this sets the readclass to read or unread. 
 
                     htmlBuilder.Append($@"
 <div class='inbox-message-row {readClass}' onclick='selectMessage(this)'
+     data-read='{(isRead ? "1" : "0")}' 
+
      data-sender='{senderInfo}'
      data-email='{email}'
      data-role='{role}'
@@ -71,16 +75,18 @@ namespace NMU_BookTrade
      data-body='{bodySafe}'
      data-id='{id}'> 
     <div class='inbox-message-content'>
-        <input type='checkbox' class='inbox-message-checkbox' value='{id}'>
+       
         <div class='inbox-message-details'>
             <div class='inbox-message-header'>
                 <div class='inbox-sender-info'>
                     <span class='inbox-sender-name'>{senderInfo}</span>
                     <span class='inbox-user-badge {role}'>{role}</span>
                 </div>
-                <span class='inbox-message-time'>{dateSent.ToShortTimeString()}</span>
+               <span class='inbox-message-time'>{dateSent.ToString("MMM dd, yyyy hh:mm tt")}</span>
+
+
             </div>
-            <div class='inbox-message-subject'>Message #{id}</div>
+            
             <div class='inbox-message-preview'>{(preview.Length > 80 ? preview.Substring(0, 80) + "..." : preview)}</div>
         </div>
        
@@ -130,16 +136,16 @@ namespace NMU_BookTrade
                      data-body='{body.Replace("\"", "&quot;").Replace("'", "&apos;").Replace("\n", "<br>")}'
                      data-id='{id}'> 
                     <div class='inbox-message-content'>
-                        <input type='checkbox' class='inbox-message-checkbox'>
+                        
                         <div class='inbox-message-details'>
                             <div class='inbox-message-header'>
                                 <div class='inbox-sender-info'>
                                     <span class='inbox-sender-name'>Me</span>
                                     <span class='inbox-user-badge admin'>admin</span>
                                 </div>
-                                <span class='inbox-message-time'>{dateSent.ToShortTimeString()}</span>
+                               <span class='inbox-message-time'>{dateSent.ToString("MMM dd, yyyy hh:mm tt")}</span>
                             </div>
-                            <div class='inbox-message-subject'>Message #{id}</div>
+                           
                             <div class='inbox-message-preview'>{(body.Length > 80 ? body.Substring(0, 80) + "..." : body)}</div>
                         </div>
                        
@@ -170,7 +176,7 @@ namespace NMU_BookTrade
             }
         }
 
-        [WebMethod]
+        [System.Web.Services.WebMethod]
         public static string DeleteMessage(int messageID)
         {
             try
@@ -220,17 +226,26 @@ namespace NMU_BookTrade
 
 
         [WebMethod]
-        public static void MarkMessageAsRead(int messageID)
+        public static string MarkMessageAsRead(int messageID)
         {
-            string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connStr))
-            using (SqlCommand cmd = new SqlCommand("UPDATE SupportMessages SET isRead = 1 WHERE messageID = @id", conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@id", messageID);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connStr))
+                using (SqlCommand cmd = new SqlCommand("UPDATE SupportMessages SET isRead = 1 WHERE messageID = @id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", messageID);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    return "Marked as read";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
             }
         }
+
         [WebMethod]
         public static int GetUnreadMessageCount()
         {

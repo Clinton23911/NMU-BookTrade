@@ -76,7 +76,7 @@
                                 <asp:TextBox ID="txtEmail" runat="server" CssClass="input-field" ToolTip="Email" placeholder="Email"></asp:TextBox>
                             </div>
                             <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ErrorMessage="Please enter your email address" ControlToValidate="txtEmail" CssClass="form_errormessage" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
-                            <asp:RegularExpressionValidator ID="revEmail" runat="server" ErrorMessage="Invalid email address" ForeColor="Red" ControlToValidate="txtEmail" ValidationExpression="^\S+@\S+\.\S+$" Display="Dynamic"></asp:RegularExpressionValidator>
+                            <asp:RegularExpressionValidator ID="revEmail" runat="server" ErrorMessage="Invalid email address. Please enter your email address correctly.  " ForeColor="Red" ControlToValidate="txtEmail" ValidationExpression="^\S+@\S+\.\S+$" Display="Dynamic"></asp:RegularExpressionValidator>
                         </div>
                     </td>  
                 </tr>  
@@ -213,7 +213,8 @@
 
 
  <script type="text/javascript">
-              // Show confirmation popup modal
+     // Show confirmation popup modal is only done after the registration is success
+     ful
               function showConfirmation(role) {
                   document.getElementById("roleType").innerText = role;
                   const modal = document.getElementById("confirmationModal");
@@ -222,8 +223,8 @@
 
               // Redirect to login page
               function redirectToLogin() {
-                  // Use absolute URL (ASP.NET won't process the ~ here in JS)
-                  window.location.href = "~/User Management/Login.aspx";
+                  // I used a absolute URL (ASP.NET won't process the ~ here in JS)
+                  window.location.href = "/User Management/Login.aspx";
               }
 
               // Toggle password visibility for input fields

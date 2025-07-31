@@ -3,6 +3,8 @@
     <link rel="stylesheet" href="inbox.css" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" />
+
     <div class="inbox-container">
         <!-- Header -->
         <div class="inbox-header">
@@ -18,9 +20,15 @@
                     <button class="inbox-compose-btn" onclick="openCompose(event)">Compose</button>
 
                     <div class="inbox-nav-links">
-                        <a href="#" class="inbox-nav-link active" onclick="showInboxSection()">📥 Inbox <span class="inbox-badge" runat="server" id="inboxCountSpan"></span></a>
+                      <a id="inboxLink" href="#" class="inbox-nav-link active" onclick="showInboxSection()">📥 Inbox
+                          
+                           <span class="inbox-badge" runat="server" id="inboxCountSpan" ClientIDMode="Static"></span>
+                          <!-- badge shows the count or number of unread messages-->
 
-                        <a href="#" class="inbox-nav-link" onclick="showSentSection()">📤 Sent</a>
+
+                      </a>
+
+                             <a id="sentLink" href="#" class="inbox-nav-link" onclick="showSentSection()">📤 Sent</a>     
 
                     </div>
                 </div>
@@ -45,7 +53,7 @@
                          <div class="inbox-preview-footer">
                              <button type="button" class="inbox-preview-btn primary" onclick="replyToMessage()">Reply</button>
                              <button type="button" class="inbox-preview-btn secondary" onclick="forwardMessage()">Forward</button>
-                             <button class="inbox-preview-btn secondary" onclick="markSelectedAsRead()">Mark as Resolved</button>
+                            
                          </div>
                      </div>
                 <!-- Search bar and Refresh -->
@@ -55,16 +63,12 @@
                         <span class="inbox-search-icon">🔍</span>
                     </div>
                     <div class="inbox-action-buttons">
-                        <button class="inbox-action-btn" onclick="applySearchFilter()">🔎 Filter</button>
+                        
                         <button class="inbox-action-btn" onclick="location.reload()">🔄 Refresh</button>
                     </div>
                 </div>
 
-                <!-- Select All -->
-                <div class="inbox-select-row">
-                    <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"> Select All
-                    <button onclick="markSelectedAsRead()">✔ Mark as Read</button>
-                </div>
+               
                 <!-- Inbox Section -->
                 <div id="inboxSection" class="inbox-messages-list">
                     <div class="inbox-messages-container" runat="server" id="inboxMessagesContainer"></div>
@@ -95,44 +99,61 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
 <script>
-    let selectedMessageId = null;
+    let selectedMessageId = null; // Declaring the varriable and setting it to null
+
 
     // Function to handle selecting a message and displaying its preview
     function selectMessage(element) {
-        document.querySelectorAll('.inbox-message-row').forEach(msg => msg.classList.remove('selected'));
-        element.classList.add('selected');
+        document.querySelectorAll('.inbox-message-row').forEach(msg => msg.classList.remove('selected')); // here we are selecting all html elements with the class inbox-message-row 
+        element.classList.add('selected'); 
         selectedMessageId = element.dataset.id;
-        document.getElementById("previewSubject").innerText = element.querySelector(".inbox-message-subject").innerText;
+        document.getElementById("previewSubject").innerText = "Message";
         document.getElementById("previewSender").innerText = element.dataset.sender + " (" + element.dataset.role + ")";
-        document.getElementById("previewTime").innerText = element.dataset.time;
+        document.getElementById("previewTime").innerText = element.dataset.time; // 
         document.getElementById("previewBody").innerHTML = element.dataset.body;
         document.getElementById("messagePreviewPanel").style.display = "block";
 
         // Check if role is "admin" (i.e., sent by me)
         const role = element.dataset.role;
-        const resolvedBtn = document.querySelector(".inbox-preview-btn.secondary[onclick='markSelectedAsRead()']");
+        // Remove that block entirely OR replace it with a safe check:
         if (role === "admin") {
-            resolvedBtn.style.display = "none";
-        } else {
-            resolvedBtn.style.display = "inline-block";
+            console.log("This message was sent by the admin.");
         }
 
 
-        // ✅ Mark as read and update badge
-        fetch("Inbox.aspx/MarkMessageAsRead", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ messageID: selectedMessageId })
-        })
-            .then(res => res.json())
-            .then(data => {
-                element.classList.add("read");
-                updateInboxCount();
-            });
+
+        // ✅ Only mark and update count if unread
+        if (element.dataset.read === "0") {
+            fetch("Inbox.aspx/MarkMessageAsRead", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messageID: parseInt(selectedMessageId) })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    // Update UI immediately
+                    element.classList.add("read");
+                    element.dataset.read = "1"; // Mark as read locally
+                    updateInboxCount();         // Decrease the counter
+                })
+                .catch(err => console.error("Mark read failed:", err));
+        }
+
+
     }
 
-    // Function to update the inbox count
     function updateInboxCount() {
         fetch("Inbox.aspx/GetUnreadMessageCount", {
             method: "POST",
@@ -141,9 +162,13 @@
         })
             .then(res => res.json())
             .then(data => {
-                document.getElementById("<%= inboxCountSpan.ClientID %>").innerText = data.d;
-        });
+                const badge = document.getElementById("inboxCountSpan");
+                if (badge) {
+                    badge.innerText = data.d;
+                }
+            });
     }
+
 
     // Function to apply the search filter
     function applySearchFilter() {
@@ -221,50 +246,36 @@
         document.getElementById("composeBody").value = "\n\n--- Forwarded Message ---\n" + document.getElementById("previewBody").innerText;
     }
 
-    // Function to delete a message
     function deleteMessage() {
         if (!selectedMessageId) return;
 
         if (confirm("Are you sure you want to delete this message?")) {
-            fetch("Inbox.aspx/DeleteMessage", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ messageID: selectedMessageId })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    alert(data.d);
+            PageMethods.DeleteMessage(parseInt(selectedMessageId),
+                function (response) {
+                    if (response.includes("deleted")) {
+                        const messageElement = document.querySelector(`.inbox-message-row[data-id="${selectedMessageId}"]`);
+                        if (messageElement) messageElement.remove();
 
-                    // ✅ Remove the message DOM element from the page
-                    const messageElement = document.querySelector(`.inbox-message-row[data-id='${selectedMessageId}']`);
-                    if (messageElement) {
-                        messageElement.remove();
+                        document.getElementById("messagePreviewPanel").style.display = "none";
+                        selectedMessageId = null;
+                        updateInboxCount();
+                    } else {
+                        alert("Something went wrong: " + response);
                     }
-
-                    // ✅ Hide the preview panel
-                    document.getElementById("messagePreviewPanel").style.display = "none";
-
-                    // ✅ Reset selected ID
-                    selectedMessageId = null;
-
-                    // ✅ Update inbox count if applicable
-                    updateInboxCount();
+                },
+                function (error) {
+                    console.error("PageMethods error:", error);
+                    alert("Failed to delete the message.");
                 });
         }
     }
 
+  
 
-    // Function to select all messages
-    function toggleSelectAll(master) {
-        document.querySelectorAll('.inbox-message-checkbox').forEach(cb => cb.checked = master.checked);
-    }
 
-    // Function to mark selected messages as read
-    function markSelectedAsRead() {
-        let selected = Array.from(document.querySelectorAll('.inbox-message-checkbox:checked'));
-        selected.forEach(cb => cb.closest('.inbox-message-row').style.opacity = 0.4);
-        alert(selected.length + " marked as read. Reload to update count.");
-    }
+    
+
+   
 
     function LoadSentMessages() {
         fetch("Inbox.aspx/LoadSentMessages", {
@@ -292,12 +303,19 @@
         document.getElementById("inboxSection").style.display = "none";
         document.getElementById("sentSection").style.display = "block";
         document.getElementById("messagePreviewPanel").style.display = "none";
+
+
+        document.getElementById("sentLink").classList.add("active");
+        document.getElementById("inboxLink").classList.remove("active");
     }
 
     function showInboxSection() {
         document.getElementById("sentSection").style.display = "none";
         document.getElementById("inboxSection").style.display = "block";
         document.getElementById("messagePreviewPanel").style.display = "none";
+
+        document.getElementById("inboxLink").classList.add("active");
+        document.getElementById("sentLink").classList.remove("active");
     }
 
 

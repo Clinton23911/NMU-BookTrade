@@ -27,8 +27,8 @@
             <asp:RequiredFieldValidator ID="rfvFirstName" runat="server" ControlToValidate="txtFirstName" ErrorMessage="First Name is required." ForeColor="Red" Display="Dynamic" />
             <br />
 
-            <!-- Last Name -->
-            <asp:Label AssociatedControlID="txtLastName" runat="server" CssClass="contact-lable" Text="Last Name:" />
+            <!-- Surname -->
+            <asp:Label AssociatedControlID="txtLastName" runat="server" CssClass="contact-lable" Text="Surname:  " />
             <asp:TextBox ID="txtLastName" runat="server" />
             <asp:RequiredFieldValidator ID="rfvLastName" runat="server" ControlToValidate="txtLastName" ErrorMessage="Last Name is required." ForeColor="Red" Display="Dynamic" />
             <br />
@@ -50,6 +50,10 @@
             
             <!-- Submit -->
             <asp:Button ID="btnSubmit" runat="server" Text="Send Message" CssClass="btn-Cosubmit" OnClick="btnSubmit_Click" />
+             <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn-Cosubmit" OnClick="btnCancel_Click" CausesValidation="false" />
+
+            <!-- Status Message -->
+            <asp:Label ID="lblStatus" runat="server" CssClass="status-label" Visible="false" />
 
             <!-- Info -->
             <div class="contact-info">

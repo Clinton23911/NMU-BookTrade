@@ -128,13 +128,28 @@ input#Regbtn {
     /* font-size: 20px; */
 }
 
+input#btnLogout {
+    margin-top: 0px;
+    margin-right: 20px;
+    /* padding-right: 59px; */
+    /* padding-right: 59px; */
+}
+
 input#btnLogout4 {
     margin-top: 0px;
     margin-right: 20px;
     padding-right: 59px;
+    padding-right: 59px;
 }
 
 input#btnLogout2 {
+    margin-top: 0px;
+    margin-right: 20px;
+    padding-right: 59px;
+    padding-right: 59px;
+}
+
+input#btnLogout3 {
     margin-top: 0px;
     margin-right: 20px;
     padding-right: 59px;
@@ -611,12 +626,13 @@ p.p-Passwordpages {
 input#middle_section_btnDeleteProfile {
     background-color: transparent;
     color: white;
-    padding: 10px 20px;
+    padding: 10px 3px;
     border: 2px solid #3fd0c9;
     border-radius: 12px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
     font-size: 16px;
+    /* margin: 0px 10px; */
 }
 
 input#middle_section_btnDeleteProfile:hover {
@@ -2108,10 +2124,20 @@ textarea {
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    background-color: #3fd0c9;
+    background: rgba(255, 255, 255, 0.1);
     color: white;
     border: none;
 }
+
+input#middle_section_btnCancel:hover {
+    background:Orangered;
+    border-color: ghostwhite;
+}
+input#middle_section_btnSubmit:hover {
+    background: #3fd0c9;
+}
+
+
 
 .contact-info {
     margin-top: 2rem;
@@ -2125,6 +2151,19 @@ textarea {
     .contact-info p {
         margin: 0.5rem 0;
     }
+
+input#middle_section_txtLastName {
+    margin-left: 14px;
+}
+
+.status-label {
+    display: block;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: ghostwhite;
+}
+
 
 
 
@@ -2548,6 +2587,91 @@ textarea {
         margin: 0 0 5px;
         font-weight: bold;
     }
+
+
+
+
+
+
+    /* Assign driver page */
+
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.table-header {
+    background-color: #006666;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.table-row {
+    background-color: #f9f9f9;
+}
+
+.table-row-alt {
+    background-color: #f1f1f1;
+}
+
+.driver-dropdown {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    width: 100%;
+}
+
+.assign-btn {
+    background-color: #007b5e;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .assign-btn:hover {
+        background-color: #005a43;
+    }
+
+
+.date-picker {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

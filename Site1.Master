@@ -67,10 +67,10 @@
     <asp:Menu ID="MenuAdmin" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
         <Items>
             <asp:MenuItem Text="Dashboard" NavigateUrl="~/Admin/GraceModule/AdminDashboard.aspx"/>
+            <asp:MenuItem Text="AssignDriver" NavigateUrl="~/Admin/GraceModule/AssignDriver.aspx"/>
             <asp:MenuItem Text="Inbox" NavigateUrl="~/Admin/GraceModule/Inbox.aspx"/>           
             <asp:MenuItem Text="Manage Categories" NavigateUrl="~/Admin/GraceModule/ManageCategories.aspx"/>
             <asp:MenuItem Text="Manage Genres" NavigateUrl="~/Admin/GraceModule/ManageGenres.aspx"/>
-           
         </Items>
         <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
     </asp:Menu>
@@ -135,8 +135,12 @@
     <div id="divAuthenticator_seller" runat="server" class="auth-section">
      
          <asp:HyperLink ID="hlSellerProfile" runat="server" NavigateUrl="~/Seller/ClintonModule/SellerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
-
+        
 <asp:Button ID="btnLogout3" CssClass="btn" runat="server" Text="LogOut" PostBackUrl="~/User Management/LogOut.aspx" CausesValidation="false"/>
+
+        <br />
+        <br />
+        <br />
     </div>
 
     <div id="divAuthenticator_Admin" runat="server" class="auth-section">

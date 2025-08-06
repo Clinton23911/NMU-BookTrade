@@ -1,57 +1,78 @@
-﻿<%--<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="SearchTextBook.aspx.cs" Inherits="NMU_BookTrade.SearchTextBook" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="SearchTextBook.aspx.cs" Inherits="NMU_BookTrade.SearchTextBook" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
- <div class="search-wrapper">
-<!-- 🔍 Search -->
-            <asp:TextBox ID="txtSearch" runat="server" CssClass="search-box" Placeholder="Search for book title"></asp:TextBox>
-             <button class="search-btn">🔍</button>
+  <div class="search-wrapper">
+    <div class="categories-inline">
+        <asp:Repeater ID="rptCategory1" runat="server" OnItemCommand="rptCategory_ItemCommand">
+            <ItemTemplate>
+                <asp:LinkButton runat="server"
+                    CommandName="SelectCategory"
+                    CommandArgument='<%# Eval("categoryName") %>'
+                    CssClass="category-link">
+                    <%# Eval("categoryName") %>
+                </asp:LinkButton>
+            </ItemTemplate>
+        </asp:Repeater>
 
+        <div class="search-bar-bd">
+            <asp:TextBox ID="txtSearch" runat="server" CssClass="search-bd" Placeholder="Search textbook title..." />
+            <asp:Button ID="btnSearch" runat="server" Text="🔍" OnClick="btnSearch_Click" CssClass="search-btn" />
+        </div>
 
-            <br /><br />
+        <asp:Repeater ID="rptCategory2" runat="server" OnItemCommand="rptCategory_ItemCommand">
+            <ItemTemplate>
+                <asp:LinkButton runat="server"
+                    CommandName="SelectCategory"
+                    CommandArgument='<%# Eval("categoryName") %>'
+                    CssClass="category-link">
+                    <%# Eval("categoryName") %>
+                </asp:LinkButton>
+            </ItemTemplate>
+        </asp:Repeater>
+    </div>
+</div>
 
-            <!-- 🔎 Show search result header -->
-            <asp:Label ID="lblSearchResults" runat="server" Font-Bold="true"></asp:Label>
-            <asp:LinkButton ID="lnkViewAllResults" runat="server" OnClick="lnkViewAllResults_Click">
-                View all results <i class="fas fa-arrow-right"></i>
-            </asp:LinkButton>
+      <asp:Panel ID="pnlSearchResults" runat="server" Visible="false">
+    <div class="results-tile">
+        <asp:Label ID="lblSearchResults" runat="server" CssClass="results-label" Font-Bold="false"></asp:Label>
+<asp:LinkButton ID="lnkViewAllResults" runat="server" CssClass="view-all-link" OnClick="lnkViewAllResults_Click">
+    View all results <i class="fas fa-arrow-right"></i>
+</asp:LinkButton>
+         <asp:Repeater ID="rptSearchResults" runat="server">
+     <ItemTemplate>
+         <div class="textbook">
+             <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' /><br />
+             <b><%# Eval("title") %></b><br />
+             R<%# Eval("price") %>
+         </div>
+     </ItemTemplate>
+ </asp:Repeater>
+        
+    </div>
 
-            <!-- 🏷️ Categories (Faculties) -->
-            <div>
-                <asp:Repeater ID="rptCategory" runat="server" OnItemCommand="rptCategory_ItemCommand">
-                    <ItemTemplate>
-                        <span class="category">
-                            <asp:LinkButton runat="server" CommandName="SelectFaculty" CommandArgument='<%# Eval("categoryName") %>'>
-                                <%# Eval("categoryName") %>
-                            </asp:LinkButton>
-                        </span>
-                    </ItemTemplate>
-                </asp:Repeater>
+   
+</asp:Panel> 
+
+  <div class="results-grid">
+    <asp:Repeater ID="rptOutNow" runat="server">
+        <ItemTemplate>
+            <div class="textbook">
+                <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' /><br />
             </div>
+        </ItemTemplate>
+    </asp:Repeater>
+            <div class="out-now">OUT <br />NOW!</div>
+</div>
 
-            <!-- 🚨 OUT NOW SECTION -->
-            <div class="section-title">OUT NOW!</div>
-            <asp:Repeater ID="rptOutNow" runat="server">
-                <ItemTemplate>
-                    <div class="textbook">
-                        <img src='<%# Eval("coverImg") %>'/><br />
-                        <b><%# Eval("title") %></b><br />
-                        R<%# Eval("price") %>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
-
-            <!-- 🆕 RECENTLY ADDED -->
-            <div class="section-title">Recently Added Textbooks!</div>
+        <div class="section-title">Recently Added Textbooks!</div>
+         <hr class="section-line" />
             <asp:Repeater ID="rptRecentlyAdded" runat="server">
                 <ItemTemplate>
                     <div class="textbook">
-                        <img src='<%# Eval("coverImg") %>' /><br />
-                        <b><%# Eval("title") %></b><br />
-                        R<%# Eval("price") %>
+                        <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' />
                     </div>
                 </ItemTemplate>
             </asp:Repeater>
-
-        </div>
-</asp:Content>--%>
+</asp:Content>

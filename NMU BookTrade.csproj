@@ -100,6 +100,7 @@
     <Content Include="Images\textbook242.png" />
     <Content Include="Images\textbook244.png" />
     <Content Include="Images\User.png" />
+    <Content Include="Buyer\pabiModule\SearchResult.aspx" />
     <Content Include="Seller\ClintonModule\CreateListings.aspx" />
     <Content Include="Seller\ClintonModule\ManageListings.aspx" />
     <Content Include="Seller\ClintonModule\SellerDashboard.aspx" />
@@ -114,6 +115,7 @@
     <Content Include="User Management\LogOut.aspx" />
     <Content Include="User Management\Register.aspx" />
     <Content Include="User Management\ResetPassword.aspx" />
+    <Content Include="Buyer\pabiModule\ViewTextBookDetails.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -230,6 +232,13 @@
     <Compile Include="Buyer\pabiModule\SearchTextBook.aspx.designer.cs">
       <DependentUpon>SearchTextBook.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Buyer\pabiModule\SearchResult.aspx.cs">
+      <DependentUpon>SearchResult.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\SearchResult.aspx.designer.cs">
+      <DependentUpon>SearchResult.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Seller\ClintonModule\CreateListings.aspx.cs">
       <DependentUpon>CreateListings.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -327,6 +336,13 @@
     </Compile>
     <Compile Include="User Management\ResetPassword.aspx.designer.cs">
       <DependentUpon>ResetPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\ViewTextBookDetails.aspx.cs">
+      <DependentUpon>ViewTextBookDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\ViewTextBookDetails.aspx.designer.cs">
+      <DependentUpon>ViewTextBookDetails.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

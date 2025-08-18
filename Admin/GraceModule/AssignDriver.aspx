@@ -6,7 +6,7 @@
     <asp:GridView ID="gvDeliveries" runat="server" AutoGenerateColumns="false"
     OnRowCommand="gvDeliveries_RowCommand"
     OnRowDataBound="gvDeliveries_RowDataBound"
-    DataKeyNames="deliveryID"
+    DataKeyNames="saleID"
     CssClass="styled-table"
     GridLines="None">
     
@@ -20,11 +20,10 @@
         <asp:BoundField DataField="BuyerName" HeaderText="Buyer" />
         <asp:BoundField DataField="PickupAddress" HeaderText="Pickup Address" />
         <asp:BoundField DataField="DeliveryAddress" HeaderText="Delivery Address" />
-        <asp:BoundField DataField="deliveryDate" HeaderText="Date" DataFormatString="{0:dd MMM yyyy}" />
 
         <asp:TemplateField HeaderText="Driver">
             <ItemTemplate>
-                <asp:DropDownList ID="ddlDrivers" runat="server" CssClass="driver-dropdown"></asp:DropDownList>
+                <asp:DropDownList ID="ddlDrivers" runat="server" CssClass="driver-dropdown" AutoPostBack ="true"></asp:DropDownList>
             </ItemTemplate>
 
         </asp:TemplateField>
@@ -49,7 +48,8 @@
         <asp:TemplateField HeaderText="Actions">
             <ItemTemplate>
                 <asp:Button ID="btnAssign" runat="server" Text="Assign" CommandName="AssignDriver"
-                    CommandArgument='<%# Eval("deliveryID") %>' CssClass="assign-btn" />
+                    CommandArgument='<%# Eval("saleID") %>' CssClass="assign-btn"
+                    OnClientClick="return confirm('Are you sure you want to assign this driver?');" />
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>

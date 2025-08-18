@@ -3,7 +3,7 @@
 
 <html>
 <head runat="server">
-  <link href="StyleSheet1.css" rel="stylesheet" type="text/css" />
+  <link href="~/StyleSheet1.css" rel="stylesheet" type="text/css" />
    
 
 

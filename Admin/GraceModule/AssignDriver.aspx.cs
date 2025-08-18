@@ -14,26 +14,31 @@ namespace NMU_BookTrade
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            LoadDeliveries();
+            if (!IsPostBack)
+            {
+                LoadDeliveries(); // ✅ Only bind grid once
+            }
         }
-
         private void LoadDeliveries()
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {// we are loading deliveries with books that are sold but not assigned yet to the driver.  
-         string query = @"
-                SELECT 
-                    sa.saleID,
-                    b.title AS BookTitle,
-                    s.sellerName, s.sellerAddress,
-                    bu.buyerName, bu.buyerAddress,
-                    b.driverID
-                FROM Sale sa
-                JOIN Book b ON sa.bookISBN = b.bookISBN
-                JOIN Seller s ON sa.sellerID = s.sellerID
-                JOIN Buyer bu ON sa.buyerID = bu.buyerID
-                WHERE b.status = 'unavailable' AND b.driverID IS NULL
-                ORDER BY sa.saleDate DESC";
+                string query = @"
+            SELECT 
+                sa.saleID,
+                b.title AS BookTitle,
+                s.sellerName,
+                s.sellerAddress AS PickupAddress,
+                bu.buyerName,
+                bu.buyerAddress AS DeliveryAddress,
+                b.driverID,
+                b.deliveryDate
+            FROM Sale sa
+            JOIN Book b ON sa.bookISBN = b.bookISBN
+            JOIN Seller s ON sa.sellerID = s.sellerID
+            JOIN Buyer bu ON sa.buyerID = bu.buyerID
+            WHERE b.status = 'unavailable' AND b.driverID IS NULL
+            ORDER BY sa.saleDate DESC";
 
                 // the dataAdapter executes this query and we then fill in the `
                 SqlDataAdapter da = new SqlDataAdapter(query, con);

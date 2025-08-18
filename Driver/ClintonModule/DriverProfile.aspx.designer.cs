@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NMU_BookTrade
+namespace NMU_BookTrade.Driver.ClintonModule
 {
 
 
@@ -96,6 +96,15 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvEmail;
 
         /// <summary>
+        /// revEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revEmail;
+
+        /// <summary>
         /// txtNumber control.
         /// </summary>
         /// <remarks>
@@ -114,6 +123,15 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNumber;
 
         /// <summary>
+        /// revNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revNumber;
+
+        /// <summary>
         /// fuProfileImage control.
         /// </summary>
         /// <remarks>
@@ -123,6 +141,15 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.FileUpload fuProfileImage;
 
         /// <summary>
+        /// lblImageError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblImageError;
+
+        /// <summary>
         /// btnUpdate control.
         /// </summary>
         /// <remarks>
@@ -130,6 +157,15 @@ namespace NMU_BookTrade
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnUpdate;
+
+        /// <summary>
+        /// btnDelete control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDelete;
 
         /// <summary>
         /// lblMessage control.

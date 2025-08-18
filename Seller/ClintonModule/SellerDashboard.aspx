@@ -25,10 +25,10 @@
         </div>
 
         <div class="sd-actions">
-            <asp:HyperLink ID="lnkCreateListing" runat="server" CssClass="sd-action-btn sd-primary" NavigateUrl="~/CreateListings.aspx">
+            <asp:HyperLink ID="lnkCreateListing" runat="server" CssClass="sd-action-btn sd-primary" NavigateUrl="~/Seller/ClintonModule/CreateListings.aspx">
                 <i class="fas fa-plus-circle"></i> Create New Listing
             </asp:HyperLink>
-            <asp:HyperLink ID="lnkManageListings" runat="server" CssClass="sd-action-btn sd-secondary" NavigateUrl="~/ManageListings.aspx">
+            <asp:HyperLink ID="lnkManageListings" runat="server" CssClass="sd-action-btn sd-secondary" NavigateUrl="~/Seller/ClintonModule/ManageListings.aspx">
                 <i class="fas fa-edit"></i> Manage Listings
             </asp:HyperLink>
         </div>

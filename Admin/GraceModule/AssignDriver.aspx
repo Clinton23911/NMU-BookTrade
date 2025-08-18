@@ -3,6 +3,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
 
+    
     <asp:GridView ID="gvDeliveries" runat="server" AutoGenerateColumns="false"
     OnRowCommand="gvDeliveries_RowCommand"
     OnRowDataBound="gvDeliveries_RowDataBound"
@@ -54,8 +55,6 @@
         </asp:TemplateField>
     </Columns>
 </asp:GridView>
-
-
 
 
 </asp:Content>

@@ -16,7 +16,7 @@ namespace NMU_BookTrade
         {
             if (!IsPostBack)
             {
-                LoadDeliveries(); // ✅ Only bind grid once
+                LoadDeliveries();
             }
         }
         private void LoadDeliveries()
@@ -118,7 +118,6 @@ namespace NMU_BookTrade
                 LoadDeliveries();
             }
         }
-
 
     }
 }

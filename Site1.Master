@@ -67,7 +67,7 @@
     <asp:Menu ID="MenuAdmin" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
         <Items>
             <asp:MenuItem Text="Dashboard" NavigateUrl="~/Admin/GraceModule/AdminDashboard.aspx"/>
-            <asp:MenuItem Text="AssignDriver" NavigateUrl="~/Admin/GraceModule/AssignDriver.aspx"/>
+            <asp:MenuItem Text="Assign Driver" NavigateUrl="~/Admin/GraceModule/AssignDriver.aspx"/>
             <asp:MenuItem Text="Inbox" NavigateUrl="~/Admin/GraceModule/Inbox.aspx"/>           
             <asp:MenuItem Text="Manage Categories" NavigateUrl="~/Admin/GraceModule/ManageCategories.aspx"/>
             <asp:MenuItem Text="Manage Genres" NavigateUrl="~/Admin/GraceModule/ManageGenres.aspx"/>
@@ -110,8 +110,10 @@
 
     <!-- Auth section: Right side -->
     <div id="divAuthenticated_Buyer" runat="server" class="auth-section">
-        <input type="text" class="search-bar" placeholder="Search for book title"/>
-        <button class="search-btn">🔍</button>
+     <div id="divSearchBar" runat="server" class="auth-left">
+     <input type="text" class="search-bar" placeholder="Search for book title" />
+     <button class="search-btn">🔍</button>
+ </div>
         <asp:HyperLink ID="hlCart" runat="server" NavigateUrl="~/Buyer/pabiModule/Cart.aspx" CssClass="cart-link">
              <i class="fas fa-shopping-cart"></i>
         </asp:HyperLink>

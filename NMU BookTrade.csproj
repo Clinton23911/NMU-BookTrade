@@ -74,13 +74,13 @@
     <Content Include="Admin\GraceModule\ViewDriver.aspx" />
     <Content Include="Buyer\pabiModule\BuyerDashboard.aspx" />
     <Content Include="Buyer\pabiModule\BuyerProfile.aspx" />
-    <Content Include="Buyer\pabiModule\Cart.aspx" />
     <Content Include="Buyer\pabiModule\Reviews.aspx" />
     <Content Include="Driver\ClintonModule\DriverDashboard.aspx" />
     <Content Include="Driver\ClintonModule\DriverProfile.aspx" />
     <Content Include="Driver\ClintonModule\ManageDeliveries.aspx" />
     <Content Include="Driver\ClintonModule\ViewSchedule.aspx" />
     <Content Include="Images\accounting.jpg" />
+    <Content Include="Images\BookImage.png" />
     <Content Include="Images\clint.jpg" />
     <Content Include="Images\commercial law.jpg" />
     <Content Include="Images\database.png" />
@@ -101,6 +101,7 @@
     <Content Include="Images\textbook242.png" />
     <Content Include="Images\textbook244.png" />
     <Content Include="Images\User.png" />
+    <Content Include="Buyer\pabiModule\SearchResult.aspx" />
     <Content Include="Seller\ClintonModule\CreateListings.aspx" />
     <Content Include="Seller\ClintonModule\ManageListings.aspx" />
     <Content Include="Seller\ClintonModule\SellerDashboard.aspx" />
@@ -115,6 +116,7 @@
     <Content Include="User Management\LogOut.aspx" />
     <Content Include="User Management\Register.aspx" />
     <Content Include="User Management\ResetPassword.aspx" />
+    <Content Include="Buyer\pabiModule\ViewTextBookDetails.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -188,13 +190,6 @@
     <Compile Include="Buyer\pabiModule\BuyerProfile.aspx.designer.cs">
       <DependentUpon>BuyerProfile.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Buyer\pabiModule\Cart.aspx.cs">
-      <DependentUpon>Cart.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Buyer\pabiModule\Cart.aspx.designer.cs">
-      <DependentUpon>Cart.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Buyer\pabiModule\Reviews.aspx.cs">
       <DependentUpon>Reviews.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -233,9 +228,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Buyer\pabiModule\SearchTextBook.aspx.cs">
       <DependentUpon>SearchTextBook.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Buyer\pabiModule\SearchTextBook.aspx.designer.cs">
       <DependentUpon>SearchTextBook.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\SearchResult.aspx.cs">
+      <DependentUpon>SearchResult.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\SearchResult.aspx.designer.cs">
+      <DependentUpon>SearchResult.aspx</DependentUpon>
     </Compile>
     <Compile Include="Seller\ClintonModule\CreateListings.aspx.cs">
       <DependentUpon>CreateListings.aspx</DependentUpon>
@@ -334,6 +337,13 @@
     </Compile>
     <Compile Include="User Management\ResetPassword.aspx.designer.cs">
       <DependentUpon>ResetPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\ViewTextBookDetails.aspx.cs">
+      <DependentUpon>ViewTextBookDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\ViewTextBookDetails.aspx.designer.cs">
+      <DependentUpon>ViewTextBookDetails.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

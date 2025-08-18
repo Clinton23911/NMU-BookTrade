@@ -101,7 +101,9 @@ namespace NMU_BookTrade
                             break;
                     }
                     hlDynamicProfile.NavigateUrl = ResolveUrl(profileUrl);
+                    //hide search on nav when logged in //
 
+                    divSearchBar.Visible = Session["buyerID"] == null;
                 }
             }
         }

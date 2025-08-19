@@ -253,12 +253,8 @@
             PageMethods.DeleteMessage(parseInt(selectedMessageId),
                 function (response) {
                     if (response.includes("deleted")) {
-                        const messageElement = document.querySelector(`.inbox-message-row[data-id="${selectedMessageId}"]`);
-                        if (messageElement) messageElement.remove();
-
-                        document.getElementById("messagePreviewPanel").style.display = "none";
-                        selectedMessageId = null;
-                        updateInboxCount();
+                        // simplest: reload the page so the list refreshes
+                        window.location.reload();
                     } else {
                         alert("Something went wrong: " + response);
                     }

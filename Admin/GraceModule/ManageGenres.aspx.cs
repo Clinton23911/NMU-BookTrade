@@ -1,33 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace NMU_BookTrade
 {
     public partial class WebForm8 : System.Web.UI.Page
-    {// Connection string from Web.config
-        private readonly string connStr =
-            ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+    {
+        // Connection string from Web.config
+        private readonly string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 LoadGenres(); // Load all genres when the page loads
+                LoadCategories(); // Load category options into the dropdown
             }
         }
 
-        // Load genre records from database
+        // Load all genre records from database
         private void LoadGenres()
         {
             using (SqlConnection con = new SqlConnection(connStr))
-            using (SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Genre", con))
+            using (SqlDataAdapter da = new SqlDataAdapter("SELECT g.genreID, g.genreName, c.categoryName FROM Genre g LEFT JOIN Category c ON g.categoryID = c.categoryID", con))
             {
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -36,23 +34,49 @@ namespace NMU_BookTrade
             }
         }
 
-        // Add new genre
+        // Load all available categories into dropdown
+        private void LoadCategories()
+        {
+            using (SqlConnection con = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand("SELECT categoryID, categoryName FROM Category", con))
+            {
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                ddlCategories.DataSource = reader;
+                ddlCategories.DataTextField = "categoryName";
+                ddlCategories.DataValueField = "categoryID";
+                ddlCategories.DataBind();
+            }
+
+            // Add a default prompt
+            ddlCategories.Items.Insert(0, new ListItem("-- Select Category --", ""));
+        }
+
+        // Add new genre (with selected category)
         protected void BtnAddGenre_Click(object sender, EventArgs e)
         {
             string name = txtGenreName.Text.Trim();
+            string selectedCat = ddlCategories.SelectedValue;
 
-            if (string.IsNullOrEmpty(name)) return;
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(selectedCat)) return; // Don't add if empty
 
             using (SqlConnection con = new SqlConnection(connStr))
-            using (SqlCommand cmd = new SqlCommand("INSERT INTO Genre (genreName) VALUES (@name)", con))
+            using (SqlCommand cmd = new SqlCommand("INSERT INTO Genre (genreName, categoryID) VALUES (@name, @catID)", con))
             {
                 cmd.Parameters.AddWithValue("@name", name);
+                cmd.Parameters.AddWithValue("@catID", selectedCat);
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
 
-            txtGenreName.Text = "";  // Clear input field
-            LoadGenres();            // Refresh the GridView
+            txtGenreName.Text = "";
+            ddlCategories.SelectedIndex = 0; // Reset dropdown
+
+            lblFeedback.ForeColor = System.Drawing.Color.LightGreen;
+            lblFeedback.Text = $"Genre '{name}' added successfully";
+            lblFeedback.Visible = true;
+
+            LoadGenres();
         }
 
         // Edit genre (start edit mode)
@@ -69,8 +93,7 @@ namespace NMU_BookTrade
             string name = ((TextBox)gvGenres.Rows[e.RowIndex].Cells[0].Controls[0]).Text.Trim();
 
             using (SqlConnection con = new SqlConnection(connStr))
-            using (SqlCommand cmd = new SqlCommand(
-                "UPDATE Genre SET genreName = @name WHERE genreID = @id", con))
+            using (SqlCommand cmd = new SqlCommand("UPDATE Genre SET genreName = @name WHERE genreID = @id", con))
             {
                 cmd.Parameters.AddWithValue("@name", name);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -83,9 +106,7 @@ namespace NMU_BookTrade
         }
 
         // Cancel edit mode
-        
         protected void GvGenres_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-
         {
             gvGenres.EditIndex = -1;
             LoadGenres();
@@ -95,16 +116,54 @@ namespace NMU_BookTrade
         protected void GvGenres_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int id = Convert.ToInt32(gvGenres.DataKeys[e.RowIndex].Value);
+            string genreName = gvGenres.Rows[e.RowIndex].Cells[0].Text;
 
-            using (SqlConnection con = new SqlConnection(connStr))
-            using (SqlCommand cmd = new SqlCommand("DELETE FROM Genre WHERE genreID = @id", con))
+            Session["PendingDeleteGenreID"] = id;
+            Session["PendingDeleteGenreName"] = genreName;
+
+            lblFeedback.Text = "";
+            lblConfirmText.Text = $"Are you sure you want to delete genre '{genreName}'?";
+            ShowModal();
+        }
+
+        protected void btnConfirmDelete_Click(object sender, EventArgs e)
+        {
+            if (Session["PendingDeleteGenreID"] != null)
             {
-                cmd.Parameters.AddWithValue("@id", id);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                int id = Convert.ToInt32(Session["PendingDeleteGenreID"]);
+
+                using (SqlConnection con = new SqlConnection(connStr))
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM Genre WHERE genreID = @id", con))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                lblFeedback.ForeColor = System.Drawing.Color.LightGreen;
+                lblFeedback.Text = $"Genre '{Session["PendingDeleteGenreName"]}' deleted successfully.";
+                lblFeedback.Visible = true;
             }
 
+            Session.Remove("PendingDeleteGenreID");
+            Session.Remove("PendingDeleteGenreName");
+
+            lblConfirmText.Text = "";
             LoadGenres();
+        }
+
+        protected void btnCancelDelete_Click(object sender, EventArgs e)
+        {
+            lblConfirmText.Text = "";
+            lblFeedback.ForeColor = System.Drawing.Color.Gray;
+            lblFeedback.Text = "Delete action cancelled.";
+            lblFeedback.Visible = true;
+            LoadGenres();
+        }
+
+        private void ShowModal()
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "GenreModalScript", "document.querySelector('.genre-modal-overlay').style.display = 'block';", true);
         }
     }
 }

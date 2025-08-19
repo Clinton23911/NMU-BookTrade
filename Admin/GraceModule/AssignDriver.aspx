@@ -3,11 +3,16 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
 
+     <h2 class="assigned-heading">Assign the drivers:</h2>
+
+ <p class="assigned-paragraph">Every driver will get an assignment, with a specified date and time from you.<br /> If a purchase has been made, the table below will show buyer and seller details. <br /> Make sure you pick the date and time, driver and click assign. They will receive the assignment/job, in their delivery schedule.
+ </p>
+    <br />
     
     <asp:GridView ID="gvDeliveries" runat="server" AutoGenerateColumns="false"
     OnRowCommand="gvDeliveries_RowCommand"
     OnRowDataBound="gvDeliveries_RowDataBound"
-    DataKeyNames="saleID"
+    DataKeyNames="deliveryID"
     CssClass="styled-table"
     GridLines="None">
     
@@ -49,12 +54,31 @@
         <asp:TemplateField HeaderText="Actions">
             <ItemTemplate>
                 <asp:Button ID="btnAssign" runat="server" Text="Assign" CommandName="AssignDriver"
-                    CommandArgument='<%# Eval("saleID") %>' CssClass="assign-btn"
+                    CommandArgument='<%# Eval("deliveryID") %>' CssClass="assign-btn"
                     OnClientClick="return confirm('Are you sure you want to assign this driver?');" />
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>
 </asp:GridView>
+
+    <br />
+    <br />
+
+
+    <h2 class="assigned-heading">Drivers You've Assigned:</h2>
+    
+    <p class="assigned-paragraph"> Keep track and view all the drivers you have assigned right here.</p>
+    <br />
+<asp:GridView ID="gvAssignedDrivers" runat="server" AutoGenerateColumns="false" CssClass="assigned-grid">
+    <Columns>
+        <asp:BoundField DataField="BookTitle" HeaderText="Book" />
+        <asp:BoundField DataField="SellerName" HeaderText="Seller" />
+        <asp:BoundField DataField="BuyerName" HeaderText="Buyer" />
+        <asp:BoundField DataField="DriverName" HeaderText="Assigned Driver" />
+        <asp:BoundField DataField="deliveryDate" HeaderText="Delivery Date" DataFormatString="{0:yyyy-MM-dd HH:mm}" />
+    </Columns>
+</asp:GridView>
+
 
 
 </asp:Content>

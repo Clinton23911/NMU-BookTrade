@@ -17,28 +17,33 @@ namespace NMU_BookTrade
             if (!IsPostBack)
             {
                 LoadDeliveries();
+                LoadAssignedRecords();
             }
         }
-        private void LoadDeliveries()
+        private void LoadDeliveries()// hear we are loading deliveries that still need drivers
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {// we are loading deliveries with books that are sold but not assigned yet to the driver.  
+
                 string query = @"
-            SELECT 
-                sa.saleID,
-                b.title AS BookTitle,
-                s.sellerName,
-                s.sellerAddress AS PickupAddress,
-                bu.buyerName,
-                bu.buyerAddress AS DeliveryAddress,
-                b.driverID,
-                b.deliveryDate
-            FROM Sale sa
-            JOIN Book b ON sa.bookISBN = b.bookISBN
-            JOIN Seller s ON sa.sellerID = s.sellerID
-            JOIN Buyer bu ON sa.buyerID = bu.buyerID
-            WHERE b.status = 'unavailable' AND b.driverID IS NULL
-            ORDER BY sa.saleDate DESC";
+                            SELECT
+                                sa.saleID,
+                                b.title AS BookTitle,
+                                s.sellerName,
+                                s.sellerAddress AS PickupAddress,
+                                bu.buyerName,
+                                bu.buyerAddress AS DeliveryAddress,
+                                del.deliveryID,      -- may be NULL
+                                del.status,
+                                del.deliveryDate
+                            FROM Sale sa
+                            JOIN Book   b  ON sa.bookISBN = b.bookISBN
+                            JOIN Seller s  ON sa.sellerID = s.sellerID
+                            JOIN Buyer  bu ON sa.buyerID = bu.buyerID
+                            LEFT JOIN Delivery del ON del.saleID = sa.saleID
+                            WHERE del.driverID IS NULL      -- also matches rows where del is NULL
+                            ORDER BY sa.saleDate DESC";
+
 
                 // the dataAdapter executes this query and we then fill in the `
                 SqlDataAdapter da = new SqlDataAdapter(query, con);
@@ -49,6 +54,8 @@ namespace NMU_BookTrade
                 gvDeliveries.DataBind();
             }
         }
+
+
 
 
         // It's used here to load the driver list into each dropdown in the grid
@@ -116,8 +123,40 @@ namespace NMU_BookTrade
                 }
 
                 LoadDeliveries();
+                LoadAssignedRecords();
             }
         }
 
+        // Load deliveries that were already assigned to drivers (history or confirmation)
+        protected void LoadAssignedRecords()
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+            {
+                                // we are only fetch deliveries where a driver has already been assigned (driverID is NOT null)
+                                string query = @"
+                SELECT 
+                    b.title AS BookTitle,
+                    s.sellerName AS SellerName,
+                    bu.buyerName AS BuyerName,
+                    d.driverName + ' ' + d.driverSurname AS DriverName,
+                    del.deliveryDate
+                FROM Delivery del
+                JOIN Sale   sa ON del.saleID  = sa.saleID
+                JOIN Book    b ON sa.bookISBN = b.bookISBN
+                JOIN Seller  s ON sa.sellerID = s.sellerID
+                JOIN Buyer  bu ON sa.buyerID = bu.buyerID
+                JOIN Driver  d ON del.driverID = d.driverID
+                WHERE del.driverID IS NOT NULL
+                ORDER BY del.deliveryDate DESC";
+
+
+                SqlDataAdapter da = new SqlDataAdapter(query, con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                gvAssignedDrivers.DataSource = dt;
+                gvAssignedDrivers.DataBind();
+            }
+
+        }
     }
 }

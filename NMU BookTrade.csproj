@@ -70,6 +70,7 @@
     <Content Include="Admin\GraceModule\Inbox.aspx" />
     <Content Include="Admin\GraceModule\ManageCategories.aspx" />
     <Content Include="Admin\GraceModule\ManageGenres.aspx" />
+    <Content Include="Admin\GraceModule\ManageReviews.aspx" />
     <Content Include="Admin\GraceModule\ViewDriver.aspx" />
     <Content Include="Buyer\pabiModule\BuyerDashboard.aspx" />
     <Content Include="Buyer\pabiModule\BuyerProfile.aspx" />
@@ -167,6 +168,13 @@
     </Compile>
     <Compile Include="Admin\GraceModule\ManageGenres.aspx.designer.cs">
       <DependentUpon>ManageGenres.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\GraceModule\ManageReviews.aspx.cs">
+      <DependentUpon>ManageReviews.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\GraceModule\ManageReviews.aspx.designer.cs">
+      <DependentUpon>ManageReviews.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\GraceModule\ViewDriver.aspx.cs">
       <DependentUpon>ViewDriver.aspx</DependentUpon>

@@ -1,4 +1,6 @@
 ﻿
+
+
 ﻿ /* General Styles */
 html, body {
     background: radial-gradient( circle at 0% 0%, #3fd0c9, #02353c, #02353c, #c1f6ed );
@@ -94,7 +96,7 @@ html, body {
 
 
 .cart-link {
-    color: black;
+    color: ghostwhite;
     margin: 0 10px;
     font-size: 20px;
     text-decoration: none;
@@ -321,7 +323,7 @@ span[style*="color:Red"] {
 
 
 
-/*Log In Section */
+/*Log In Section ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 
 h3.LR-formheadings {
     color: ghostwhite;
@@ -459,7 +461,7 @@ p.p-Passwordpages {
         opacity: 0.9;
     }
 
-/*Admin Profile page */
+/*Admin Profile page -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 .profile-container {
     display: flex;
@@ -613,7 +615,7 @@ input#middle_section_btnDeleteProfile:hover {
     }
 
 /*SearchTextbook section
-*/
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 .search-wrapper {
     display: flex;
     justify-content: center;
@@ -640,7 +642,7 @@ input#middle_section_btnDeleteProfile:hover {
 
 .search-bd {
     padding: 8px 12px;
-    border-radius: 20px 0 0 20px;
+    border-radius: 20px; 
     border: none;
     width: 300px;
     font-size: 14px;
@@ -748,7 +750,7 @@ input#middle_section_btnDeleteProfile:hover {
 }
 
 .view-all-link {
-    display: inline-flex;
+    display: block;
     margin-top: 5px;
     font-size: 14px;
     color: white;
@@ -945,7 +947,7 @@ input#middle_section_btnDeleteProfile:hover {
     }
 
 
-/*Cart*/
+/*Cart ------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 .cart-header {
     text-align: left;
     margin-bottom: 15px;
@@ -1039,7 +1041,7 @@ input#middle_section_btnDeleteProfile:hover {
 }
 
 
-/*ForgotPassword and Resset Password Pages */
+/*ForgotPassword and Resset Password Pages --------------------------------------------------------------------------------------------------------------------------------*/
 input#middle_section_btnSubmit {
     padding: 10px 20px;
     border-radius: 8px;
@@ -1156,7 +1158,7 @@ input#middle_section_btnReset {
         transform: translateY(0);
     }
 
-/* Admin Page */
+/* Admin Page ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 .table-wrapper {
     display: flex;
@@ -1363,7 +1365,7 @@ input#middle_section_btnReset {
     /*HOME PAGE */
 
 
-/* --- Hero Section --- */
+/* --- Hero Section ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 .hero-section {
     background: #e6f4f1;
     padding: 40px 0;
@@ -1410,7 +1412,7 @@ input#middle_section_btnReset {
 }
 
 
-/* --- Recently Uploaded Section --- */
+/* --- Recently Uploaded Section-------------------------------------------------------------------------------------------------------------------------------- --- */
 .section-title {
     text-align: center;
     margin-top: 40px;
@@ -1526,12 +1528,12 @@ img#Image1 {
 }
 
 .left-arrow {
-    left: -38px;
+    left: -789px;
     top: 185px;
 }
 
 .right-arrow {
-    right: -1115px;
+    right: -361px;
     top: 185px;
 }
 
@@ -1539,7 +1541,19 @@ img#Image1 {
     background-color: #3fd0c9;
 }
 
-/*View TextBook Details*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*View TextBook Details page --------------------------------------------------------------------------------------------------------------------------------------------*/
 .book-details {
     max-width: 600px;
     margin: auto;
@@ -1617,7 +1631,13 @@ img#Image1 {
     border-radius: 5px;
 }
 
-/*Search Result*/
+
+
+
+
+
+
+/*Search Result page -----------------------------------------------------------------------------------------------------------------------------------------------------*/
 .book-grid {
     display: flex;
     flex-wrap: wrap;
@@ -1659,7 +1679,7 @@ img#Image1 {
 }
 
 .book-price {
-    color: #007a33;
+    color: #3fd0c9;
     font-size: 15px;
     font-weight: bold;
 }
@@ -1698,7 +1718,7 @@ img#Image1 {
     }
 
 
-/*Cart*/
+/*Cart page ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 .cart-header {
     text-align: left;
     margin-bottom: 15px;
@@ -1795,7 +1815,26 @@ img#Image1 {
 
 
 
-/* --- Reviews Section --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- Reviews page------------------------------------------------------------------------------------------------------------------------------------------------ */
 
 /* Container layout */
 .testimonial-section {
@@ -1971,7 +2010,17 @@ img#Image1 {
 }
 
 
-/*About Page*/
+
+
+
+
+
+
+
+
+
+
+/*About Page------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 .about-container{
     max-width:1200px;
@@ -2534,7 +2583,23 @@ a.Aboutus-btn:hover {
 
 
 
-/*Book Conditions*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Book Conditions page --------------------------------------------------------------------------------------------------------------------------------------------*/
 /* ===== Centered Container ===== */
 .BCcontainer {
     max-width: 800px;
@@ -2777,7 +2842,7 @@ input#middle_section_txtLastName {
 
 
 
-    /*Inbox Page*/
+    /*Inbox Page--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* Base Layout */
 .inbox-container {
     padding: 20px;
@@ -3108,9 +3173,20 @@ input#middle_section_txtLastName {
 
 
 
-        /* Manage Categories page*/
 
-/* ── Page Heading ─────────────────────────── */
+
+
+
+
+
+
+
+
+
+
+        /* Manage Categories page---------------------------------------------------------------------------------------------------------------------------------------*/
+
+/* ── Page Heading ───── */
 
 .auto-style3 {
     padding: 8px 12px;
@@ -3132,6 +3208,18 @@ input#middle_section_txtLastName {
     cursor: pointer;
     margin-left: 54px;
 }
+
+input#middle_section_btnCancelDelete:hover {
+    color: white;
+    background: #2ecc71;
+    cursor: pointer;
+}
+
+input#middle_section_btnConfirmDelete:hover {
+    color: ghostwhite;
+    background: orangered;
+    cursor: pointer;
+}
 .manage-cat-heading {
     font-size: 24px;
     font-weight: bold;
@@ -3139,7 +3227,7 @@ input#middle_section_txtLastName {
     margin-bottom: 10px;
 }
 
-/* ── Add Category Form ────────────────────── */
+/* ── Add Category Form ──── */
 .manage-cat-wrapper {
     margin-bottom: 20px;
     display: flex;
@@ -3175,7 +3263,7 @@ input#middle_section_txtLastName {
         background-color: #27ae60;
     }
 
-/* ── Category Grid Table ──────────────────── */
+/* ── Category Grid Table ──── */
 .manage-cat-table {
     width: 100%;
     border-collapse: separate;
@@ -3256,7 +3344,192 @@ img#middle_section_BookImage {
             border-radius: 5px;
             margin-left: 24px;
         }
-/* --- Footer --- */
+
+
+
+
+
+
+
+
+        /*Manage Genre page*-------------------------------------------------------------------------------------------------------------------------------/
+
+/* Styles for ManageGenres.aspx only */
+.genre-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.genre-modal-box {
+    background-color: #fff;
+    width: 400px;
+    max-width: 90%;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.genre-modal-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.genre-modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.genre-btn-delete {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.genre-btn-cancel {
+    background-color: gray;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+select#middle_section_ddlCategories {
+   
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 37px;
+    height: 38px;
+    margin-top: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Inapropriate Reviews Page --------------------------------------------------------------------------------------------------------------------------------------------*/
+
+.rv-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.05)
+}
+
+.rv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px
+}
+
+    .rv-header h2 {
+        margin: 0;
+        font-size: 18px
+    }
+
+.rv-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center
+}
+
+.rv-input {
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    min-width: 260px
+}
+
+.rv-btn {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #111827;
+    background: #111827;
+    color: #fff;
+    cursor: pointer
+}
+
+    .rv-btn.ghost {
+        background: #fff;
+        color: #111827
+    }
+
+    .rv-btn.danger {
+        background: #b91c1c;
+        border-color: #b91c1c
+    }
+
+    .rv-btn:hover {
+        opacity: .92
+    }
+
+.rv-grid {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0
+}
+
+    .rv-grid th, .rv-grid td {
+        padding: 10px;
+        border-bottom: 1px solid #f3f4f6;
+        vertical-align: top
+    }
+
+    .rv-grid th {
+        text-align: left;
+        background: #f9fafb;
+        position: sticky;
+        top: 0
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- Footer -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 .footer {
     display: flex;
     justify-content: space-between;
@@ -3326,7 +3599,17 @@ img#middle_section_BookImage {
 
 
 
-    /* Assign driver page */
+
+
+
+
+
+
+
+
+
+
+    /* Assign driver page------------------------------------------------------------------------------------------------------------------------------ */
 
 
 .styled-table {
@@ -3391,46 +3674,31 @@ img#middle_section_BookImage {
 }
 
 
+.assigned-heading {
+    font-size: 20px;
+    margin-top: 40px;
+    font-weight: bold;
+    color: ghostwhite;
+    text-align: center;
+}
 
+.assigned-grid {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
 
+    .assigned-grid th,
+    .assigned-grid td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+p.assigned-paragraph {
+    text-align: center;
+    color: white;
+}
 
 
 /* Optional sliding animation */
@@ -3447,17 +3715,6 @@ img#middle_section_BookImage {
         transform: translateX(0);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3482,7 +3739,23 @@ img#middle_section_BookImage {
         font-size: 16px;
     }
 }
-/*Create Listings Page*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Create Listings Page--------------------------------------------------------------------------------------------------------------------------------*/
 
 /* Main container */
 .cl-container {

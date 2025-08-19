@@ -3686,7 +3686,10 @@ select#middle_section_ddlCategories {
 
 /* Assign driver page */
 
-
+h2.assigned-heading {
+    color: #c9fffc;
+    text-align: center;
+}
 .styled-table {
     width: 100%;
     border-collapse: collapse;
@@ -3793,7 +3796,7 @@ select#middle_section_ddlCategories {
     background-color: #007b5e;
     color: white;
     border: none;
-    padding: 6px 14px;
+    padding: 6px 59px 6px 16px;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;

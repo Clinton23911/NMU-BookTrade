@@ -25,24 +25,24 @@ namespace NMU_BookTrade
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {// we are loading deliveries with books that are sold but not assigned yet to the driver.  
 
-                string query = @"
-                            SELECT
-                                sa.saleID,
-                                b.title AS BookTitle,
-                                s.sellerName,
-                                s.sellerAddress AS PickupAddress,
-                                bu.buyerName,
-                                bu.buyerAddress AS DeliveryAddress,
-                                del.deliveryID,      -- may be NULL
-                                del.status,
-                                del.deliveryDate
-                            FROM Sale sa
-                            JOIN Book   b  ON sa.bookISBN = b.bookISBN
-                            JOIN Seller s  ON sa.sellerID = s.sellerID
-                            JOIN Buyer  bu ON sa.buyerID = bu.buyerID
-                            LEFT JOIN Delivery del ON del.saleID = sa.saleID
-                            WHERE del.driverID IS NULL      -- also matches rows where del is NULL
-                            ORDER BY sa.saleDate DESC";
+                                        string query = @"
+                                                    SELECT
+                             sa.saleID,
+                           ISNULL(b.title, 'Unknown Book') AS BookTitle,
+                             s.sellerName,
+                             s.sellerAddress AS PickupAddress,
+                             bu.buyerName,
+                             bu.buyerAddress AS DeliveryAddress,
+                             del.deliveryID,      -- may be NULL
+                             del.status,
+                             del.deliveryDate
+                         FROM Sale sa
+                         INNER JOIN Book   b  ON sa.bookISBN = b.bookISBN
+                         INNER JOIN Seller s  ON sa.sellerID = s.sellerID
+                         LEFT JOIN Buyer  bu ON sa.buyerID = bu.buyerID
+                         LEFT JOIN Delivery del ON del.saleID = sa.saleID
+                         WHERE del.status = 0 AND b.status = 'unavailable'
+                         ORDER BY sa.saleDate DESC";
 
 
                 // the dataAdapter executes this query and we then fill in the `
@@ -134,21 +134,21 @@ namespace NMU_BookTrade
             {
                                 // we are only fetch deliveries where a driver has already been assigned (driverID is NOT null)
                                 string query = @"
-                SELECT 
-                    b.title AS BookTitle,
-                    s.sellerName AS SellerName,
-                    bu.buyerName AS BuyerName,
-                    d.driverName + ' ' + d.driverSurname AS DriverName,
-                    del.deliveryDate
-                FROM Delivery del
-                JOIN Sale   sa ON del.saleID  = sa.saleID
-                JOIN Book    b ON sa.bookISBN = b.bookISBN
-                JOIN Seller  s ON sa.sellerID = s.sellerID
-                JOIN Buyer  bu ON sa.buyerID = bu.buyerID
-                JOIN Driver  d ON del.driverID = d.driverID
-                WHERE del.driverID IS NOT NULL
-                ORDER BY del.deliveryDate DESC";
-
+                                             SELECT 
+                                    b.title AS BookTitle,
+                                    s.sellerName AS SellerName,
+                                    bu.buyerName AS BuyerName,
+	                                del.status, del.driverID,   
+                                    d.driverName + ' ' + d.driverSurname AS DriverName,
+                                    del.deliveryDate
+                                FROM Delivery del
+                                LEFT JOIN Sale   sa ON del.saleID  = sa.saleID
+                                LEFT JOIN Book    b ON sa.bookISBN = b.bookISBN
+                                LEFT JOIN Seller  s ON sa.sellerID = s.sellerID
+                                LEFT JOIN Buyer  bu ON sa.buyerID = bu.buyerID
+                                LEFT JOIN Driver  d ON del.driverID = d.driverID
+                                WHERE del.status BETWEEN 1 AND 5
+                                ORDER BY del.deliveryDate DESC";
 
                 SqlDataAdapter da = new SqlDataAdapter(query, con);
                 DataTable dt = new DataTable();

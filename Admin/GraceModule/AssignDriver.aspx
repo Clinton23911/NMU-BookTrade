@@ -12,7 +12,7 @@
     <asp:GridView ID="gvDeliveries" runat="server" AutoGenerateColumns="false"
     OnRowCommand="gvDeliveries_RowCommand"
     OnRowDataBound="gvDeliveries_RowDataBound"
-    DataKeyNames="saleID"
+    DataKeyNames="deliveryID"
     CssClass="styled-table"
     GridLines="None">
     
@@ -54,7 +54,7 @@
         <asp:TemplateField HeaderText="Actions">
             <ItemTemplate>
                 <asp:Button ID="btnAssign" runat="server" Text="Assign" CommandName="AssignDriver"
-                    CommandArgument='<%# Eval("saleID") %>' CssClass="assign-btn"
+                    CommandArgument='<%# Eval("deliveryID") %>' CssClass="assign-btn"
                     OnClientClick="return confirm('Are you sure you want to assign this driver?');" />
             </ItemTemplate>
         </asp:TemplateField>

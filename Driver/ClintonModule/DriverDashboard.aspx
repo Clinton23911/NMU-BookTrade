@@ -15,6 +15,12 @@
         <div class="dd-header">
             <h1 class="dd-welcome">Welcome <asp:Label ID="lblDriverName" runat="server" Text="Driver"></asp:Label>!</h1>
             <p class="dd-subtitle">MANAGE YOUR DELIVERIES AND SCHEDULE</p>
+            <div class="dd-header-actions">
+                <asp:Button ID="btnRefreshSummary" runat="server" 
+                    CssClass="dd-refresh-btn" 
+                    Text="Refresh Summary" 
+                    OnClick="btnRefreshSummary_Click" />
+            </div>
         </div>
 
         <!-- Stats Cards -->
@@ -24,8 +30,35 @@
                     <i class="fas fa-truck"></i>
                 </div>
                 <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblTotalDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">Total Deliveries</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblPendingDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">Pending</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="dd-stat-content">
                     <div class="dd-stat-number"><asp:Label ID="lblAssignedDeliveries" runat="server" Text="0"></asp:Label></div>
-                    <div class="dd-stat-label">Assigned Deliveries</div>
+                    <div class="dd-stat-label">Assigned</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblInTransitDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">In Transit</div>
                 </div>
             </div>
             <div class="dd-stat-card">
@@ -35,6 +68,33 @@
                 <div class="dd-stat-content">
                     <div class="dd-stat-number"><asp:Label ID="lblCompletedDeliveries" runat="server" Text="0"></asp:Label></div>
                     <div class="dd-stat-label">Completed Today</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblCompletedThisWeek" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">Completed This Week</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblFailedDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">Failed</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblCancelledDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">Cancelled</div>
                 </div>
             </div>
             <div class="dd-stat-card">

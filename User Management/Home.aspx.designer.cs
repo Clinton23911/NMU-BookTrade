@@ -51,6 +51,15 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.Button btnReadStories;
 
         /// <summary>
+        /// rptTestimonials control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptTestimonials;
+
+        /// <summary>
         /// lblTotalDeliveries control.
         /// </summary>
         /// <remarks>
@@ -58,5 +67,14 @@ namespace NMU_BookTrade
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTotalDeliveries;
+
+        /// <summary>
+        /// litTotalReviews control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litTotalReviews;
     }
 }

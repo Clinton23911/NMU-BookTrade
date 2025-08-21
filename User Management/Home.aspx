@@ -63,58 +63,23 @@
 
 <div class="testimonial-cards">
 
-    <%-- Uncomment this Repeater later when your data is ready
+    
     <asp:Repeater ID="rptTestimonials" runat="server">
-        <ItemTemplate>
-            <div class="testimonial-card">
-                <img src='<%# ResolveUrl(Eval("profileImage").ToString()) %>' class="testimonial-img" alt="Buyer Photo" />
-                <div class="testimonial-content">
-                    <p class="testimonial-comment">"<%# Eval("reviewComment") %>"</p>
-                    <div class="testimonial-stars">
-                        <%# GetStarHtml(Convert.ToInt32(Eval("reviewRating"))) %>
-                    </div>
-                    <p class="testimonial-name">- <%# Eval("BuyerName") %> <%# Eval("BuyerSurname") %></p>
+    <ItemTemplate>
+        <div class="testimonial-card">
+            <asp:Image ID="imgProfile" runat="server"
+                       ImageUrl='<%# ResolveUrl("~/UploadedImages/" + Eval("buyerProfileImage")) %>'
+                       CssClass="testimonial-img" AlternateText="Buyer Photo" />
+            <div class="testimonial-content">
+                <p class="testimonial-comment">"<%# Eval("reviewComment") %>"</p>
+                <div class="testimonial-stars">
+                    <%# GetStarHtml(Convert.ToInt32(Eval("reviewRating"))) %>
                 </div>
+                <p class="testimonial-name">- <%# Eval("BuyerName") %> <%# Eval("BuyerSurname") %></p>
             </div>
-        </ItemTemplate>
-    </asp:Repeater>
-    --%>
-
-    <!-- Static card preview 1 -->
-    <div class="testimonial-card">
-        <div class="testimonial-img-placeholder"></div>
-        <div class="testimonial-content">
-            <p class="testimonial-comment">"This is a sample review comment text."</p>
-            <div class="testimonial-stars">
-                <!-- Example stars -->
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: lightgray;">☆</span>
-                <span style="color: lightgray;">☆</span>
-            </div>
-            <p class="testimonial-name">- Buyer Name Surname</p>
         </div>
-    </div>
-
-    <!-- Static card preview 2 -->
-    <div class="testimonial-card">
-        <div class="testimonial-img-placeholder"></div>
-        <div class="testimonial-content">
-            <p class="testimonial-comment">"Another example testimonial, great service!"</p>
-            <div class="testimonial-stars">
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-            </div>
-            <p class="testimonial-name">- Another Buyer</p>
-        </div>
-    </div>
-
-</div>
-
+    </ItemTemplate>
+</asp:Repeater>
 
 
 </div>
@@ -126,7 +91,7 @@
     <br />
 
 
-    <h3 class="section-title"> Our deliveries have never are always on time </h3> 
+    <h3 class="section-title"> Our deliveries are always reaching students on time </h3> 
 
     <!-- Delivery Performance Section -->
 <div class="delivery-stats-section">
@@ -145,8 +110,10 @@
                 <p>On-Time Delivery Rate</p>
             </div>
             <div class="stat-block">
-                <h3>4.9/5</h3>
-                <p>Buyers Rating</p>
+                    <div class="stat-number">
+                        <asp:Literal ID="litTotalReviews" runat="server"></asp:Literal>
+                    </div>
+                <div class="stat-label">Total Reviews</div>
             </div>
         </div>
     </div>

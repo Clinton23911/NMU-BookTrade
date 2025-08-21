@@ -56,6 +56,8 @@
                             
                          </div>
                      </div>
+
+
                 <!-- Search bar and Refresh -->
                 <div class="inbox-actions-bar">
                     <div class="inbox-search-box">
@@ -134,8 +136,9 @@
 
 
 
-        // ✅ Only mark and update count if unread
+        // ✅ checking if message has been read
         if (element.dataset.read === "0") {
+            // telling the server to mark as read
             fetch("Inbox.aspx/MarkMessageAsRead", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },

@@ -12,7 +12,10 @@ namespace NMU_BookTrade
         {
             if (!IsPostBack)
             {
+                
                 LoadBooks(); // Load books for the slider
+                totalReviews();   // Call your method here
+                LoadReviews();
             }
         }
 
@@ -46,11 +49,11 @@ namespace NMU_BookTrade
         {
             string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
             string query = @"
-                SELECT TOP 4 B.name AS BuyerName, B.surname AS BuyerSurname, B.profileImage, 
-                             R.reviewRating, R.reviewComment
-                FROM Review R
-                INNER JOIN Sale S ON R.saleID = S.saleID
-                INNER JOIN Buyer B ON S.buyerID = B.buyerID
+                SELECT TOP 3 r.reviewID, r.reviewRating, r.reviewComment, r.reviewDate, 
+                                                   b.buyerName, b.buyerSurname, b.buyerProfileImage
+                                            FROM Review r
+                                            INNER JOIN Sale s ON r.saleID = s.saleID
+                                            INNER JOIN Buyer b ON s.buyerID = b.buyerID
                 ORDER BY R.reviewID DESC";
 
             using (SqlConnection con = new SqlConnection(connStr))
@@ -58,8 +61,8 @@ namespace NMU_BookTrade
             {
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();  //  Reads multiple rows of data.
-               // rptTestimonials.DataSource = reader;
-               // rptTestimonials.DataBind();
+                rptTestimonials.DataSource = reader;
+                rptTestimonials.DataBind();
             }
         }
 
@@ -74,6 +77,24 @@ namespace NMU_BookTrade
                     stars += "<span style='color: lightgray;'>&#9734;</span>"; // empty star
             }
             return stars;
+        }
+
+
+        private void totalReviews()
+        {
+            string _cs = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(_cs))
+            {
+                conn.Open();
+                // here we are going to count the total reviews 
+
+                SqlCommand totalcmd = new SqlCommand("Select COUNT(*) FROM Review", conn);
+                int TotalReviews = (int)totalcmd.ExecuteScalar();
+
+                // After getting the stats and calculating them we send them to the front-end 
+
+                litTotalReviews.Text = TotalReviews.ToString();
+            }
         }
 
         protected void btnReadStories_Click(object sender, EventArgs e)

@@ -21,9 +21,17 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 }
                 else
                 {
-                    // Set default date range (last 7 days)
-                    txtStartDate.Text = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
-                    txtEndDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                    // Set a broader date range to show more deliveries
+                    string today = DateTime.Today.ToString("yyyy-MM-dd");
+                    string nextWeek = DateTime.Today.AddDays(7).ToString("yyyy-MM-dd");
+                    txtStartDate.Attributes["min"] = today;
+                    txtEndDate.Attributes["min"] = today;
+                    txtStartDate.Text = today;
+                    txtEndDate.Text = nextWeek;
+                    
+                    // Test database connection for debugging
+                    TestDatabaseConnection();
+                    
                     LoadDeliveries();
                     UpdateSummary();
                 }
@@ -54,6 +62,21 @@ namespace NMU_BookTrade.Driver.ClintonModule
                         }
                     }
 
+                    // Check if there are any deliveries for this specific driver
+                    string driverCheckQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID";
+                    using (SqlCommand driverCheckCmd = new SqlCommand(driverCheckQuery, connection))
+                    {
+                        driverCheckCmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        int driverDeliveries = Convert.ToInt32(driverCheckCmd.ExecuteScalar());
+                        if (driverDeliveries == 0)
+                        {
+                            // No deliveries for this driver
+                            gvDeliveries.DataSource = deliveries;
+                            gvDeliveries.DataBind();
+                            return;
+                        }
+                    }
+
                     string query = @"SELECT 
                                     d.deliveryID AS DeliveryID, 
                                     ISNULL(b.title, 'Unknown Book') AS BookTitle, 
@@ -73,7 +96,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
                                     ISNULL(drv.driverName + ' ' + drv.driverSurname, 'Not Assigned') AS DriverName,
                                     d.deliveryDate AS ScheduledDate
                                     FROM Delivery d
-                                    LEFT JOIN Sale s ON d.deliveryID = s.saleID
+                                    LEFT JOIN Sale s ON d.saleID = s.saleID
                                     LEFT JOIN Book b ON s.bookISBN = b.bookISBN
                                     LEFT JOIN Seller seller ON s.sellerID = seller.sellerID
                                     LEFT JOIN Buyer buyer ON s.buyerID = buyer.buyerID
@@ -111,10 +134,14 @@ namespace NMU_BookTrade.Driver.ClintonModule
 
                     query += " ORDER BY d.deliveryDate DESC";
 
+                    // Validate and clamp dates to today or later
+                    DateTime startDate, endDate;
+                    GetValidatedDateRange(out startDate, out endDate);
+
                     using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        cmd.Parameters.AddWithValue("@StartDate", txtStartDate.Text);
-                        cmd.Parameters.AddWithValue("@EndDate", txtEndDate.Text);
+                        cmd.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
                         cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
 
                         using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
@@ -122,6 +149,12 @@ namespace NMU_BookTrade.Driver.ClintonModule
                             adapter.Fill(deliveries);
                         }
                     }
+                }
+
+                // Debug: Log the number of rows returned
+                if (deliveries.Rows.Count == 0)
+                {
+                    ShowAlert("No deliveries found for the selected criteria. Please check your date range and status filter.");
                 }
 
                 gvDeliveries.DataSource = deliveries;
@@ -134,71 +167,148 @@ namespace NMU_BookTrade.Driver.ClintonModule
             }
         }
 
+        // Alternative method using stored procedure (uncomment if you want to use the stored procedure approach)
+        /*
+        private void LoadDeliveriesWithStoredProcedure(int? statusFilter = null)
+        {
+            try
+            {
+                int driverID = Convert.ToInt32(Session["DriverID"]);
+                
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+                {
+                    connection.Open();
+                    
+                    using (SqlCommand cmd = new SqlCommand("GetDriverDeliveries", connection))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@DriverID", driverID);
+                        
+                        if (statusFilter.HasValue)
+                            cmd.Parameters.AddWithValue("@StatusFilter", statusFilter.Value);
+                        
+                        DateTime startDate, endDate;
+                        GetValidatedDateRange(out startDate, out endDate);
+                        
+                        if (!string.IsNullOrEmpty(txtStartDate.Text))
+                            cmd.Parameters.AddWithValue("@StartDate", startDate);
+                        
+                        if (!string.IsNullOrEmpty(txtEndDate.Text))
+                            cmd.Parameters.AddWithValue("@EndDate", endDate.AddDays(1).AddSeconds(-1));
+                        
+                        DataTable dt = new DataTable();
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(dt);
+                        }
+                        
+                        gvDeliveries.DataSource = dt;
+                        gvDeliveries.DataBind();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowAlert($"Error loading deliveries: {ex.Message}");
+            }
+        }
+        */
+
         private void UpdateSummary()
         {
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+            try
             {
-                connection.Open();
-
-                // Total deliveries
-                string totalQuery = "SELECT COUNT(*) FROM Delivery WHERE deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
-                using (SqlCommand cmd = new SqlCommand(totalQuery, connection))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@StartDate", txtStartDate.Text);
-                    cmd.Parameters.AddWithValue("@EndDate", txtEndDate.Text);
-                    cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
-                    lblTotalDeliveries.Text = cmd.ExecuteScalar().ToString();
-                }
+                    connection.Open();
 
-                // Pending deliveries (status = 0)
-                string pendingQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 0 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
-                using (SqlCommand cmd = new SqlCommand(pendingQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@StartDate", txtStartDate.Text);
-                    cmd.Parameters.AddWithValue("@EndDate", txtEndDate.Text);
-                    cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
-                    lblPendingDeliveries.Text = cmd.ExecuteScalar().ToString();
-                }
+                    DateTime startDate, endDate;
+                    GetValidatedDateRange(out startDate, out endDate);
 
-                // In Transit deliveries (status = 2)
-                string transitQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 2 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
-                using (SqlCommand cmd = new SqlCommand(transitQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@StartDate", txtStartDate.Text);
-                    cmd.Parameters.AddWithValue("@EndDate", txtEndDate.Text);
-                    cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
-                    lblInTransitDeliveries.Text = cmd.ExecuteScalar().ToString();
-                }
+                    // Total deliveries
+                    string totalQuery = "SELECT COUNT(*) FROM Delivery WHERE deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(totalQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        lblTotalDeliveries.Text = cmd.ExecuteScalar().ToString();
+                    }
 
-                // Completed deliveries (status = 3)
-                string completedQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 3 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
-                using (SqlCommand cmd = new SqlCommand(completedQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@StartDate", txtStartDate.Text);
-                    cmd.Parameters.AddWithValue("@EndDate", txtEndDate.Text);
-                    cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
-                    lblCompletedDeliveries.Text = cmd.ExecuteScalar().ToString();
-                }
+                    // Pending deliveries (status = 0)
+                    string pendingQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 0 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(pendingQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        lblPendingDeliveries.Text = cmd.ExecuteScalar().ToString();
+                    }
 
-                // Failed deliveries (status = 4)
-                string failedQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 4 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
-                using (SqlCommand cmd = new SqlCommand(failedQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@StartDate", txtStartDate.Text);
-                    cmd.Parameters.AddWithValue("@EndDate", txtEndDate.Text);
-                    cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
-                    lblFailedDeliveries.Text = cmd.ExecuteScalar().ToString();
-                }
+                    // Assigned deliveries (status = 1)
+                    string assignedQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 1 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(assignedQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        lblAssignedDeliveries.Text = cmd.ExecuteScalar().ToString();
+                    }
 
-                // Cancelled deliveries (status = 5)
-                string cancelledQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 5 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
-                using (SqlCommand cmd = new SqlCommand(cancelledQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@StartDate", txtStartDate.Text);
-                    cmd.Parameters.AddWithValue("@EndDate", txtEndDate.Text);
-                    cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
-                    lblCancelledDeliveries.Text = cmd.ExecuteScalar().ToString();
+                    // In Transit deliveries (status = 2)
+                    string transitQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 2 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(transitQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        lblInTransitDeliveries.Text = cmd.ExecuteScalar().ToString();
+                    }
+
+                    // Completed deliveries (status = 3)
+                    string completedQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 3 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(completedQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        lblCompletedDeliveries.Text = cmd.ExecuteScalar().ToString();
+                    }
+
+                    // Failed deliveries (status = 4)
+                    string failedQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 4 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(failedQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        lblFailedDeliveries.Text = cmd.ExecuteScalar().ToString();
+                    }
+
+                    // Cancelled deliveries (status = 5)
+                    string cancelledQuery = "SELECT COUNT(*) FROM Delivery WHERE status = 5 AND deliveryDate BETWEEN @StartDate AND @EndDate AND driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(cancelledQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        lblCancelledDeliveries.Text = cmd.ExecuteScalar().ToString();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                // Set all summary values to "0" in case of error
+                lblTotalDeliveries.Text = "0";
+                lblPendingDeliveries.Text = "0";
+                lblAssignedDeliveries.Text = "0";
+                lblInTransitDeliveries.Text = "0";
+                lblCompletedDeliveries.Text = "0";
+                lblFailedDeliveries.Text = "0";
+                lblCancelledDeliveries.Text = "0";
+                
+                // Log the error or show a user-friendly message
+                ShowAlert($"Error updating summary: {ex.Message}");
             }
         }
 
@@ -217,7 +327,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
             }
             else
             {
-                ShowAlert("End date must be after start date");
+                ShowAlert("Dates cannot be in the past and End date must be after Start date");
             }
         }
 
@@ -227,6 +337,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
             if (DateTime.TryParse(txtStartDate.Text, out startDate) &&
                 DateTime.TryParse(txtEndDate.Text, out endDate))
             {
+                // Only check that end date is after or equal to start date
                 return endDate >= startDate;
             }
             return false;
@@ -287,37 +398,45 @@ namespace NMU_BookTrade.Driver.ClintonModule
 
         protected void ddlStatusUpdate_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DropDownList ddlStatus = (DropDownList)sender;
-            GridViewRow row = (GridViewRow)ddlStatus.NamingContainer;
+            DropDownList ddl = (DropDownList)sender;
+            GridViewRow row = (GridViewRow)ddl.NamingContainer;
             HiddenField hfDeliveryID = (HiddenField)row.FindControl("hfDeliveryID");
             
-            if (hfDeliveryID != null)
+            int deliveryID = Convert.ToInt32(hfDeliveryID.Value);
+            int newStatus = Convert.ToInt32(ddl.SelectedValue);
+            
+            UpdateDeliveryStatus(deliveryID, newStatus);
+        }
+
+        private void UpdateDeliveryStatus(int deliveryID, int newStatus)
+        {
+            try
             {
-                string deliveryID = hfDeliveryID.Value;
-                string newStatus = ddlStatus.SelectedValue;
-                
-                try
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
-                    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
-                    {
-                        connection.Open();
-                        string query = "UPDATE Delivery SET status = @Status WHERE deliveryID = @DeliveryID";
-                        using (SqlCommand cmd = new SqlCommand(query, connection))
-                        {
-                            cmd.Parameters.AddWithValue("@Status", newStatus);
-                            cmd.Parameters.AddWithValue("@DeliveryID", deliveryID);
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
+                    connection.Open();
                     
-                    ShowAlert("Delivery status updated successfully!", "success");
-                    LoadDeliveries();
-                    UpdateSummary();
+                    string query = "UPDATE Delivery SET status = @Status WHERE deliveryID = @DeliveryID AND driverID = @DriverID";
+                    
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@Status", newStatus);
+                        cmd.Parameters.AddWithValue("@DeliveryID", deliveryID);
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        
+                        cmd.ExecuteNonQuery();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    ShowAlert($"Error updating status: {ex.Message}");
-                }
+                
+                LoadDeliveries();
+                UpdateSummary();
+                
+                // Show success message
+                ShowAlert("Delivery status updated successfully!", "success");
+            }
+            catch (Exception ex)
+            {
+                ShowAlert($"Error updating delivery status: {ex.Message}");
             }
         }
 
@@ -337,6 +456,8 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 case "1": return "Assigned";
                 case "2": return "In Transit";
                 case "3": return "Completed";
+                case "4": return "Failed";
+                case "5": return "Cancelled";
                 default: return status;
             }
         }
@@ -351,6 +472,72 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 showConfirmButton: false
             }});";
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowAlert", script, true);
+        }
+
+        private void GetValidatedDateRange(out DateTime startDate, out DateTime endDate)
+        {
+            DateTime today = DateTime.Today;
+            DateTime parsedStart = today;
+            DateTime parsedEnd = today;
+
+            DateTime temp;
+            if (DateTime.TryParse(txtStartDate.Text, out temp))
+            {
+                // Allow past dates for testing, but default to today if invalid
+                parsedStart = temp;
+            }
+            if (DateTime.TryParse(txtEndDate.Text, out temp))
+            {
+                // Allow past dates for testing, but default to today if invalid
+                parsedEnd = temp;
+            }
+
+            if (parsedEnd < parsedStart)
+            {
+                parsedEnd = parsedStart;
+            }
+
+            // Reflect values back to the inputs
+            txtStartDate.Text = parsedStart.ToString("yyyy-MM-dd");
+            txtEndDate.Text = parsedEnd.ToString("yyyy-MM-dd");
+
+            startDate = parsedStart;
+            endDate = parsedEnd;
+        }
+
+        // Debug method to test database connectivity and data
+        private void TestDatabaseConnection()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+                {
+                    connection.Open();
+                    
+                    // Test basic queries
+                    string[] testQueries = {
+                        "SELECT COUNT(*) FROM Delivery",
+                        "SELECT COUNT(*) FROM Sale", 
+                        "SELECT COUNT(*) FROM Book",
+                        "SELECT COUNT(*) FROM Seller",
+                        "SELECT COUNT(*) FROM Buyer",
+                        "SELECT COUNT(*) FROM Driver"
+                    };
+                    
+                    foreach (string query in testQueries)
+                    {
+                        using (SqlCommand cmd = new SqlCommand(query, connection))
+                        {
+                            int count = Convert.ToInt32(cmd.ExecuteScalar());
+                            // You can add logging here if needed
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowAlert($"Database connection test failed: {ex.Message}");
+            }
         }
     }
 }

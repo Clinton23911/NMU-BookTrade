@@ -16,24 +16,29 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 // Validate session before proceeding
                 if (!IsDriverAuthenticated())
                 {
-                    Response.Redirect("~/UserManagement/Login.aspx");
+                    Response.Redirect("~/User Management/Login.aspx");
                     return;
                 }
 
                 try
                     {
                     LoadDriverData();
-                    LoadPendingDeliveries();
+                    LoadActiveDeliveries();
+                    CheckDatabaseStatus(); // Check database status for debugging
                     SetActiveTab(tabPending);
                 }
-                catch (SqlException sqlEx)
+                catch (SqlException)
                 {
                     lblErrorMessage.Text = "Database error occurred. Please try again later.";
+                    lblErrorMessage.CssClass = "alert alert-danger";
+                    lblErrorMessage.Visible = true;
                     // Log the error: LogError(sqlEx);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     lblErrorMessage.Text = "An unexpected error occurred. Please contact support.";
+                    lblErrorMessage.CssClass = "alert alert-danger";
+                    lblErrorMessage.Visible = true;
                     // Log the error: LogError(ex);
                 }
             }
@@ -50,106 +55,230 @@ namespace NMU_BookTrade.Driver.ClintonModule
         {
             string driverId = Session["DriverID"].ToString();
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+            try
             {
-                connection.Open();
-
-                // Get driver info
-                string driverQuery = "SELECT driverName, driverSurname FROM Driver WHERE driverID = @DriverID";
-                using (SqlCommand cmd = new SqlCommand(driverQuery, connection))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@DriverID", driverId);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    connection.Open();
+
+                    // Get driver info
+                    string driverQuery = "SELECT driverName, driverSurname FROM Driver WHERE driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(driverQuery, connection))
                     {
-                        if (reader.Read())
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            lblDriverName.Text = $"{reader["driverName"]} {reader["driverSurname"]}";
-                        }
-                        else
-                        {
-                            lblErrorMessage.Text = "Driver information not found.";
+                            if (reader.Read())
+                            {
+                                lblDriverName.Text = $"{reader["driverName"]} {reader["driverSurname"]}";
+                            }
+                            else
+                            {
+                                lblErrorMessage.Text = "Driver information not found.";
+                                lblErrorMessage.CssClass = "alert alert-danger";
+                                lblErrorMessage.Visible = true;
+                            }
                         }
                     }
-                }
 
-                // Count assigned deliveries
-                string assignedQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 1";
-                using (SqlCommand cmd = new SqlCommand(assignedQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@DriverID", driverId);
-                    int count = Convert.ToInt32(cmd.ExecuteScalar());
-                    lblAssignedDeliveries.Text = count.ToString();
-                }
+                    // Get current date for today's calculations
+                    DateTime today = DateTime.Today;
+                    DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek);
+                    DateTime endOfWeek = startOfWeek.AddDays(7);
 
-                // Count completed deliveries today
-                string completedQuery = @"SELECT COUNT(*) FROM Delivery 
-                                        WHERE driverID = @DriverID AND status = 3
-                                        AND CONVERT(DATE, deliveryDate) = CONVERT(DATE, GETDATE())";
-                using (SqlCommand cmd = new SqlCommand(completedQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@DriverID", driverId);
-                    int count = Convert.ToInt32(cmd.ExecuteScalar());
-                    lblCompletedDeliveries.Text = count.ToString();
-                }
+                    // Total deliveries (all time)
+                    string totalQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(totalQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblTotalDeliveries.Text = count.ToString();
+                    }
 
-                // Calculate average rating
-                string ratingQuery = @"SELECT AVG(CAST(r.reviewRating AS FLOAT)) 
-                                     FROM Review r
-                                     JOIN Sale s ON r.saleID = s.saleID
-                                     JOIN Delivery d ON s.saleID = d.deliveryID
-                                     WHERE d.driverID = @DriverID";
-                using (SqlCommand cmd = new SqlCommand(ratingQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@DriverID", driverId);
-                    object result = cmd.ExecuteScalar();
-                    double avgRating = result != DBNull.Value ? Convert.ToDouble(result) : 0.0;
-                    lblDriverRating.Text = avgRating.ToString("0.0");
+                    // Assigned deliveries (status = 1)
+                    string assignedQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 1";
+                    using (SqlCommand cmd = new SqlCommand(assignedQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblAssignedDeliveries.Text = count.ToString();
+                    }
+
+                    // Pending deliveries (status = 0)
+                    string pendingQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 0";
+                    using (SqlCommand cmd = new SqlCommand(pendingQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblPendingDeliveries.Text = count.ToString();
+                    }
+
+                    // In Transit deliveries (status = 2)
+                    string transitQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 2";
+                    using (SqlCommand cmd = new SqlCommand(transitQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblInTransitDeliveries.Text = count.ToString();
+                    }
+
+                    // Completed deliveries today
+                    string completedTodayQuery = @"SELECT COUNT(*) FROM Delivery 
+                                                WHERE driverID = @DriverID AND status = 3
+                                                AND CONVERT(DATE, deliveryDate) = @Today";
+                    using (SqlCommand cmd = new SqlCommand(completedTodayQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        cmd.Parameters.AddWithValue("@Today", today);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblCompletedDeliveries.Text = count.ToString();
+                    }
+
+                    // Completed deliveries this week
+                    string completedWeekQuery = @"SELECT COUNT(*) FROM Delivery 
+                                                WHERE driverID = @DriverID AND status = 3
+                                                AND deliveryDate >= @StartOfWeek AND deliveryDate < @EndOfWeek";
+                    using (SqlCommand cmd = new SqlCommand(completedWeekQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        cmd.Parameters.AddWithValue("@StartOfWeek", startOfWeek);
+                        cmd.Parameters.AddWithValue("@EndOfWeek", endOfWeek);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblCompletedThisWeek.Text = count.ToString();
+                    }
+
+                    // Failed deliveries (status = 4)
+                    string failedQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 4";
+                    using (SqlCommand cmd = new SqlCommand(failedQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblFailedDeliveries.Text = count.ToString();
+                    }
+
+                    // Cancelled deliveries (status = 5)
+                    string cancelledQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 5";
+                    using (SqlCommand cmd = new SqlCommand(cancelledQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblCancelledDeliveries.Text = count.ToString();
+                    }
+
+                    // Calculate average rating
+                    string ratingQuery = @"SELECT AVG(CAST(r.reviewRating AS FLOAT)) 
+                                         FROM Review r
+                                         JOIN Sale s ON r.saleID = s.saleID
+                                         JOIN Delivery d ON s.saleID = d.saleID
+                                         WHERE d.driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(ratingQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        object result = cmd.ExecuteScalar();
+                        double avgRating = result != DBNull.Value ? Convert.ToDouble(result) : 0.0;
+                        lblDriverRating.Text = avgRating.ToString("0.0");
+                    }
+
+                    // Clear any previous error messages
+                    lblErrorMessage.Text = "";
+                    lblErrorMessage.Visible = false;
                 }
+            }
+            catch (SqlException)
+            {
+                lblErrorMessage.Text = $"Database error";
+                lblErrorMessage.CssClass = "alert alert-danger";
+                lblErrorMessage.Visible = true;
+                // Log the error: LogError(sqlEx);
+            }
+            catch (Exception)
+            {
+                lblErrorMessage.Text = $"Error loading driver data";
+                lblErrorMessage.CssClass = "alert alert-danger";
+                lblErrorMessage.Visible = true;
+                // Log the error: LogError(ex);
             }
         }
 
-        private void LoadPendingDeliveries()
+        private void LoadActiveDeliveries()
         {
             string driverId = Session["DriverID"].ToString();
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+            try
             {
-                connection.Open();
-
-                string query = @"SELECT d.deliveryID, b.title AS BookTitle, 
-                                seller.sellerName AS SellerName, buyer.buyerName AS BuyerName,
-                                seller.sellerAddress AS PickupAddress, buyer.buyerAddress AS DeliveryAddress,
-                                d.deliveryDate
-                                FROM Delivery d
-                                JOIN Sale s ON d.deliveryID = s.saleID
-                                JOIN Book b ON s.bookISBN = b.bookISBN
-                                JOIN Seller seller ON b.sellerID = seller.sellerID
-                                JOIN Buyer buyer ON s.buyerID = buyer.buyerID
-                                WHERE d.driverID = @DriverID AND d.status = 1
-                                ORDER BY d.deliveryDate";
-
-                using (SqlCommand cmd = new SqlCommand(query, connection))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@DriverID", driverId);
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                    {
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
+                    connection.Open();
 
-                        if (dt.Rows.Count > 0)
-                        {
-                            rptPendingDeliveries.DataSource = dt;
-                            rptPendingDeliveries.DataBind();
-                            lblNoPending.Visible = false;
-                        }
-                        else
+                    // First check if there are any active deliveries for this driver (not completed)
+                    string checkQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status != 3";
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, connection))
+                    {
+                        checkCmd.Parameters.AddWithValue("@DriverID", driverId);
+                        int activeCount = Convert.ToInt32(checkCmd.ExecuteScalar());
+                        
+                        if (activeCount == 0)
                         {
                             rptPendingDeliveries.DataSource = null;
                             rptPendingDeliveries.DataBind();
                             lblNoPending.Visible = true;
+                            return;
+                        }
+                    }
+
+                    string query = @"SELECT d.deliveryID, 
+                                    ISNULL(b.title, 'Unknown Book') AS BookTitle, 
+                                    ISNULL(seller.sellerName, 'Unknown Seller') AS SellerName, 
+                                    ISNULL(buyer.buyerName, 'Unknown Buyer') AS BuyerName,
+                                    ISNULL(seller.sellerAddress, 'No Address') AS PickupAddress, 
+                                    ISNULL(buyer.buyerAddress, 'No Address') AS DeliveryAddress,
+                                    d.deliveryDate,
+                                    d.status,
+                                    CASE 
+                                        WHEN d.status = 0 THEN 'Pending'
+                                        WHEN d.status = 1 THEN 'Assigned'
+                                        WHEN d.status = 2 THEN 'In Transit'
+                                        WHEN d.status = 4 THEN 'Failed'
+                                        WHEN d.status = 5 THEN 'Cancelled'
+                                        ELSE 'Unknown'
+                                    END AS StatusText
+                                    FROM Delivery d
+                                    LEFT JOIN Sale s ON d.saleID = s.saleID
+                                    LEFT JOIN Book b ON s.bookISBN = b.bookISBN
+                                    LEFT JOIN Seller seller ON s.sellerID = seller.sellerID
+                                    LEFT JOIN Buyer buyer ON s.buyerID = buyer.buyerID
+                                    WHERE d.driverID = @DriverID AND d.status != 3
+                                    ORDER BY d.deliveryDate";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                rptPendingDeliveries.DataSource = dt;
+                                rptPendingDeliveries.DataBind();
+                                lblNoPending.Visible = false;
+                            }
+                            else
+                            {
+                                rptPendingDeliveries.DataSource = null;
+                                rptPendingDeliveries.DataBind();
+                                lblNoPending.Visible = true;
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                lblErrorMessage.Text = $"Error loading active deliveries: {ex.Message}";
+                lblErrorMessage.CssClass = "alert alert-danger";
+                lblErrorMessage.Visible = true;
             }
         }
 
@@ -157,54 +286,81 @@ namespace NMU_BookTrade.Driver.ClintonModule
         {
             string driverId = Session["DriverID"].ToString();
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+            try
             {
-                connection.Open();
-
-                string query = @"SELECT d.deliveryID, b.title AS BookTitle, 
-                                seller.sellerName AS SellerName, buyer.buyerName AS BuyerName,
-                                d.deliveryDate AS CompletedDate,
-                                DATEDIFF(MINUTE, d.startTime, d.endTime) AS DeliveryMinutes,
-                                r.reviewRating, r.reviewComment
-                                FROM Delivery d
-                                JOIN Sale s ON d.deliveryID = s.saleID
-                                JOIN Book b ON s.bookISBN = b.bookISBN
-                                JOIN Seller seller ON b.sellerID = seller.sellerID
-                                JOIN Buyer buyer ON s.buyerID = buyer.buyerID
-                                LEFT JOIN Review r ON s.saleID = r.saleID
-                                WHERE d.driverID = @DriverID AND d.status = 3
-                                ORDER BY d.deliveryDate DESC";
-
-                using (SqlCommand cmd = new SqlCommand(query, connection))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@DriverID", driverId);
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    connection.Open();
+
+                    // First check if there are any completed deliveries for this driver
+                    string checkQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 3";
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, connection))
                     {
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
-
-                        // Add formatted duration column
-                        dt.Columns.Add("DeliveryDuration", typeof(string));
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            int minutes = row["DeliveryMinutes"] != DBNull.Value ? Convert.ToInt32(row["DeliveryMinutes"]) : 0;
-                            row["DeliveryDuration"] = FormatDuration(minutes);
-                        }
-
-                        if (dt.Rows.Count > 0)
-                        {
-                            rptCompletedDeliveries.DataSource = dt;
-                            rptCompletedDeliveries.DataBind();
-                            lblNoCompleted.Visible = false;
-                        }
-                        else
+                        checkCmd.Parameters.AddWithValue("@DriverID", driverId);
+                        int completedCount = Convert.ToInt32(checkCmd.ExecuteScalar());
+                        
+                        if (completedCount == 0)
                         {
                             rptCompletedDeliveries.DataSource = null;
                             rptCompletedDeliveries.DataBind();
                             lblNoCompleted.Visible = true;
+                            return;
+                        }
+                    }
+
+                    string query = @"SELECT d.deliveryID, 
+                                    ISNULL(b.title, 'Unknown Book') AS BookTitle, 
+                                    ISNULL(seller.sellerName, 'Unknown Seller') AS SellerName, 
+                                    ISNULL(buyer.buyerName, 'Unknown Buyer') AS BuyerName,
+                                    d.deliveryDate AS CompletedDate,
+                                    DATEDIFF(MINUTE, d.startTime, d.endTime) AS DeliveryMinutes,
+                                    r.reviewRating, r.reviewComment
+                                    FROM Delivery d
+                                    LEFT JOIN Sale s ON d.saleID = s.saleID
+                                    LEFT JOIN Book b ON s.bookISBN = b.bookISBN
+                                    LEFT JOIN Seller seller ON s.sellerID = seller.sellerID
+                                    LEFT JOIN Buyer buyer ON s.buyerID = buyer.buyerID
+                                    LEFT JOIN Review r ON s.saleID = r.saleID
+                                    WHERE d.driverID = @DriverID AND d.status = 3
+                                    ORDER BY d.deliveryDate DESC";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+
+                            // Add formatted duration column
+                            dt.Columns.Add("DeliveryDuration", typeof(string));
+                            foreach (DataRow row in dt.Rows)
+                            {
+                                int minutes = row["DeliveryMinutes"] != DBNull.Value ? Convert.ToInt32(row["DeliveryMinutes"]) : 0;
+                                row["DeliveryDuration"] = FormatDuration(minutes);
+                            }
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                rptCompletedDeliveries.DataSource = dt;
+                                rptCompletedDeliveries.DataBind();
+                                lblNoCompleted.Visible = false;
+                            }
+                            else
+                            {
+                                rptCompletedDeliveries.DataSource = null;
+                                rptCompletedDeliveries.DataBind();
+                                lblNoCompleted.Visible = true;
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                lblErrorMessage.Text = $"Error loading completed deliveries: {ex.Message}";
+                lblErrorMessage.CssClass = "alert alert-danger";
+                lblErrorMessage.Visible = true;
             }
         }
 
@@ -215,59 +371,91 @@ namespace NMU_BookTrade.Driver.ClintonModule
             DateTime startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
             DateTime endOfWeek = startOfWeek.AddDays(7);
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+            try
             {
-                connection.Open();
-
-                string query = @"SELECT d.deliveryID, b.title AS BookTitle, 
-                                buyer.buyerAddress AS Location, d.deliveryDate
-                                FROM Delivery d
-                                JOIN Sale s ON d.deliveryID = s.saleID
-                                JOIN Book b ON s.bookISBN = b.bookISBN
-                                JOIN Buyer buyer ON s.buyerID = buyer.buyerID
-                                WHERE d.driverID = @DriverID
-                                AND d.deliveryDate >= @StartDate
-                                AND d.deliveryDate < @EndDate
-                                ORDER BY d.deliveryDate";
-
-                using (SqlCommand cmd = new SqlCommand(query, connection))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@DriverID", driverId);
-                    cmd.Parameters.AddWithValue("@StartDate", startOfWeek);
-                    cmd.Parameters.AddWithValue("@EndDate", endOfWeek);
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    connection.Open();
+
+                    // First check if there are any deliveries for this driver in the current week
+                    string checkQuery = @"SELECT COUNT(*) FROM Delivery 
+                                        WHERE driverID = @DriverID
+                                        AND deliveryDate >= @StartDate
+                                        AND deliveryDate < @EndDate";
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, connection))
                     {
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
-
-                        // Convert DataTable to a list of dynamic objects
-                        var scheduleByDay = dt.Rows.Cast<DataRow>()
-                            .GroupBy(r => ((DateTime)r["deliveryDate"]).DayOfWeek)
-                            .Select(g => new
-                            {
-                                Day = g.Key.ToString(),
-                                Deliveries = g.Select(r => new
-                                {
-                                    Time = ((DateTime)r["deliveryDate"]).ToString("HH:mm"),
-                                    BookTitle = r["BookTitle"].ToString(),
-                                    Location = r["Location"].ToString()
-                                }).ToList()
-                            }).ToList();
-
-                        if (scheduleByDay.Count > 0)
-                        {
-                            rptWeeklySchedule.DataSource = scheduleByDay;
-                            rptWeeklySchedule.DataBind();
-                            lblNoSchedule.Visible = false;
-                        }
-                        else
+                        checkCmd.Parameters.AddWithValue("@DriverID", driverId);
+                        checkCmd.Parameters.AddWithValue("@StartDate", startOfWeek);
+                        checkCmd.Parameters.AddWithValue("@EndDate", endOfWeek);
+                        int weekCount = Convert.ToInt32(checkCmd.ExecuteScalar());
+                        
+                        if (weekCount == 0)
                         {
                             rptWeeklySchedule.DataSource = null;
                             rptWeeklySchedule.DataBind();
                             lblNoSchedule.Visible = true;
+                            return;
+                        }
+                    }
+
+                    string query = @"SELECT d.deliveryID, 
+                                    ISNULL(b.title, 'Unknown Book') AS BookTitle, 
+                                    ISNULL(buyer.buyerAddress, 'No Address') AS Location, 
+                                    d.deliveryDate
+                                    FROM Delivery d
+                                    LEFT JOIN Sale s ON d.saleID = s.saleID
+                                    LEFT JOIN Book b ON s.bookISBN = b.bookISBN
+                                    LEFT JOIN Buyer buyer ON s.buyerID = buyer.buyerID
+                                    WHERE d.driverID = @DriverID
+                                    AND d.deliveryDate >= @StartDate
+                                    AND d.deliveryDate < @EndDate
+                                    ORDER BY d.deliveryDate";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        cmd.Parameters.AddWithValue("@StartDate", startOfWeek);
+                        cmd.Parameters.AddWithValue("@EndDate", endOfWeek);
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+
+                            // Convert DataTable to a list of dynamic objects
+                            var scheduleByDay = dt.Rows.Cast<DataRow>()
+                                .GroupBy(r => ((DateTime)r["deliveryDate"]).DayOfWeek)
+                                .Select(g => new
+                                {
+                                    Day = g.Key.ToString(),
+                                    Deliveries = g.Select(r => new
+                                    {
+                                        Time = ((DateTime)r["deliveryDate"]).ToString("HH:mm"),
+                                        BookTitle = r["BookTitle"].ToString(),
+                                        Location = r["Location"].ToString()
+                                    }).ToList()
+                                }).ToList();
+
+                            if (scheduleByDay.Count > 0)
+                            {
+                                rptWeeklySchedule.DataSource = scheduleByDay;
+                                rptWeeklySchedule.DataBind();
+                                lblNoSchedule.Visible = false;
+                            }
+                            else
+                            {
+                                rptWeeklySchedule.DataSource = null;
+                                rptWeeklySchedule.DataBind();
+                                lblNoSchedule.Visible = true;
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                lblErrorMessage.Text = $"Error loading weekly schedule: {ex.Message}";
+                lblErrorMessage.CssClass = "alert alert-danger";
+                lblErrorMessage.Visible = true;
             }
         }
 
@@ -281,7 +469,8 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected void tabPending_Click(object sender, EventArgs e)
         {
             mvDriverContent.ActiveViewIndex = 0;
-            LoadPendingDeliveries();
+            LoadActiveDeliveries();
+            LoadDriverData(); // Refresh summary data
             SetActiveTab(tabPending);
         }
 
@@ -289,6 +478,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
         {
             mvDriverContent.ActiveViewIndex = 1;
             LoadCompletedDeliveries();
+            LoadDriverData(); // Refresh summary data
             SetActiveTab(tabCompleted);
         }
 
@@ -296,6 +486,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
         {
             mvDriverContent.ActiveViewIndex = 2;
             LoadWeeklySchedule();
+            LoadDriverData(); // Refresh summary data
             SetActiveTab(tabSchedule);
         }
 
@@ -314,6 +505,8 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 if (!int.TryParse(btn.CommandArgument, out int deliveryId))
                 {
                     lblErrorMessage.Text = "Invalid delivery ID.";
+                    lblErrorMessage.CssClass = "alert alert-danger";
+                    lblErrorMessage.Visible = true;
                     return;
                 }
 
@@ -335,33 +528,110 @@ namespace NMU_BookTrade.Driver.ClintonModule
 
                         if (rowsAffected > 0)
                         {
-                            Response.Redirect($"~/Driver/ClintonModule/DeliveryTracking.aspx?id={deliveryId}");
+                            // Refresh the summary data after status change
+                            LoadDriverData();
+                            LoadActiveDeliveries();
+                            lblErrorMessage.Text = $"Delivery #{deliveryId} started successfully!";
+                            lblErrorMessage.CssClass = "alert alert-success";
+                            lblErrorMessage.Visible = true;
                         }
                         else
                         {
                             lblErrorMessage.Text = "Delivery could not be started. It may have been assigned to another driver.";
+                            lblErrorMessage.CssClass = "alert alert-danger";
+                            lblErrorMessage.Visible = true;
                         }
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 lblErrorMessage.Text = "Error starting delivery. Please try again.";
+                lblErrorMessage.CssClass = "alert alert-danger";
+                lblErrorMessage.Visible = true;
                 // Log the error: LogError(ex);
             }
         }
 
-        protected void btnViewDetails_Click(object sender, EventArgs e)
+        protected void btnCompleteDelivery_Click(object sender, EventArgs e)
         {
-            var btn = (Button)sender;
-            string deliveryId = btn.CommandArgument;
-            Response.Redirect($"~/Driver/ClintonModule/DeliveryDetails.aspx?id={deliveryId}");
+            try
+            {
+                var btn = (Button)sender;
+                if (!int.TryParse(btn.CommandArgument, out int deliveryId))
+                {
+                    lblErrorMessage.Text = "Invalid delivery ID.";
+                    lblErrorMessage.CssClass = "alert alert-danger";
+                    lblErrorMessage.Visible = true;
+                    return;
+                }
+
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+                {
+                    connection.Open();
+
+                    string updateQuery = @"UPDATE Delivery 
+                                          SET status = 3, endTime = @EndTime 
+                                          WHERE deliveryID = @DeliveryID AND driverID = @DriverID AND status = 2";
+
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DeliveryID", deliveryId);
+                        cmd.Parameters.AddWithValue("@EndTime", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"].ToString());
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            // Refresh the summary data after status change
+                            LoadDriverData();
+                            LoadActiveDeliveries();
+                            lblErrorMessage.Text = $"Delivery #{deliveryId} completed successfully!";
+                            lblErrorMessage.CssClass = "alert alert-success";
+                            lblErrorMessage.Visible = true;
+                        }
+                        else
+                        {
+                            lblErrorMessage.Text = "Delivery could not be completed. It may not be in transit or assigned to another driver.";
+                            lblErrorMessage.CssClass = "alert alert-danger";
+                            lblErrorMessage.Visible = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                lblErrorMessage.Text = "Error completing delivery. Please try again.";
+                lblErrorMessage.CssClass = "alert alert-danger";
+                lblErrorMessage.Visible = true;
+                // Log the error: LogError(ex);
+            }
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
-            Response.Redirect("~/UserManagement/Login.aspx");
+            Response.Redirect("~/User Management/Login.aspx");
+        }
+
+        protected void btnRefreshSummary_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LoadDriverData();
+                LoadActiveDeliveries();
+                // Clear any error messages
+                lblErrorMessage.Text = "";
+                lblErrorMessage.Visible = false;
+            }
+            catch (Exception)
+            {
+                lblErrorMessage.Text = "Error refreshing summary data. Please try again.";
+                lblErrorMessage.CssClass = "alert alert-danger";
+                lblErrorMessage.Visible = true;
+                // Log the error: LogError(ex);
+            }
         }
 
         protected void rptPendingDeliveries_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -405,6 +675,82 @@ namespace NMU_BookTrade.Driver.ClintonModule
 
             int stars = Convert.ToInt32(rating);
             return new string('★', stars) + new string('☆', 5 - stars);
+        }
+
+        private void RefreshSummaryData()
+        {
+            LoadDriverData();
+            LoadActiveDeliveries();
+        }
+
+        private void CheckDatabaseStatus()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+                {
+                    connection.Open();
+                    
+                    // Check if Delivery table exists and has data
+                    string checkDeliveryQuery = "SELECT COUNT(*) FROM Delivery";
+                    using (SqlCommand cmd = new SqlCommand(checkDeliveryQuery, connection))
+                    {
+                        int deliveryCount = Convert.ToInt32(cmd.ExecuteScalar());
+                        if (deliveryCount == 0)
+                        {
+                            lblErrorMessage.Text = "No deliveries found in database. Dashboard summary will show 0 for all counts.";
+                            lblErrorMessage.CssClass = "alert alert-danger";
+                            lblErrorMessage.Visible = true;
+                        }
+                    }
+
+                    // Check if Driver table exists and has the current driver
+                    string checkDriverQuery = "SELECT COUNT(*) FROM Driver WHERE driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(checkDriverQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        int driverCount = Convert.ToInt32(cmd.ExecuteScalar());
+                        if (driverCount == 0)
+                        {
+                            lblErrorMessage.Text = "Driver not found in database. Please contact administrator.";
+                            lblErrorMessage.CssClass = "alert alert-danger";
+                            lblErrorMessage.Visible = true;
+                        }
+                    }
+
+                    // Check if there are any deliveries for this specific driver
+                    string checkDriverDeliveriesQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(checkDriverDeliveriesQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        int driverDeliveries = Convert.ToInt32(cmd.ExecuteScalar());
+                        if (driverDeliveries == 0)
+                        {
+                            lblErrorMessage.Text = "No deliveries assigned to this driver. All tabs will show empty.";
+                            lblErrorMessage.CssClass = "alert alert-danger";
+                            lblErrorMessage.Visible = true;
+                        }
+                    }
+
+                    // Test the JOIN relationships
+                    string testJoinQuery = @"SELECT COUNT(*) FROM Delivery d
+                                           LEFT JOIN Sale s ON d.saleID = s.saleID
+                                           LEFT JOIN Book b ON s.bookISBN = b.bookISBN
+                                           WHERE d.driverID = @DriverID";
+                    using (SqlCommand cmd = new SqlCommand(testJoinQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
+                        int joinCount = Convert.ToInt32(cmd.ExecuteScalar());
+                        // This will help identify if the JOIN issue is resolved
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lblErrorMessage.Text = $"Database connection test failed: {ex.Message}";
+                lblErrorMessage.CssClass = "alert alert-danger";
+                lblErrorMessage.Visible = true;
+            }
         }
     }
 }

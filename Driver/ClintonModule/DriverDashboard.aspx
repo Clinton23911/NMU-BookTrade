@@ -9,12 +9,18 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
     <div class="dd-container">
         <!-- Error Message Display -->
-        <asp:Label ID="lblErrorMessage" runat="server" CssClass="error-message" Visible="false"></asp:Label>
+        <asp:Label ID="lblErrorMessage" runat="server" CssClass="alert alert-danger" Visible="false"></asp:Label>
         
         <!-- Header Section -->
         <div class="dd-header">
             <h1 class="dd-welcome">Welcome <asp:Label ID="lblDriverName" runat="server" Text="Driver"></asp:Label>!</h1>
             <p class="dd-subtitle">MANAGE YOUR DELIVERIES AND SCHEDULE</p>
+            <div class="dd-header-actions">
+                <asp:Button ID="btnRefreshSummary" runat="server" 
+                    CssClass="dd-refresh-btn" 
+                    Text="🗘" 
+                    OnClick="btnRefreshSummary_Click" />
+            </div>
         </div>
 
         <!-- Stats Cards -->
@@ -24,8 +30,35 @@
                     <i class="fas fa-truck"></i>
                 </div>
                 <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblTotalDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">Total Deliveries</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblPendingDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">New</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="dd-stat-content">
                     <div class="dd-stat-number"><asp:Label ID="lblAssignedDeliveries" runat="server" Text="0"></asp:Label></div>
-                    <div class="dd-stat-label">Assigned Deliveries</div>
+                    <div class="dd-stat-label">Ready to Start</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblInTransitDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">In Transit</div>
                 </div>
             </div>
             <div class="dd-stat-card">
@@ -35,6 +68,33 @@
                 <div class="dd-stat-content">
                     <div class="dd-stat-number"><asp:Label ID="lblCompletedDeliveries" runat="server" Text="0"></asp:Label></div>
                     <div class="dd-stat-label">Completed Today</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblCompletedThisWeek" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">Completed This Week</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblFailedDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">Failed</div>
+                </div>
+            </div>
+            <div class="dd-stat-card">
+                <div class="dd-stat-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <div class="dd-stat-content">
+                    <div class="dd-stat-number"><asp:Label ID="lblCancelledDeliveries" runat="server" Text="0"></asp:Label></div>
+                    <div class="dd-stat-label">Cancelled</div>
                 </div>
             </div>
             <div class="dd-stat-card">
@@ -51,7 +111,7 @@
         <!-- Tabs Navigation -->
         <div class="dd-tabs">
             <asp:LinkButton ID="tabPending" runat="server" CssClass="dd-tab active" OnClick="tabPending_Click">
-                <i class="fas fa-clock"></i> Pending Deliveries
+                <i class="fas fa-truck"></i> Active Deliveries
             </asp:LinkButton>
             <asp:LinkButton ID="tabCompleted" runat="server" CssClass="dd-tab" OnClick="tabCompleted_Click">
                 <i class="fas fa-check"></i> Completed Deliveries
@@ -65,10 +125,11 @@
         <div class="dd-content-area">
             <asp:MultiView ID="mvDriverContent" runat="server" ActiveViewIndex="0">
                 
-                <!-- Pending Deliveries View -->
+                <!-- Active Deliveries View -->
                 <asp:View ID="viewPending" runat="server">
-                    <h2 class="dd-section-title">Pending Deliveries</h2>
-                    <asp:Label ID="lblNoPending" runat="server" Text="No pending deliveries found." 
+                    <h2 class="dd-section-title">Active Deliveries</h2>
+                    <p class="dd-section-description">All deliveries that are assigned, in transit, or pending - everything except completed deliveries.</p>
+                    <asp:Label ID="lblNoPending" runat="server" Text="No active deliveries found." 
                         CssClass="dd-empty-message" Visible="false"></asp:Label>
                     
                     <asp:Repeater ID="rptPendingDeliveries" runat="server" OnItemDataBound="rptPendingDeliveries_ItemDataBound">
@@ -77,6 +138,7 @@
                                 <div class="dd-delivery-header">
                                     <span class="dd-delivery-id">#<%# Eval("deliveryID") %></span>
                                     <span class="dd-delivery-date"><%# ((DateTime)Eval("deliveryDate")).ToString("dd MMM yyyy") %></span>
+                                    <span class="dd-delivery-status dd-status-<%# Eval("StatusText").ToString().ToLower().Replace(" ", "-") %>"><%# Eval("StatusText") %></span>
                                 </div>
                                 <div class="dd-delivery-body">
                                     <div class="dd-delivery-info">
@@ -89,12 +151,14 @@
                                             CommandArgument='<%# Eval("deliveryID") %>'
                                             CssClass="dd-action-btn" 
                                             Text="Start Delivery" 
-                                            OnClick="btnStartDelivery_Click" />
-                                        <asp:Button ID="btnViewDetails" runat="server" 
+                                            OnClick="btnStartDelivery_Click"
+                                            Visible='<%# Eval("status").ToString() == "1" %>' />
+                                        <asp:Button ID="btnCompleteDelivery" runat="server" 
                                             CommandArgument='<%# Eval("deliveryID") %>'
-                                            CssClass="dd-action-btn dd-secondary-btn" 
-                                            Text="View Details" 
-                                            OnClick="btnViewDetails_Click" />
+                                            CssClass="dd-action-btn dd-success-btn" 
+                                            Text="Complete Delivery" 
+                                            OnClick="btnCompleteDelivery_Click"
+                                            Visible='<%# Eval("status").ToString() == "2" %>' />
                                     </div>
                                 </div>
                             </div>

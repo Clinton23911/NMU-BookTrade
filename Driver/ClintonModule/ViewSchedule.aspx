@@ -3,7 +3,7 @@
     Inherits="NMU_BookTrade.Driver.ClintonModule.ViewSchedule" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <link href="../Content/ViewSchedule.css" rel="stylesheet" />
+   
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">

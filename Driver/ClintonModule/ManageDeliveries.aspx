@@ -69,7 +69,7 @@
             </asp:GridView>
         </div>
 
-        <div class="md-summary">
+                <div class="md-summary">
             <div class="md-summary-card">
                 <div class="md-summary-title">Total Deliveries</div>
                 <div class="md-summary-value"><asp:Label ID="lblTotalDeliveries" runat="server" Text="0"></asp:Label></div>
@@ -77,6 +77,10 @@
             <div class="md-summary-card">
                 <div class="md-summary-title">Pending</div>
                 <div class="md-summary-value"><asp:Label ID="lblPendingDeliveries" runat="server" Text="0"></asp:Label></div>
+            </div>
+            <div class="md-summary-card">
+                <div class="md-summary-title">Assigned</div>
+                <div class="md-summary-value"><asp:Label ID="lblAssignedDeliveries" runat="server" Text="0"></asp:Label></div>
             </div>
             <div class="md-summary-card">
                 <div class="md-summary-title">In Transit</div>
@@ -94,6 +98,10 @@
                 <div class="md-summary-title">Cancelled</div>
                 <div class="md-summary-value"><asp:Label ID="lblCancelledDeliveries" runat="server" Text="0"></asp:Label></div>
             </div>
+        </div>
+        
+        <div class="md-actions">
+            <asp:Button ID="btnRefresh" runat="server" Text="Refresh" CssClass="md-filter-btn" OnClick="btnRefresh_Click" />
         </div>
     </div>
 </asp:Content>

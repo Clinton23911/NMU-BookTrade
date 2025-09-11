@@ -634,6 +634,24 @@ namespace NMU_BookTrade.Driver.ClintonModule
             }
         }
 
+        protected void btnRefreshSummary_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LoadDriverData();
+                LoadPendingDeliveries();
+                // Clear any error messages
+                lblErrorMessage.Text = "";
+                lblErrorMessage.Visible = false;
+            }
+            catch (Exception)
+            {
+                lblErrorMessage.Text = "Error refreshing summary data. Please try again.";
+                lblErrorMessage.Visible = true;
+                // Log the error: LogError(ex);
+            }
+        }
+
         protected void rptPendingDeliveries_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             // Additional formatting if needed

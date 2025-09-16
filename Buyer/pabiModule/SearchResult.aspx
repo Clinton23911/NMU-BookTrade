@@ -2,9 +2,11 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="~/Styles/Stylesheet1.css" rel="stylesheet" type="text/css" />
+
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
+                <asp:Label ID="lblCartCount" runat="server" CssClass="cart-count"></asp:Label>
     <div class="categories-inline">
         <asp:Repeater ID="rptCategory" runat="server" OnItemCommand="rptCategory_ItemCommand">
             <ItemTemplate>
@@ -45,12 +47,14 @@
       <asp:Panel ID="CartPanel" runat="server" CssClass="slide-panel" Visible="false">
     <div class="panel-header">
         <asp:Label ID="lblHeader" runat="server" Text="Added to Cart"></asp:Label>
-        <asp:Button ID="btnClose" runat="server" Text="X" CssClass="close-btn" OnClick="btnClose_Click" />
+        <asp:Button ID="btnClose" runat="server" Text="x" CssClass="close-btn" OnClick="btnClose_Click" />
     </div>
     <div class="panel-content">
         <asp:Label ID="lblCartMessage" runat="server" Text=""></asp:Label>
+        <asp:Image ID="imgCartBook" runat="server" CssClass="cart-book-image" Width="80" />
+        <asp:Label ID="lblCartBookTitle" runat="server" CssClass="cart-book-title"></asp:Label>
         <br /><br />
-        <asp:HyperLink ID="lnkGoToCart" runat="server" NavigateUrl="Cart.aspx" CssClass="go-to-cart">Go to Cart</asp:HyperLink>
+        <asp:HyperLink ID="lnkGoToCart" runat="server" NavigateUrl="Cart.aspx" CssClass="go-to-cart">Go to Cart ➤</asp:HyperLink>
     </div>
 </asp:Panel>
 </asp:Content>

@@ -16,19 +16,22 @@
     <asp:Image ID="imgCover" runat="server" CssClass="book-cover" />
 
       <div class="info">
+        <asp:Label CssClass="detail-label" runat="server" Text="Title"></asp:Label>
         <asp:Label ID="lblTitle" runat="server" CssClass="label-title"></asp:Label><br /><br />
                     
-        <asp:Label CssClass="detail-label" runat="server" Text="Author: "></asp:Label>
+        <asp:Label CssClass="detail-label" runat="server" Text="Author"></asp:Label>
         <asp:Label ID="lblAuthor" runat="server"></asp:Label><br /><br />
                     
-        <asp:Label CssClass="detail-label" runat="server" Text="Price: "></asp:Label>
+        <asp:Label CssClass="detail-label" runat="server" Text="Price"></asp:Label>
         <asp:Label ID="lblPrice" runat="server"></asp:Label><br /><br />
                     
-        <asp:Label CssClass="detail-label" runat="server" Text="Condition: "></asp:Label>
+        <asp:Label CssClass="detail-label" runat="server" Text="Condition"></asp:Label>
         <asp:Label ID="lblCondition" runat="server"></asp:Label><br /><br />
-                    
-        <asp:Label CssClass="detail-label" runat="server" Text="Available Stock: "></asp:Label>
-        <asp:Label ID="lblStock" runat="server"></asp:Label><br /><br />
+        
+        <asp:Label CssClass="detail-label" runat="server" Text="Category"></asp:Label>
+        <asp:Label ID="lblCategory" runat="server"></asp:Label><br /><br />
+        <asp:Label CssClass="detail-label" runat="server" Text="Genre"></asp:Label>
+        <asp:Label ID="lblGenre" runat="server"></asp:Label><br /><br />
                     
        <div class="buttons">
           <asp:Button ID="btnAddToCart" runat="server" Text="Add to Cart ➤" OnClick="btnAddToCart_Click" />

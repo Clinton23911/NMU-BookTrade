@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace NMU_BookTrade
@@ -105,7 +101,8 @@ namespace NMU_BookTrade
             CartPanel.Visible = true;
             CartPanel.CssClass = "slide-panel slide-panel-visible";
 
-            lblMessage.Text = "";
+
+
         }
 
 

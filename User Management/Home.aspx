@@ -32,17 +32,22 @@
         <asp:Repeater ID="rptBooks" runat="server">
             <ItemTemplate>
                 <div class="book-slide">
-                    <asp:Image runat="server"
-                        ImageUrl='<%# ResolveUrl(Eval("coverImage").ToString()) %>'
-                        CssClass="book-img" />
-                    <div class="book-info">
-                        <h4><%# Eval("title") %></h4>
-                        <p class="book-price">R<%# Eval("price") %></p>
-                        <a href='<%# "BookDetails.aspx?bookISBN=" + Eval("bookISBN") %>' class="interested-btn">Interested</a>
-                    </div>
+                                    <asp:LinkButton ID="lnkCover" runat="server" 
+CommandName="ViewBook" 
+CommandArgument='<%# Eval("bookISBN") %>'>
+                <asp:Image runat="server"
+                    ImageUrl='<%# ResolveUrl(Eval("coverImage").ToString()) %>'
+                    CssClass="book-img" />
+                    </asp:LinkButton>
+
+                <div class="book-info">
+                    <h4><%# Eval("title") %></h4>
+                    <p class="book-price">R<%# Eval("price") %></p>
+                    <a href='<%# ResolveUrl("~/Buyer/pabiModule/SearchResult.aspx?query=" + Eval("bookISBN")) %>' class="interested-btn">Interested</a>
                 </div>
-            </ItemTemplate>
-        </asp:Repeater>
+            </div>
+        </ItemTemplate>
+    </asp:Repeater>
     </div>
 </div>
 

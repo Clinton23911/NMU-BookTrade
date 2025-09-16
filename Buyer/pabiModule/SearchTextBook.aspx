@@ -17,7 +17,9 @@
         </asp:Repeater>
 
         <div class="search-bar-bd">
-            <asp:TextBox ID="txtSearch" runat="server" CssClass="search-bd" Placeholder="Search textbook title..." />
+            <asp:TextBox ID="txtSearch" runat="server" CssClass="search-bd" Placeholder="Search by Title or Author..." />
+            <br />
+            <asp:ListBox ID="lstSuggestions" runat="server" Visible="false" Width="300px"></asp:ListBox>
             <asp:Button ID="btnSearch" runat="server" Text="🔍" OnClick="btnSearch_Click" CssClass="search-btn" />
         </div>
 
@@ -35,6 +37,7 @@
 </div>
 
       <asp:Panel ID="pnlSearchResults" runat="server" Visible="false">
+          
     <div class="results-tile">
         <asp:Label ID="lblSearchResults" runat="server" CssClass="results-label" Font-Bold="false"></asp:Label>
 <asp:LinkButton ID="lnkViewAllResults" runat="server" CssClass="view-all-link" OnClick="lnkViewAllResults_Click">
@@ -43,10 +46,17 @@
          <asp:Repeater ID="rptSearchResults" runat="server">
      <ItemTemplate>
          <div class="textbook">
-             <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' /><br />
-             <b><%# Eval("title") %></b><br />
-             R<%# Eval("price") %>
-         </div>
+              <asp:LinkButton ID="lnkBookCover" runat="server" 
+                CommandName="ViewBook"
+                CommandArgument='<%# Eval("bookISBN") %>'>
+                <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' 
+                     alt='<%# Eval("title") %>' 
+                     style="cursor:pointer;" />
+            </asp:LinkButton>
+            <br />
+            <b><%# Eval("title") %></b><br />
+            R<%# Eval("price") %>
+        </div>
      </ItemTemplate>
  </asp:Repeater>
         
@@ -54,12 +64,17 @@
 
    
 </asp:Panel> 
-
+    <br />
+    <br />
   <div class="results-grid">
-    <asp:Repeater ID="rptOutNow" runat="server">
+    <asp:Repeater ID="rptOutNow" runat="server" OnItemCommand="rptOutNow_ItemCommand">
         <ItemTemplate>
             <div class="textbook">
+                <asp:LinkButton ID="lnkCover" runat="server" 
+    CommandName="ViewBook" 
+    CommandArgument='<%# Eval("bookISBN") %>'>
                 <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' /><br />
+                    </asp:LinkButton>
             </div>
         </ItemTemplate>
     </asp:Repeater>
@@ -68,11 +83,17 @@
 
         <div class="section-title">Recently Added Textbooks!</div>
          <hr class="section-line" />
-            <asp:Repeater ID="rptRecentlyAdded" runat="server">
-                <ItemTemplate>
-                    <div class="textbook">
-                        <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' />
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
+           <asp:Repeater ID="rptRecentlyAdded" runat="server" OnItemCommand="rptRecentlyAdded_ItemCommand">
+    <ItemTemplate>
+        <asp:LinkButton ID="lnkCover" runat="server" 
+            CommandName="ViewBook" 
+            CommandArgument='<%# Eval("bookISBN") %>'>
+            <div class="textbook">
+                <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' alt="Book Cover" />
+                <br />
+                <b><%# Eval("title") %></b>
+            </div>
+        </asp:LinkButton>
+    </ItemTemplate>
+</asp:Repeater>
 </asp:Content>

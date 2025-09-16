@@ -69,13 +69,22 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.Label lblCondition;
 
         /// <summary>
-        /// lblStock control.
+        /// lblCategory control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStock;
+        protected global::System.Web.UI.WebControls.Label lblCategory;
+
+        /// <summary>
+        /// lblGenre control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGenre;
 
         /// <summary>
         /// btnAddToCart control.

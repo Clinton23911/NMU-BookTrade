@@ -15,6 +15,15 @@ namespace NMU_BookTrade
     {
 
         /// <summary>
+        /// lblCartCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCartCount;
+
+        /// <summary>
         /// rptCategory control.
         /// </summary>
         /// <remarks>
@@ -85,6 +94,24 @@ namespace NMU_BookTrade
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCartMessage;
+
+        /// <summary>
+        /// imgCartBook control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgCartBook;
+
+        /// <summary>
+        /// lblCartBookTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCartBookTitle;
 
         /// <summary>
         /// lnkGoToCart control.

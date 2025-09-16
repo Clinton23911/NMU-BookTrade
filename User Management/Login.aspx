@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="NMU_BookTrade.WebForm5" %>
+﻿
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="NMU_BookTrade.WebForm5" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
@@ -13,6 +14,7 @@
     AlternateText="Person Reading" />
 
      </div>  
+
 
      <div class="right-side">
          <h2 class=" LR-formheadings" > Log In  </h2>
@@ -37,16 +39,23 @@
              </tr>
 
              <tr>
-                 <td>
-                     <div class="input-wrapper">
-                         <div class="input-icon">
-                             <i class="fas fa-lock"></i>
-                             <asp:TextBox ID="txtPassword" runat="server" CssClass="input-field" ToolTip="Password" placeholder="Password"></asp:TextBox>
-                         </div>
-                         <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ErrorMessage="Enter your password, it's required" ControlToValidate="txtPassword" CssClass="form_errormessage"  ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
-                     </div>
-                 </td>  
-             </tr>
+                <td>
+                    <div class="input-wrapper">
+                        <label>Password:</label>
+                        <div class="password-wrapper">
+                            <asp:TextBox ID="txtPassword" ClientIDMode="Static" runat="server"
+                                CssClass="input-field password-input" TextMode="Password"
+                                ToolTip="Password" placeholder="Password"></asp:TextBox>
+                            <span class="toggle-password" onclick="toggleVisibility('txtPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                        </div>
+                        <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ErrorMessage="Enter your password, it's required" ControlToValidate="txtPassword" CssClass="form_errormessage" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                    </div>
+                </td>  
+            </tr>
+
+
                 <tr>
                     <td>
                         <asp:Button ID="btnLogin" runat="server" Text="Log In" CssClass="form-button" OnClick="btnLogin_Click"/>
@@ -72,6 +81,22 @@
      </div>
  </div>
 
+
+
+<script type="text/javascript">
+    function toggleVisibility(inputId, iconSpan) {
+        var input = document.getElementById(inputId);
+        var isHidden = input.type === "password";
+
+        input.type = isHidden ? "text" : "password";
+
+        
+        iconSpan.innerHTML = isHidden
+             
+           ? '<i class="fas fa-eye"></i>'
+           : '<i class="fas fa-eye-slash"></i>';      
+    }
+</script>
 
 
 

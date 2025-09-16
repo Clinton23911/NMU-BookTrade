@@ -59,30 +59,4 @@
                 </ItemTemplate>
             </asp:Repeater>
         </div>
-
-<footer class="footer">
-    <div class="logo">
-        <img src= '<%# ResolveUrl(Eval("NMUBOOKTRADE").ToString()) %>'/>
-        <strong>NMU<br><span>BookTrade</span></strong>
-        <p>Thanks for choosing us!</p>
-    </div>
-    <div class="footer-links">
-        <div>
-            <h4>Company</h4>
-            <a href="#">Home</a><br>
-            <a href="#">About</a><br>
-            <a href="#">Book Conditions</a><br>
-            <a href="#">Contact Support</a>
-        </div>
-        <div>
-            <h4>Documentation</h4>
-            <a href="#">FAQ</a><br>
-            <a href="#">Privacy Policy</a>
-        </div>
-        <div>
-            <h4>Social</h4>
-            <a href="#">WhatsApp</a>
-        </div>
-    </div>
-</footer>
 </asp:Content>

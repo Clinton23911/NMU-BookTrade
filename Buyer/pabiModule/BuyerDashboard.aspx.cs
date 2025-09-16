@@ -66,7 +66,7 @@ namespace NMU_BookTrade
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT title, price, coverImage FROM Book", con);
+                SqlCommand cmd = new SqlCommand("SELECT TOP 8 coverImage FROM Book", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -80,7 +80,7 @@ namespace NMU_BookTrade
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT title, price, coverImage FROM Book", con);
+                SqlCommand cmd = new SqlCommand("SELECT TOP 8 title, price, coverImage FROM Book", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();

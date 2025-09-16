@@ -14,6 +14,7 @@ namespace NMU_BookTrade
             {
 
                 string query = Request.QueryString["query"];
+                string isbn = Request.QueryString["isbn"];
                 if (!string.IsNullOrEmpty(query))
                 {
                     txtSearch.Text = query;
@@ -61,7 +62,7 @@ namespace NMU_BookTrade
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT title, price, coverImage FROM Book", con);
+                SqlCommand cmd = new SqlCommand("SELECT TOP 8 bookISBN, coverImage FROM Book", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -75,7 +76,7 @@ namespace NMU_BookTrade
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT title, price, coverImage FROM Book", con);
+                SqlCommand cmd = new SqlCommand("SELECT TOP 8 bookISBN, title, price, coverImage FROM Book", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -89,7 +90,7 @@ namespace NMU_BookTrade
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
                 con.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Book WHERE title LIKE @SearchTerm OR author LIKE @SearchTerm", con);
+                SqlCommand cmd = new SqlCommand("SELECT TOP 2 bookISBN, title, author, coverImage, price " + "FROM Book " + " WHERE title LIKE @SearchTerm OR author LIKE @SearchTerm", con);
                 cmd.Parameters.AddWithValue("@SearchTerm", "%" + searchTerm + "%");
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
@@ -144,7 +145,7 @@ namespace NMU_BookTrade
             if (e.CommandName == "SelectCategory")
             {
                 string faculty = e.CommandArgument.ToString();
-                Response.Redirect("~/Category.aspx?category=" + Server.UrlEncode(faculty));
+                Response.Redirect("~/Admin/GraceModule/ManageCategories.aspx?category=" + Server.UrlEncode(faculty));
             }
 
             if (e.Item.ItemIndex == 2)
@@ -156,5 +157,25 @@ namespace NMU_BookTrade
                 }
             }
         }
+
+       protected void rptOutNow_ItemCommand(object source, RepeaterCommandEventArgs e)
+{
+    if (e.CommandName == "ViewBook")
+    {
+        string bookISBN = e.CommandArgument.ToString();
+        Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?isbn=" + Server.UrlEncode(bookISBN));
+    }
+}
+
+protected void rptRecentlyAdded_ItemCommand(object source, RepeaterCommandEventArgs e)
+{
+    if (e.CommandName == "ViewBook")
+    {
+        string bookISBN = e.CommandArgument.ToString();
+        Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?isbn=" + Server.UrlEncode(bookISBN));
+    }
+}
+
+
     }
 }

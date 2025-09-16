@@ -38,7 +38,7 @@ namespace NMU_BookTrade
             string bookISBN = btn.CommandArgument;
 
             // Redirect to book details page
-            Response.Redirect("BookDetails.aspx?bookISBN=" + bookISBN);
+            Response.Redirect("BookDetails.aspx?query=" + bookISBN);
         }
 
 
@@ -79,7 +79,16 @@ namespace NMU_BookTrade
         protected void btnReadStories_Click(object sender, EventArgs e)
         {
             // You can redirect or show more reviews here
-            Response.Redirect("AllReviews.aspx");
+            Response.Redirect("~/Buyer/pabiModule/Reviews.aspx?query=" + Server.UrlEncode(btnReadStories.Text.Trim()));
+        }
+
+        protected void rptBooks_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "ViewBook")
+            {
+                string bookISBN = e.CommandArgument.ToString();
+                Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?query=" + Server.UrlEncode(bookISBN));
+            }
         }
     }
 }

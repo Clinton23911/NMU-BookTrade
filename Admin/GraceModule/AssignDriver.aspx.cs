@@ -58,16 +58,16 @@ namespace NMU_BookTrade
 
 
 
-        // It's used here to load the driver list into each dropdown in the grid
+        // It's used here to load the driver list into each dropdown in the grid and going through each row.
         protected void gvDeliveries_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             // Only work on data rows (ignore header/footer rows)
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                // Find the DropDownList inside the current row
+                // Finding the DropDownList inside the current row
                 DropDownList ddl = (DropDownList)e.Row.FindControl("ddlDrivers");
 
-                // Fetch the list of drivers from the database
+                // Fetching the list of drivers from the database
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
                     SqlCommand cmd = new SqlCommand("SELECT driverID, driverName + ' ' + driverSurname AS FullName FROM Driver", con);
@@ -103,7 +103,7 @@ namespace NMU_BookTrade
                 DateTime deliveryDate;
                 if (!DateTime.TryParse(txtDate.Text, out deliveryDate))
                 {
-                    // Show error or fallback to current date + 2 days
+                    // Show error or fallback to current date + 2 days which means if the user didn’t enter a valid date, the system automatically sets the delivery date to two days from today at 10 AM.
                     deliveryDate = DateTime.Now.AddDays(2).Date.AddHours(10);
                 }
 
@@ -149,6 +149,9 @@ namespace NMU_BookTrade
                                 LEFT JOIN Driver  d ON del.driverID = d.driverID
                                 WHERE del.status BETWEEN 1 AND 5
                                 ORDER BY del.deliveryDate DESC";
+
+                //REMEMBER . A LEFT JOIN ensures the delivery still shows up, with blank values for the missing details, instead of being completely left out for example a delivery might exist in the Delivery table, but maybe the driver hasn’t been assigned yet, or some book details are missing.
+
 
                 SqlDataAdapter da = new SqlDataAdapter(query, con);
                 DataTable dt = new DataTable();

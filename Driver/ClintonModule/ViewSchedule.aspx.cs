@@ -155,7 +155,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
             }
         }
 
-        public string GetDeliveryCardStyle(object status)
+        protected string GetDeliveryCardStyle(object status)
         {
             if (status == null) return "background-color: #F5F5F5; border-left: 4px solid #9E9E9E;";
 

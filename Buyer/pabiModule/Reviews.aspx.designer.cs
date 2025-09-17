@@ -15,6 +15,24 @@ namespace NMU_BookTrade
     {
 
         /// <summary>
+        /// btnShowPurchases control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnShowPurchases;
+
+        /// <summary>
+        /// btnShowHistory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnShowHistory;
+
+        /// <summary>
         /// pnlSummary control.
         /// </summary>
         /// <remarks>
@@ -60,6 +78,15 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.Repeater rptReviews;
 
         /// <summary>
+        /// pnlPurchasesTab control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPurchasesTab;
+
+        /// <summary>
         /// rptPurchases control.
         /// </summary>
         /// <remarks>
@@ -67,6 +94,51 @@ namespace NMU_BookTrade
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptPurchases;
+
+        /// <summary>
+        /// pnlHistoryTab control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlHistoryTab;
+
+        /// <summary>
+        /// ddlReviewFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlReviewFilter;
+
+        /// <summary>
+        /// rptReviewHistory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptReviewHistory;
+
+        /// <summary>
+        /// pnlReviewPanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlReviewPanel;
+
+        /// <summary>
+        /// lblHeader control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblHeader;
 
         /// <summary>
         /// imgProduct control.
@@ -94,15 +166,6 @@ namespace NMU_BookTrade
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlRating;
-
-        /// <summary>
-        /// txtReviewTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtReviewTitle;
 
         /// <summary>
         /// lblFirstName control.
@@ -139,23 +202,5 @@ namespace NMU_BookTrade
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSubmitReview;
-
-        /// <summary>
-        /// btnCancel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancel;
-
-        /// <summary>
-        /// rptReviewHistory control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptReviewHistory;
     }
 }

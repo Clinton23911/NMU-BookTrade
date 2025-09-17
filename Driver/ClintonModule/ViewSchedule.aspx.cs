@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace NMU_BookTrade.Driver.ClintonModule
 {
@@ -189,7 +191,92 @@ namespace NMU_BookTrade.Driver.ClintonModule
 
         protected void btnPrintSchedule_Click(object sender, EventArgs e)
         {
-            ClientScript.RegisterStartupScript(this.GetType(), "print", "window.print();", true);
+            try
+            {
+                DataTable deliveries = GetWeekDeliveries();
+                if (deliveries.Rows.Count == 0)
+                {
+                    ShowErrorMessage("No deliveries to include in PDF");
+                    return;
+                }
+
+                Response.Clear();
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("Content-Disposition", $"attachment; filename=schedule_{CurrentWeekStart:yyyyMMdd}.pdf");
+
+                using (Document doc = new Document(PageSize.A4, 36f, 36f, 54f, 36f))
+                {
+                    PdfWriter.GetInstance(doc, Response.OutputStream);
+                    doc.Open();
+
+                    // Fonts/colors
+                    BaseColor primary = new BaseColor(2, 53, 60);
+                    var fontTitle = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16, primary);
+                    var fontSub = FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.BLACK);
+                    var fontHeader = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.WHITE);
+                    var fontCell = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.BLACK);
+
+                    Paragraph title = new Paragraph("My Delivery Schedule", fontTitle);
+                    title.Alignment = Element.ALIGN_LEFT;
+                    doc.Add(title);
+                    doc.Add(new Paragraph($"Week: {CurrentWeekStart:MMM dd, yyyy} - {CurrentWeekStart.AddDays(6):MMM dd, yyyy}", fontSub));
+                    doc.Add(new Paragraph(" "));
+
+                    PdfPTable table = new PdfPTable(7) { WidthPercentage = 100 };
+                    table.SetWidths(new float[] { 1.1f, 1.1f, 0.8f, 2.0f, 2.0f, 1.2f, 1.4f });
+
+                    void AddHeader(string text)
+                    {
+                        PdfPCell cell = new PdfPCell(new Phrase(text, fontHeader))
+                        {
+                            BackgroundColor = primary,
+                            HorizontalAlignment = Element.ALIGN_CENTER,
+                            Padding = 6f
+                        };
+                        table.AddCell(cell);
+                    }
+
+                    AddHeader("Day");
+                    AddHeader("Time Slot");
+                    AddHeader("ID");
+                    AddHeader("Book");
+                    AddHeader("Location");
+                    AddHeader("Status");
+                    AddHeader("Date/Time");
+
+                    foreach (DataRow row in deliveries.AsEnumerable().OrderBy(r => r.Field<DateTime>("deliveryDate")))
+                    {
+                        void AddCell(string text)
+                        {
+                            PdfPCell c = new PdfPCell(new Phrase(text ?? string.Empty, fontCell))
+                            {
+                                Padding = 5f,
+                                HorizontalAlignment = Element.ALIGN_LEFT,
+                                VerticalAlignment = Element.ALIGN_MIDDLE
+                            };
+                            table.AddCell(c);
+                        }
+
+                        AddCell(row["Day"].ToString());
+                        AddCell(row["TimeSlot"].ToString());
+                        AddCell(row["DeliveryID"].ToString());
+                        AddCell(row["BookTitle"].ToString());
+                        AddCell(row["Location"].ToString());
+                        AddCell(row["Status"].ToString());
+                        AddCell(((DateTime)row["deliveryDate"]).ToString("yyyy-MM-dd HH:mm"));
+                    }
+
+                    doc.Add(table);
+                    doc.Close();
+                }
+
+                Response.End();
+            }
+            catch (Exception ex)
+            {
+                LogError($"Error generating PDF: {ex.Message}");
+                ShowErrorMessage("Failed to generate PDF. Please try again.");
+            }
         }
 
         protected void btnExportCSV_Click(object sender, EventArgs e)

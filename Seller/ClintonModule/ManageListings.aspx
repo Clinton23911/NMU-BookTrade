@@ -8,7 +8,7 @@
         <div class="ml-header">
             <h1 class="ml-title">Manage Listings</h1>
             <div class="ml-search-results">
-                <asp:Label ID="lblSearchResults" runat="server" Text="Your Listings"></asp:Label>
+                <asp:Label ID="lblSearchResults" runat="server" Text="Your Listings" CssClass="ml-results-label"></asp:Label>
                 <asp:LinkButton ID="lnkViewAll" runat="server" CssClass="ml-view-all">View all results</asp:LinkButton>
             </div>
         </div>
@@ -46,7 +46,7 @@
 
         <!-- Modal Popup for Edit/Delete -->
         <div id="editModal" class="modal-overlay">
-            <div class="modal-box" style="max-width: 420px;">
+            <div class="modal-box" style="max-width: 520px;">
                 <h2>Edit Listing</h2>
                 <div class="ml-form">
                     <div class="ml-form-row">

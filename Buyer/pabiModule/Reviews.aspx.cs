@@ -36,8 +36,15 @@ namespace NMU_BookTrade
 
                 lblFirstName.Text = GetBuyerFirstName(buyerId);
 
+                LoadFilterOptions();
                 LoadReviewHistory(buyerId);
 
+                pnlPurchasesTab.Visible = true;
+                pnlHistoryTab.Visible = false;
+                pnlReviewPanel.Visible = false;
+
+                btnShowPurchases.CssClass = "tab-btn active";
+                btnShowHistory.CssClass = "tab-btn";
             }
         }
 
@@ -130,8 +137,42 @@ namespace NMU_BookTrade
             lblTotalReviews.Text = $"{reviews.Count} {(reviews.Count == 1 ? "Review" : "Reviews")}";
         }
 
+        private void LoadFilterOptions()
+        {
+            ddlReviewFilter.Items.Clear();
+            ddlReviewFilter.Items.Add(new ListItem("Last 3 months", "3m"));
+            ddlReviewFilter.Items.Add(new ListItem("Last 6 months", "6m"));
+
+            int currentYear = DateTime.Now.Year;
+            for (int i = 0; i < 5; i++)
+            {
+                ddlReviewFilter.Items.Add(new ListItem((currentYear - i).ToString(), (currentYear - i).ToString()));
+            }
+
+            ddlReviewFilter.SelectedIndex = 0; 
+        }
+
+
         private void LoadReviewHistory(int buyerId)
         {
+            string filter = ddlReviewFilter.SelectedValue;
+            DateTime fromDate = DateTime.MinValue;
+            DateTime toDate = DateTime.Now;
+
+            if (filter == "3m")
+            {
+                fromDate = DateTime.Now.AddMonths(-3);
+            }
+            else if (filter == "6m")
+            {
+                fromDate = DateTime.Now.AddMonths(-6);
+            }
+            else if (int.TryParse(filter, out int year))
+            {
+                fromDate = new DateTime(year, 1, 1);
+                toDate = new DateTime(year, 12, 31, 23, 59, 59);
+            }
+
             var reviews = new List<dynamic>();
             using (var con = new SqlConnection(connStr))
             using (var cmd = new SqlCommand(@"
@@ -141,10 +182,14 @@ namespace NMU_BookTrade
         JOIN Sale S ON R.saleID = S.saleID
         JOIN Book B ON S.bookISBN = B.bookISBN
         WHERE S.buyerID = @buyerID
+          AND R.reviewDate BETWEEN @fromDate AND @toDate
         ORDER BY R.reviewDate DESC;", con))
             {
                 cmd.Parameters.AddWithValue("@buyerID", buyerId);
+                cmd.Parameters.AddWithValue("@fromDate", fromDate);
+                cmd.Parameters.AddWithValue("@toDate", toDate);
                 con.Open();
+
                 using (var r = cmd.ExecuteReader())
                 {
                     while (r.Read())
@@ -163,6 +208,12 @@ namespace NMU_BookTrade
 
             rptReviewHistory.DataSource = reviews;
             rptReviewHistory.DataBind();
+        }
+
+        protected void ddlReviewFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int buyerId = Convert.ToInt32(Session["buyerID"]);
+            LoadReviewHistory(buyerId);
         }
 
 
@@ -214,31 +265,36 @@ namespace NMU_BookTrade
 
         protected void btnWriteReview_Click(object sender, EventArgs e)
         {
-            var btn = (System.Web.UI.WebControls.Button)sender;
+            Button btn = (Button)sender;
             string bookISBN = btn.CommandArgument;
 
-            using (var con = new SqlConnection(connStr))
-            using (var cmd = new SqlCommand("SELECT title, coverImage FROM Book WHERE bookISBN = @isbn", con))
+            hfBookISBN.Value = bookISBN;
+
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                cmd.Parameters.AddWithValue("@isbn", bookISBN);
                 con.Open();
-                using (var r = cmd.ExecuteReader())
+                string query = "SELECT title, coverImage FROM Book WHERE bookISBN = @ISBN";
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    if (r.Read())
+                    cmd.Parameters.AddWithValue("@ISBN", bookISBN);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
                     {
-                        lblProductName.Text = r["title"].ToString();
-                        imgProduct.ImageUrl = r["coverImage"].ToString();
+                        lblProductName.Text = reader["title"].ToString();
+                        imgProduct.ImageUrl = reader["coverImage"].ToString();
                     }
                 }
             }
 
-            hfBookISBN.Value = bookISBN;
+            int buyerId = Convert.ToInt32(Session["buyerID"]);
+            lblFirstName.Text = GetBuyerFirstName(buyerId);
 
-            LoadProductSummary(bookISBN);
-
-            // Open slide panel
-            ScriptManager.RegisterStartupScript(this, GetType(), "openPanel", "openPanel();", true);
+            pnlReviewPanel.Visible = true;
+            pnlReviewPanel.CssClass = "slide panel slide-panel-visible";
+            pnlPurchasesTab.Visible = false;
+            pnlHistoryTab.Visible = false;
         }
+
 
         protected void btnSubmitReview_Click(object sender, EventArgs e)
         {
@@ -246,9 +302,8 @@ namespace NMU_BookTrade
                 return;
 
             int buyerId = Convert.ToInt32(Session["buyerID"]);
-            string bookISBN = hfBookISBN.Value;
+            string bookISBN = hfBookISBN.Value;                 
             int rating = int.Parse(ddlRating.SelectedValue);
-            string title = txtReviewTitle.Text?.Trim();
             string comment = txtReviewComment.Text?.Trim();
 
             using (var con = new SqlConnection(connStr))
@@ -263,11 +318,11 @@ namespace NMU_BookTrade
                         using (var findSale = new SqlCommand(@"
                     SELECT TOP 1 saleID
                     FROM Sale
-                    WHERE buyerID = @buyer AND bookISBN = @isbn
+                    WHERE buyerID = @buyer AND bookISBN = @bookISBN
                     ORDER BY saleDate DESC;", con, tx))
                         {
                             findSale.Parameters.Add("@buyer", SqlDbType.Int).Value = buyerId;
-                            findSale.Parameters.Add("@isbn", SqlDbType.VarChar, 32).Value = bookISBN;
+                            findSale.Parameters.Add("@bookISBN", SqlDbType.VarChar, 32).Value = bookISBN; 
                             object o = findSale.ExecuteScalar();
                             if (o == null) throw new Exception("No matching purchase found for this product.");
                             saleID = Convert.ToInt32(o);
@@ -285,7 +340,7 @@ namespace NMU_BookTrade
                     INSERT INTO Review (reviewID, reviewRating, reviewComment, saleID, reviewDate)
                     VALUES (@id, @rating, @comment, @saleID, GETDATE());", con, tx))
                         {
-                            insert.Parameters.Add("@id", SqlDbType.Int).Value = nextReviewID;
+                            insert.Parameters.Add("@id", SqlDbType.Int).Value = nextReviewID;              
                             insert.Parameters.Add("@rating", SqlDbType.Int).Value = rating;
                             insert.Parameters.Add("@comment", SqlDbType.NVarChar, -1).Value = (object)comment ?? DBNull.Value;
                             insert.Parameters.Add("@saleID", SqlDbType.Int).Value = saleID;
@@ -302,15 +357,11 @@ namespace NMU_BookTrade
                 }
             }
 
-            // refresh summary & history for this product
             LoadProductSummary(bookISBN);
             LoadReviewHistory(buyerId);
 
-            // clear form & close panel
-            txtReviewTitle.Text = string.Empty;
             txtReviewComment.Text = string.Empty;
             ddlRating.SelectedValue = "5";
-            ScriptManager.RegisterStartupScript(this, GetType(), "closePanel", "closePanel();", true);
         }
 
         protected void btnDeleteReview_Click(object sender, EventArgs e)
@@ -330,9 +381,31 @@ namespace NMU_BookTrade
                 }
             }
 
-            //Reload review history after deletion
             int buyerId = Convert.ToInt32(Session["buyerID"]);
             LoadReviewHistory(buyerId);
+        }
+
+        protected void btnShowPurchases_Click(object sender, EventArgs e)
+        {
+            pnlPurchasesTab.Visible = true;
+            pnlHistoryTab.Visible = false;
+            pnlReviewPanel.Visible = false;
+
+            btnShowPurchases.CssClass = "tab-btn active";
+            btnShowHistory.CssClass = "tab-btn";
+        }
+
+        protected void btnShowHistory_Click(object sender, EventArgs e)
+        {
+            pnlPurchasesTab.Visible = false;
+            pnlHistoryTab.Visible = true;
+            pnlReviewPanel.Visible = false;
+
+            btnShowPurchases.CssClass = "tab-btn";
+            btnShowHistory.CssClass = "tab-btn active";
+
+            int buyerId = Convert.ToInt32(Session["buyerID"]);
+            LoadReviewHistory(buyerId); 
         }
 
 

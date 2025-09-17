@@ -1,15 +1,20 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="Reviews.aspx.cs" Inherits="NMU_BookTrade.WebForm7" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
-     <div class="reviews-main">
+
+   <div class="reviews-main">
         <h2>Product Reviews</h2>
 
        <!-- Tab Navigation -->
-    <div class="tabs">
-        <button type="button" class="tab-btn active" onclick="showTab('purchasesTab')">Your Purchases</button>
-        <button type="button" class="tab-btn" onclick="showTab('historyTab')">Review History</button>
-    </div>
+  <div class="tabs">
+    <asp:Button ID="btnShowPurchases" runat="server" Text="Your Purchases"
+        CssClass="tab-btn" OnClick="btnShowPurchases_Click" />
+    <asp:Button ID="btnShowHistory" runat="server" Text="Review History"
+        CssClass="tab-btn" OnClick="btnShowHistory_Click" />
+</div>
+
         <!-- Summary for selected product (shown after you click Write Review or when ?isbn=... is present) -->
         <asp:Panel ID="pnlSummary" runat="server" Visible="false">
             <div class="average-rating">
@@ -46,27 +51,49 @@
             </div>
         </asp:Panel>
 
-        <!-- Your Purchases -->
-        <div class="purchases">
-            <h3>Your Purchases</h3>
-            <asp:Repeater ID="rptPurchases" runat="server">
-                <ItemTemplate>
-                    <div class="purchase-item">
-                        <asp:Image ID="imgPurchaseProduct" runat="server" ImageUrl='<%# Eval("coverImage") %>' Width="60" />
-                        <span class="product-name"><%# Eval("title") %></span>
-                        <asp:Button ID="btnWriteReview" runat="server" CssClass="btn"
-                            Text="Write Review"
-                            CommandArgument='<%# Eval("bookISBN") %>'
-                            OnClick="btnWriteReview_Click" />
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
-        </div>
+       <!-- Purchases Tab -->
+<asp:Panel ID="pnlPurchasesTab" runat="server" Visible="true">
+    <h3>Your Purchases</h3>
+    <asp:Repeater ID="rptPurchases" runat="server">
+        <ItemTemplate>
+            <div class="purchase-item">
+                <asp:Image ID="imgPurchaseProduct" runat="server" ImageUrl='<%# Eval("coverImage") %>' Width="60" />
+                <span class="product-name"><%# Eval("title") %></span>
+                <asp:Button ID="btnWriteReview" runat="server" CssClass="btn"
+                    Text="Write Review"
+                    CommandArgument='<%# Eval("bookISBN") %>'
+                    OnClick="btnWriteReview_Click" />
+            </div>
+        </ItemTemplate>
+    </asp:Repeater>
+</asp:Panel>
 
-       <!-- Write Review Side Panel -->
-<div id="reviewPanel" class="side-panel">
+<!-- Review History Tab -->
+<asp:Panel ID="pnlHistoryTab" runat="server" Visible="false">
+    <h3>Your Review History</h3>
+    <asp:DropDownList ID="ddlReviewFilter" runat="server" AutoPostBack="true"
+        OnSelectedIndexChanged="ddlReviewFilter_SelectedIndexChanged" />
+    <asp:Repeater ID="rptReviewHistory" runat="server">
+        <ItemTemplate>
+            <div class="review-history-item">
+                <span class="stars"><%# new string('★', (int)Eval("reviewRating")) %></span>
+                <strong><%# Eval("title") %></strong>
+                <p><%# Eval("reviewComment") %></p>
+                <small><%# Eval("reviewDate", "{0:dd MMM yyyy}") %></small>
+                <br />
+                <asp:Button ID="btnDeleteReview" runat="server" CssClass="btn-danger"
+                    Text="Delete"
+                    CommandArgument='<%# Eval("reviewID") %>'
+                    OnClick="btnDeleteReview_Click" />
+            </div>
+        </ItemTemplate>
+    </asp:Repeater>
+</asp:Panel>
+
+<!-- Slide-in Review Panel (Hidden until Write Review is clicked) -->
+<asp:Panel ID="pnlReviewPanel" runat="server" CssClass="side-panel" Visible="false">
     <div class="panel-content">
-        <span class="close" onclick="closePanel()">&times;</span>
+        <asp:Label ID="lblHeader" runat="server" Text="<strong>Write a Review</strong>" font ="16px"/>
 
         <div class="product-head">
             <asp:Image ID="imgProduct" runat="server" Width="64" />
@@ -84,62 +111,15 @@
             </asp:DropDownList>
         </div>
 
-        <div class="grid-2">
-            <asp:TextBox ID="txtReviewTitle" runat="server" CssClass="field" Placeholder="Review Title" />
-            <asp:Label ID="lblFirstName" runat="server" CssClass="field" />
-        </div>
-
         <div class="field">
+                        <asp:Label ID="lblFirstName" runat="server" CssClass="buyer-name" />
             <asp:TextBox ID="txtReviewComment" runat="server" TextMode="MultiLine" Rows="5" Width="100%" Placeholder="Your review..."></asp:TextBox>
         </div>
 
         <asp:HiddenField ID="hfBookISBN" runat="server" />
         <asp:Button ID="btnSubmitReview" runat="server" Text="Submit Review" CssClass="btn" OnClick="btnSubmitReview_Click" />
-        <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn secondary" OnClientClick="closePanel(); return false;" />
     </div>
-
-    <!-- Review History -->
-<div id="historyTab" class="tab-content">
-    <h3>Your Review History</h3>
-    <asp:Repeater ID="rptReviewHistory" runat="server">
-        <ItemTemplate>
-            <div class="review-history-item">
-                <span class="stars"><%# new string('★', (int)Eval("reviewRating")) %></span>
-                <strong><%# Eval("title") %></strong> 
-                <p><%# Eval("reviewComment") %></p>
-                <small><%# Eval("reviewDate", "{0:dd MMM yyyy}") %></small>
-                <br />
-                <asp:Button ID="btnDeleteReview" runat="server" CssClass="btn danger"
-                    Text="Delete"
-                    CommandArgument='<%# Eval("reviewID") %>'
-                    OnClick="btnDeleteReview_Click" />
-            </div>
-        </ItemTemplate>
-    </asp:Repeater>
+</asp:Panel>
 </div>
 
-</div>
-       <script type="text/javascript">
-           function openPanel() {
-               document.getElementById("reviewPanel").style.width = "400px";
-           }
-
-           function closePanel() {
-               document.getElementById("reviewPanel").style.width = "0";
-           }
-       </script>
-
-       <script>
-           function showTab(tabId) {
-          
-     // Hide all tabs
-               document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-               document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-               // Show selected tab
-               document.getElementById(tabId).classList.add('active');
-               event.target.classList.add('active');
-           }
-       </script>
-</asp:Content>
-
+       </asp:Content>

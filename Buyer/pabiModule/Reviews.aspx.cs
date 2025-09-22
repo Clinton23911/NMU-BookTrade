@@ -149,7 +149,7 @@ namespace NMU_BookTrade
                 ddlReviewFilter.Items.Add(new ListItem((currentYear - i).ToString(), (currentYear - i).ToString()));
             }
 
-            ddlReviewFilter.SelectedIndex = 0; 
+            ddlReviewFilter.SelectedIndex = 0;
         }
 
 
@@ -302,7 +302,7 @@ namespace NMU_BookTrade
                 return;
 
             int buyerId = Convert.ToInt32(Session["buyerID"]);
-            string bookISBN = hfBookISBN.Value;                 
+            string bookISBN = hfBookISBN.Value;
             int rating = int.Parse(ddlRating.SelectedValue);
             string comment = txtReviewComment.Text?.Trim();
 
@@ -322,7 +322,7 @@ namespace NMU_BookTrade
                     ORDER BY saleDate DESC;", con, tx))
                         {
                             findSale.Parameters.Add("@buyer", SqlDbType.Int).Value = buyerId;
-                            findSale.Parameters.Add("@bookISBN", SqlDbType.VarChar, 32).Value = bookISBN; 
+                            findSale.Parameters.Add("@bookISBN", SqlDbType.VarChar, 32).Value = bookISBN;
                             object o = findSale.ExecuteScalar();
                             if (o == null) throw new Exception("No matching purchase found for this product.");
                             saleID = Convert.ToInt32(o);
@@ -340,7 +340,7 @@ namespace NMU_BookTrade
                     INSERT INTO Review (reviewID, reviewRating, reviewComment, saleID, reviewDate)
                     VALUES (@id, @rating, @comment, @saleID, GETDATE());", con, tx))
                         {
-                            insert.Parameters.Add("@id", SqlDbType.Int).Value = nextReviewID;              
+                            insert.Parameters.Add("@id", SqlDbType.Int).Value = nextReviewID;
                             insert.Parameters.Add("@rating", SqlDbType.Int).Value = rating;
                             insert.Parameters.Add("@comment", SqlDbType.NVarChar, -1).Value = (object)comment ?? DBNull.Value;
                             insert.Parameters.Add("@saleID", SqlDbType.Int).Value = saleID;
@@ -405,9 +405,14 @@ namespace NMU_BookTrade
             btnShowHistory.CssClass = "tab-btn active";
 
             int buyerId = Convert.ToInt32(Session["buyerID"]);
-            LoadReviewHistory(buyerId); 
+            LoadReviewHistory(buyerId);
         }
 
+        protected void btnClear_Click(object sender, EventArgs e)
+        {
+            // Clear all input fields
+            txtReviewComment.Text = "";
+        }
 
     }
 }

@@ -19,7 +19,7 @@
                 <asp:Button ID="btnRefreshSummary" runat="server" 
                     CssClass="dd-refresh-btn" 
                     Text="🗘" 
-                    OnClick="btnRefreshSummary_Click" />
+                    OnClick="BtnRefreshSummary_Click" />
             </div>
         </div>
 

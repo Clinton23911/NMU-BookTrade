@@ -612,34 +612,33 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
-            Response.Redirect("~/User Management/Login.aspx");
+            Response.Redirect("~/User Management/Logout.aspx");
         }
 
-        protected void btnRefreshSummary_Click(object sender, EventArgs e)
+        //protected void btnRefreshSummary_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        LoadDriverData();
+        //        LoadActiveDeliveries();
+        //        // Clear any error messages
+        //        lblErrorMessage.Text = "";
+        //        lblErrorMessage.Visible = false;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        lblErrorMessage.Text = "Error refreshing summary data. Please try again.";
+        //        lblErrorMessage.CssClass = "alert alert-danger";
+        //        lblErrorMessage.Visible = true;
+        //        // Log the error: LogError(ex);
+        //    }
+        //}
+
+        protected void BtnRefreshSummary_Click(object sender, EventArgs e)
         {
             try
             {
                 LoadDriverData();
-                LoadActiveDeliveries();
-                // Clear any error messages
-                lblErrorMessage.Text = "";
-                lblErrorMessage.Visible = false;
-            }
-            catch (Exception)
-            {
-                lblErrorMessage.Text = "Error refreshing summary data. Please try again.";
-                lblErrorMessage.CssClass = "alert alert-danger";
-                lblErrorMessage.Visible = true;
-                // Log the error: LogError(ex);
-            }
-        }
-
-        protected void btnRefreshSummary_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                LoadDriverData();
-                LoadPendingDeliveries();
                 // Clear any error messages
                 lblErrorMessage.Text = "";
                 lblErrorMessage.Visible = false;
@@ -694,7 +693,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
             int stars = Convert.ToInt32(rating);
             return new string('★', stars) + new string('☆', 5 - stars);
         }
-
+        
         private void RefreshSummaryData()
         {
             LoadDriverData();

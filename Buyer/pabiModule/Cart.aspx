@@ -14,7 +14,6 @@
                 </asp:LinkButton>
             </ItemTemplate>
         </asp:Repeater>
-
         <div class="search-bar-bd">
             <asp:TextBox ID="txtSearch" runat="server" CssClass="search-bd" Placeholder="Search by Title or Author..." />
             <br />

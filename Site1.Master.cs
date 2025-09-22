@@ -18,6 +18,9 @@ namespace NMU_BookTrade
             
             if (!IsPostBack)
             {
+
+                StorePreviousPage();
+
                 // Default: Anonymous is visible, others are hidden
                 MenuAnonymous.Visible = true;
                 MenuAdmin.Visible = false;
@@ -177,6 +180,18 @@ namespace NMU_BookTrade
             Response.Redirect("~/User Management/Home.aspx");
         }
 
-        
+        protected void StorePreviousPage()
+        {
+            if (Request.UrlReferrer != null)
+            {
+                Uri referrer = Request.UrlReferrer;
+
+                if (referrer.Host == Request.Url.Host)
+                {
+                    Session["PreviousPage"] = referrer.ToString();
+                }
+            }
+        }
+
     }
 }

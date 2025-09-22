@@ -7,7 +7,6 @@
    <div class="reviews-main">
         <h2>Product Reviews</h2>
 
-       <!-- Tab Navigation -->
   <div class="tabs">
     <asp:Button ID="btnShowPurchases" runat="server" Text="Your Purchases"
         CssClass="tab-btn" OnClick="btnShowPurchases_Click" />
@@ -15,7 +14,6 @@
         CssClass="tab-btn" OnClick="btnShowHistory_Click" />
 </div>
 
-        <!-- Summary for selected product (shown after you click Write Review or when ?isbn=... is present) -->
         <asp:Panel ID="pnlSummary" runat="server" Visible="false">
             <div class="average-rating">
                 <asp:Label ID="lblAverageRating" runat="server" CssClass="avg-rating"></asp:Label>
@@ -27,7 +25,7 @@
                     <div class="rating-breakdown">
                         <span><%# Eval("reviewRating") %> ★</span>
                         <div class="bar">
-                            <div class="fill" style='width:<%# Eval("percentage") %>%'></div>
+<%--                            <div class="fill" style='width:<%# Eval("percentage") %>%'></div>--%>
                         </div>
                         <span>(<%# Eval("CountReviews") %>)</span>
                     </div>
@@ -81,10 +79,8 @@
                 <p><%# Eval("reviewComment") %></p>
                 <small><%# Eval("reviewDate", "{0:dd MMM yyyy}") %></small>
                 <br />
-                <asp:Button ID="btnDeleteReview" runat="server" CssClass="btn-danger"
-                    Text="Delete"
-                    CommandArgument='<%# Eval("reviewID") %>'
-                    OnClick="btnDeleteReview_Click" />
+              <asp:Button ID="btnDeleteReview" runat="server" Text="Delete" CommandArgument='<%# Eval("reviewID") %>' OnClick="btnDeleteReview_Click" OnClientClick="return confirm('Are you sure you want to delete this review?');" CssClass="delete-btn" />
+
             </div>
         </ItemTemplate>
     </asp:Repeater>
@@ -118,6 +114,7 @@
 
         <asp:HiddenField ID="hfBookISBN" runat="server" />
         <asp:Button ID="btnSubmitReview" runat="server" Text="Submit Review" CssClass="btn" OnClick="btnSubmitReview_Click" />
+        <asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="form-button" OnClick="btnClear_Click" CausesValidation="false"/>
     </div>
 </asp:Panel>
 </div>

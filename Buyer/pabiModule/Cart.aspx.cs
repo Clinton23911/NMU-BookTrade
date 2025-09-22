@@ -178,7 +178,7 @@ namespace NMU_BookTrade
             Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?query=" + Server.UrlEncode(searchTerm));
         }
 
-      
+
         protected void btnPurchase_Click(object sender, EventArgs e)
         {
             if (Session["buyerID"] == null) return;
@@ -348,7 +348,7 @@ namespace NMU_BookTrade
             BindCartItems();
             UpdateCartCount();
         }
-        
+
 
         protected void rptCartItems_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
@@ -489,7 +489,7 @@ namespace NMU_BookTrade
                     object result = cmd.ExecuteScalar();
                     int count = (result != DBNull.Value) ? Convert.ToInt32(result) : 0;
 
-                    
+
                 }
             }
         }

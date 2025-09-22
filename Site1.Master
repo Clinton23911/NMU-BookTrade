@@ -119,6 +119,7 @@
         </asp:HyperLink>
 
         <asp:HyperLink ID="hlBuyerProfile" runat="server" NavigateUrl="~/Buyer/pabiModule/BuyerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
+                <asp:HyperLink ID="hlOrders" runat="server" NavigateUrl="~/Buyer/pabiModule/BuyerOrders.aspx" CssClass="btn">Orders</asp:HyperLink>
 <asp:Button ID="btnLogout" CssClass="btn" runat="server" Text="LogOut" PostBackUrl="~/User Management/LogOut.aspx" CausesValidation="false"/>
     </div>
 

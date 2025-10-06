@@ -21,15 +21,21 @@
     <AlternatingRowStyle CssClass="table-row-alt" />
 
     <Columns>
-        <asp:BoundField DataField="BookTitle" HeaderText="Book" />
-        <asp:BoundField DataField="SellerName" HeaderText="Seller" />
-        <asp:BoundField DataField="BuyerName" HeaderText="Buyer" />
-        <asp:BoundField DataField="PickupAddress" HeaderText="Pickup Address" />
-        <asp:BoundField DataField="DeliveryAddress" HeaderText="Delivery Address" />
+        <asp:BoundField DataField="title" HeaderText="Book" />
+        <asp:BoundField DataField="sellerName" HeaderText="Seller" />
+        <asp:BoundField DataField="buyerName" HeaderText="Buyer" />
+        <asp:BoundField DataField="sellerAddress" HeaderText="Pickup Address" />
+       <asp:TemplateField HeaderText="Delivery Address">
+            <ItemTemplate>
+                <asp:Label ID="lblBuyerAddress" runat="server" Text='<%# Eval("buyerAddress") %>' />
+            </ItemTemplate>
+        </asp:TemplateField>
+
+
 
         <asp:TemplateField HeaderText="Driver">
             <ItemTemplate>
-                <asp:DropDownList ID="ddlDrivers" runat="server" CssClass="driver-dropdown" AutoPostBack ="true"></asp:DropDownList>
+                <asp:DropDownList ID="ddlDrivers" runat="server" CssClass="driver-dropdown"></asp:DropDownList>
             </ItemTemplate>
 
         </asp:TemplateField>
@@ -38,12 +44,9 @@
             
 
         <ItemTemplate>
-            <asp:TextBox 
-                ID="txtDeliveryDate" 
-                runat="server" 
-                Text='<%# Eval("deliveryDate", "{0:yyyy-MM-ddTHH:mm}") %>' 
-                TextMode="DateTimeLocal" 
-                CssClass="date-picker" />
+           <asp:TextBox ID="txtDeliveryDate" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>
+
+
         </ItemTemplate>
 
 

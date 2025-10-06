@@ -10,9 +10,25 @@
     <br />
 
     <div class="form-group">
-                <label>Username</label>
-                <asp:TextBox ID="txtUsername" runat="server" CssClass="input-field" />
-                <asp:RequiredFieldValidator ID="rfvUsername" runat="server" ControlToValidate="txtUsername" ErrorMessage="Username is required." CssClass="form_errormessage" ForeColor="Red" Display="Dynamic" />
+                    <label>Username</label>
+                    <asp:TextBox ID="txtUsername" runat="server" CssClass="input-field" />
+                    <asp:RequiredFieldValidator 
+                        ID="rfvUsername" 
+                        runat="server" 
+                        ControlToValidate="txtUsername" 
+                        ErrorMessage="Username is required." 
+                        CssClass="form_errormessage" 
+                        ForeColor="Red" 
+                        Display="Dynamic" />
+                    <asp:RegularExpressionValidator 
+                        ID="revUsername" 
+                        runat="server" 
+                        ControlToValidate="txtUsername" 
+                        ErrorMessage="Username must be exactly 9 digits." 
+                        CssClass="form_errormessage" 
+                        ForeColor="Red" 
+                        Display="Dynamic"
+                        ValidationExpression="^\d{9}$" />
             </div>
 
             <div class="form-group">
@@ -34,9 +50,25 @@
             </div>
 
             <div class="form-group">
-                <label>Phone Number</label>
-                <asp:TextBox ID="txtNumber" runat="server" CssClass="input-field" />
-                <asp:RequiredFieldValidator ID="rfvNumber" runat="server" ControlToValidate="txtNumber" ErrorMessage="Phone number is required." CssClass="form_errormessage" ForeColor="Red" Display="Dynamic" />
+                       <label>Phone Number</label>
+                            <asp:TextBox ID="txtNumber" runat="server" CssClass="input-field" />
+                            <asp:RequiredFieldValidator 
+                                ID="rfvNumber" 
+                                runat="server" 
+                                ControlToValidate="txtNumber" 
+                                ErrorMessage="Phone number is required." 
+                                CssClass="form_errormessage" 
+                                ForeColor="Red" 
+                                Display="Dynamic" />
+                            <asp:RegularExpressionValidator 
+                                ID="revPhoneNumber" 
+                                runat="server" 
+                                ControlToValidate="txtNumber" 
+                                ErrorMessage="Enter a valid phone number (digits only, optional + at start)." 
+                                CssClass="form_errormessage" 
+                                ForeColor="Red" 
+                                Display="Dynamic"
+                                ValidationExpression="^\+?\d{8,15}$" />
             </div>
 
             <div class="form-group">

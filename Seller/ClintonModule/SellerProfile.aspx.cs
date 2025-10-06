@@ -55,6 +55,8 @@ namespace NMU_BookTrade
                                 txtNumber.Text = reader["sellerNumber"].ToString();
                                 txtAddress.Text = reader["sellerAddress"].ToString();
 
+
+
                                 // Handle profile image
                                 if (!reader.IsDBNull(reader.GetOrdinal("sellerProfileImage")))
                                 {
@@ -84,6 +86,24 @@ namespace NMU_BookTrade
         {
             if (!Page.IsValid) return;
 
+            string username = txtUsername.Text.Trim();
+            string number = txtNumber.Text.Trim();
+
+            // Validate username (must be exactly 9 digits)
+            if (!System.Text.RegularExpressions.Regex.IsMatch(username, @"^\d{9}$"))
+            {
+                lblMessage.Text = "Username must be exactly 9 digits.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            // Validate phone number (E.164 format: 8–15 digits, optional +, no spaces)
+            if (!System.Text.RegularExpressions.Regex.IsMatch(number, @"^\+?\d{8,15}$"))
+            {
+                lblMessage.Text = "Enter a valid phone number with digits only (optional + at the start, no spaces).";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
             int sellerID = Convert.ToInt32(Session["SellerID"]);
             string newImageName = null;
 
@@ -132,6 +152,7 @@ namespace NMU_BookTrade
                     cmd.Parameters.AddWithValue("@Number", txtNumber.Text.Trim());
                     cmd.Parameters.AddWithValue("@Address", txtAddress.Text.Trim());
                     cmd.Parameters.AddWithValue("@ID", sellerID);
+
 
                     if (newImageName != null)
                     {
@@ -251,15 +272,7 @@ namespace NMU_BookTrade
 
         protected void cvUsername_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            // Custom validation for username
-            string username = args.Value;
-
-            if (username.Length < 4 || username.Length > 20)
-            {
-                args.IsValid = false;
-                cvUsername.ErrorMessage = "Username must be between 4-20 characters";
-                return;
-            }
+            
 
             // Check if username already exists (excluding current user)
             int sellerID = Convert.ToInt32(Session["SellerID"]);
@@ -270,16 +283,17 @@ namespace NMU_BookTrade
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    cmd.Parameters.AddWithValue("@Username", username);
+                    cmd.Parameters.AddWithValue("@Username",txtUsername.Text.Trim());
                     cmd.Parameters.AddWithValue("@ID", sellerID);
 
                     con.Open();
                     int count = Convert.ToInt32(cmd.ExecuteScalar());
 
                     args.IsValid = count == 0;
-                    cvUsername.ErrorMessage = "Username already taken";
+                    rfvUsername.ErrorMessage = "Username already taken";
                 }
             }
         }
     }
 }
+

@@ -639,6 +639,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
             try
             {
                 LoadDriverData();
+                
                 // Clear any error messages
                 lblErrorMessage.Text = "";
                 lblErrorMessage.Visible = false;
@@ -650,6 +651,8 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 // Log the error: LogError(ex);
             }
         }
+
+       
 
         protected void rptPendingDeliveries_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {

@@ -3,8 +3,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
-
-   <div class="reviews-main">
+<div class="reviews-main">
         <h2>Product Reviews</h2>
 
   <div class="tabs">

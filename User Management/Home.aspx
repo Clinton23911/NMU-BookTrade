@@ -54,76 +54,41 @@ CommandArgument='<%# Eval("bookISBN") %>'>
 
 
     <!-- Reviews Section -->
-   <div class="testimonial-section">
+<div class="testimonial-section">
+
+    <!-- Left side: text -->
     <div class="testimonial-text">
         <h2>Read what our buyers have to say about us</h2>
-        <br />
-      
         <p>Over 200 buyers from diverse backgrounds trust us to help them find the right books at the best prices. We’ve helped students succeed and save money with our service.</p>
         <p>We’re proud to share what they say about us!</p>
-        <br />
-        <br />
-        <asp:Button ID="btnReadStories" runat="server" CssClass="testimonial-button" Text="Read our success stories" OnClick="btnReadStories_Click" />
+        <asp:Button ID="btnReadStories" runat="server" 
+                    CssClass="testimonial-button" 
+                    Text="Read our success stories" 
+                    OnClick="btnReadStories_Click" />
     </div>
 
-<div class="testimonial-cards">
-
-    <%-- Uncomment this Repeater later when your data is ready
-    <asp:Repeater ID="rptTestimonials" runat="server">
-        <ItemTemplate>
-            <div class="testimonial-card">
-                <img src='<%# ResolveUrl(Eval("profileImage").ToString()) %>' class="testimonial-img" alt="Buyer Photo" />
-                <div class="testimonial-content">
-                    <p class="testimonial-comment">"<%# Eval("reviewComment") %>"</p>
-                    <div class="testimonial-stars">
-                        <%# GetStarHtml(Convert.ToInt32(Eval("reviewRating"))) %>
+    <!-- Right side: testimonial cards -->
+    <div class="testimonial-cards">
+        <asp:Repeater ID="rptTestimonials" runat="server">
+            <ItemTemplate>
+                <div class="testimonial-card">
+                    <asp:Image ID="imgProfile" runat="server"
+                               ImageUrl='<%# ResolveUrl("~/UploadedImages/" + Eval("buyerProfileImage")) %>'
+                               CssClass="testimonial-img" AlternateText="Buyer Photo" />
+                    <div class="testimonial-content">
+                        <p class="testimonial-comment">"<%# Eval("reviewComment") %>"</p>
+                        <div class="testimonial-stars">
+                            <%# GetStarHtml(Convert.ToInt32(Eval("reviewRating"))) %>
+                        </div>
+                        <p class="testimonial-name">- <%# Eval("BuyerName") %> <%# Eval("BuyerSurname") %></p>
                     </div>
-                    <p class="testimonial-name">- <%# Eval("BuyerName") %> <%# Eval("BuyerSurname") %></p>
                 </div>
-            </div>
-        </ItemTemplate>
-    </asp:Repeater>
-    --%>
-
-    <!-- Static card preview 1 -->
-    <div class="testimonial-card">
-        <div class="testimonial-img-placeholder"></div>
-        <div class="testimonial-content">
-            <p class="testimonial-comment">"This is a sample review comment text."</p>
-            <div class="testimonial-stars">
-                <!-- Example stars -->
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: lightgray;">☆</span>
-                <span style="color: lightgray;">☆</span>
-            </div>
-            <p class="testimonial-name">- Buyer Name Surname</p>
-        </div>
-    </div>
-
-    <!-- Static card preview 2 -->
-    <div class="testimonial-card">
-        <div class="testimonial-img-placeholder"></div>
-        <div class="testimonial-content">
-            <p class="testimonial-comment">"Another example testimonial, great service!"</p>
-            <div class="testimonial-stars">
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-                <span style="color: gold;">★</span>
-            </div>
-            <p class="testimonial-name">- Another Buyer</p>
-        </div>
+            </ItemTemplate>
+        </asp:Repeater>
     </div>
 
 </div>
 
-
-
-</div>
-
     <br />
     <br />
     <br />
@@ -131,7 +96,7 @@ CommandArgument='<%# Eval("bookISBN") %>'>
     <br />
 
 
-    <h3 class="section-title"> Our deliveries have never are always on time </h3> 
+    <h3 class="section-title"> Our deliveries are always reaching students on time </h3> 
 
     <!-- Delivery Performance Section -->
 <div class="delivery-stats-section">
@@ -140,28 +105,27 @@ CommandArgument='<%# Eval("bookISBN") %>'>
         <h2>Our Delivery Performance</h2>
         <p>We take pride in delivering your textbooks on time and keeping our promise to make trading seamless.</p>
 
-        <div class="quick-stats">
+          <div class="quick-stats">
             <div class="stat-block">
                 <h3><asp:Label ID="lblTotalDeliveries" runat="server" Text="0"></asp:Label>+</h3>
                 <p>Deliveries Completed</p>
             </div>
+         </div>
+        <br />
             <div class="stat-block">
                 <h3>98%</h3>
                 <p>On-Time Delivery Rate</p>
             </div>
-            <div class="stat-block">
-                <h3>4.9/5</h3>
-                <p>Buyers Rating</p>
-            </div>
         </div>
+     <img src="<%= ResolveUrl("~/Images/map.png") %>" alt="Delivery Map" class="delivery-map" />
     </div>
 
     <div class="stats-right">
-    <img src="<%= ResolveUrl("~/Images/map.png") %>" alt="Delivery Map" class="delivery-map" />
-
-    </div>
+   
 
 </div>
+
+
 
     <br />
     <br />

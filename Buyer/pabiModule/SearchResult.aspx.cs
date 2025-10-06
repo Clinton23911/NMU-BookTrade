@@ -23,7 +23,7 @@ namespace NMU_BookTrade
             {
                 lblSearched.Text = "nothing";
             }
-            UpdateCartCount();
+            
         }
 
         private string GetDisplayText(string searchTerm)
@@ -171,8 +171,8 @@ namespace NMU_BookTrade
                 CartPanel.Visible = true;
                 CartPanel.CssClass = "slide-panel slide-panel-visible";
                 lblMessage.Text = "";
-                UpdateCartCount();
 
+                ((Site1)this.Master).UpdateCartCount();
             }
         }
 
@@ -238,29 +238,7 @@ namespace NMU_BookTrade
             return (int)createCartCmd.ExecuteScalar();
         }
 
-        public void UpdateCartCount()
-        {
-            if (Session["buyerID"] == null)
-            {
-                lblCartCount.Text = "0";
-                return;
-            }
-
-            int buyerID = Convert.ToInt32(Session["buyerID"]);
-            string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                conn.Open();
-                string countQuery = "SELECT SUM(quantity) FROM CartItems ci JOIN Cart c ON ci.cartID = c.cartID WHERE c.buyerID = @buyerID";
-                using (SqlCommand cmd = new SqlCommand(countQuery, conn))
-                {
-                    cmd.Parameters.AddWithValue("@buyerID", buyerID);
-                    object result = cmd.ExecuteScalar();
-                    lblCartCount.Text = (result != DBNull.Value) ? result.ToString() : "0";
-                }
-            }
-        }
+      
 
     }
 }

@@ -15,39 +15,48 @@ namespace NMU_BookTrade.Admin.GraceModule
     {
 
         /// <summary>
-        /// txtSearch control.
+        /// litTotalFlagged control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+        protected global::System.Web.UI.WebControls.Literal litTotalFlagged;
 
         /// <summary>
-        /// btnSearch control.
+        /// litTotalReviews control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSearch;
+        protected global::System.Web.UI.WebControls.Literal litTotalReviews;
 
         /// <summary>
-        /// btnClear control.
+        /// litFlaggedToday control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnClear;
+        protected global::System.Web.UI.WebControls.Literal litFlaggedToday;
 
         /// <summary>
-        /// gvReviews control.
+        /// litCleanRate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvReviews;
+        protected global::System.Web.UI.WebControls.Literal litCleanRate;
+
+        /// <summary>
+        /// rptFlaggedReviews control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptFlaggedReviews;
     }
 }

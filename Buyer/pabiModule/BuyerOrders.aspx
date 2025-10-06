@@ -1,8 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="BuyerOrders.aspx.cs" Inherits="NMU_BookTrade.BuyerOrders" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="BuyerOrders.aspx.cs" Inherits="NMU_BookTrade.Buyer.pabiModule.BuyerOrders" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
     <div class="orders">
         <h2>My Orders</h2>
@@ -69,4 +67,5 @@
             </ItemTemplate>
         </asp:Repeater>
     </div>
+
 </asp:Content>

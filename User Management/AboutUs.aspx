@@ -61,13 +61,13 @@
     <div class="Aboutus-cards">
         <!-- Card 1 -->
         <div class="Aboutus-card">
-            <div class="Aboutus-card">
+            
     <h3>Smart Listings</h3>
     <p>
-        As a seller you can list your new or used textbooks (hardcopy or digital) by title, module, or author. 
+        As a seller you can list your new or used textbooks (hardcopy)  by title, module, or author. 
         Our intelligent system helps you manage listings with ease and visibility. 
      </p>
-</div>
+
 
         </div>
         <!-- Card 2 -->

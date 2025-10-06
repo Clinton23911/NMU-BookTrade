@@ -32,7 +32,7 @@ namespace NMU_BookTrade
 
                 if (reader.Read())
                 {
-
+                    // grabbing the information and storing it in the textfields
                     txtUsername.Text = reader["buyerUsername"].ToString();
 
                     txtName.Text = reader["buyerName"].ToString();
@@ -67,18 +67,39 @@ namespace NMU_BookTrade
             string address = txtAddress.Text.Trim();
             string newImageName = "";
 
+            if (!System.Text.RegularExpressions.Regex.IsMatch(username, @"^\d{9}$"))
+            {
+                lblMessage.Text = "Username must be exactly 9 digits.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(number, @"^\+?\d{8,15}$"))
+            {
+                lblMessage.Text = "Enter a valid phone number with digits only (optional + at the start, no spaces).";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            // Get the file extension of the uploaded file and convert it to lowercase
             if (fuProfileImage.HasFile)
             {
                 string ext = Path.GetExtension(fuProfileImage.FileName).ToLower();
+
+                //validation check to see if its jpeg
                 if (ext != ".jpg" && ext != ".jpeg" && ext != ".png")
                 {
                     lblMessage.Text = "Only JPG, JPEG, or PNG images are allowed.";
                     lblMessage.ForeColor = System.Drawing.Color.Red;
                     return;
                 }
-
+                // Generate a unique file name using GUID to avoid overwriting existing files
                 newImageName = Guid.NewGuid().ToString() + ext;
+
+
+                // Create the physical path on the server where the file will be saved
                 string path = Server.MapPath("~/UploadedImages/" + newImageName);
+                // file is then saved in that path
                 fuProfileImage.SaveAs(path);
             }
 

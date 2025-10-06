@@ -13,21 +13,29 @@
         <!-- Profile Form -->
         <div class="form-group">
             <label>Username</label>
-            <div class="input-icon">
-                <i class="fas fa-user"></i>
-                <asp:TextBox ID="txtUsername" runat="server" CssClass="input-field" MaxLength="50" />
-            </div>
+           
+            <asp:TextBox ID="txtUsername" runat="server" CssClass="input-field" MaxLength="10" />
+       
             <asp:RequiredFieldValidator ID="rfvUsername" runat="server" 
                 ControlToValidate="txtUsername" ErrorMessage="Username is required." 
-                CssClass="form_errormessage" Display="Dynamic" />
+                CssClass="form_errormessage" ForeColor="Red" Display="Dynamic"  />
+                      
+             <asp:RegularExpressionValidator 
+                     ID="revUsername" 
+                     runat="server" 
+                     ControlToValidate="txtUsername" 
+                     ErrorMessage="Username must be exactly 9 digits." 
+                     CssClass="form_errormessage" 
+                     ForeColor="Red" 
+                     Display="Dynamic"
+                     ValidationExpression="^\d{10}$" />
         </div>
 
         <div class="form-group">
             <label>Name</label>
-            <div class="input-icon">
-                <i class="fas fa-id-card"></i>
+            
                 <asp:TextBox ID="txtName" runat="server" CssClass="input-field" MaxLength="50" />
-            </div>
+            
             <asp:RequiredFieldValidator ID="rfvName" runat="server" 
                 ControlToValidate="txtName" ErrorMessage="Name is required." 
                 CssClass="form_errormessage" Display="Dynamic" />
@@ -35,10 +43,7 @@
 
         <div class="form-group">
             <label>Surname</label>
-            <div class="input-icon">
-                <i class="fas fa-id-card"></i>
-                <asp:TextBox ID="txtSurname" runat="server" CssClass="input-field" MaxLength="50" />
-            </div>
+            <asp:TextBox ID="txtSurname" runat="server" CssClass="input-field" MaxLength="50" />
             <asp:RequiredFieldValidator ID="rfvSurname" runat="server" 
                 ControlToValidate="txtSurname" ErrorMessage="Surname is required." 
                 CssClass="form_errormessage" Display="Dynamic" />
@@ -46,10 +51,7 @@
 
         <div class="form-group">
             <label>Email</label>
-            <div class="input-icon">
-                <i class="fas fa-envelope"></i>
-                <asp:TextBox ID="txtEmail" runat="server" CssClass="input-field" TextMode="Email" MaxLength="100" />
-            </div>
+            <asp:TextBox ID="txtEmail" runat="server" CssClass="input-field" TextMode="Email" MaxLength="100" />
             <asp:RequiredFieldValidator ID="rfvEmail" runat="server" 
                 ControlToValidate="txtEmail" ErrorMessage="Email is required." 
                 CssClass="form_errormessage" Display="Dynamic" />
@@ -58,35 +60,54 @@
                 ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" 
                 CssClass="form_errormessage" Display="Dynamic" />
         </div>
+                 <div class="form-group">
+                                <label>Phone Number</label>
+                                 <asp:TextBox ID="txtNumber" runat="server" CssClass="input-field" />
+                                 <asp:RequiredFieldValidator 
+                                     ID="rfvNumber" 
+                                     runat="server" 
+                                     ControlToValidate="txtNumber" 
+                                     ErrorMessage="Phone number is required." 
+                                     CssClass="form_errormessage" 
+                                     ForeColor="Red" 
+                                     Display="Dynamic" />
+                                 <asp:RegularExpressionValidator 
+                                     ID="revPhoneNumber" 
+                                     runat="server" 
+                                     ControlToValidate="txtNumber" 
+                                     ErrorMessage="Enter a valid phone number (digits only, optional + at start)." 
+                                     CssClass="form_errormessage" 
+                                     ForeColor="Red" 
+                                     Display="Dynamic"
+                                     ValidationExpression="^\+?\d{8,15}$" />
+                 
+                            </div>
+                            <div class="form-group">
+                                <label>Change Profile Picture</label>
+                                <asp:FileUpload ID="fuProfileImage" runat="server" />
+                                <asp:Label ID="lblImageError" runat="server" 
+                                    CssClass="form_errormessage" 
+                                    ForeColor="Red" 
+                                    Visible="false" />
+                            </div>
 
-        <div class="form-group">
-            <label>Phone Number</label>
-            <div class="input-icon">
-                <i class="fas fa-phone"></i>
-                <asp:TextBox ID="txtNumber" runat="server" CssClass="input-field" TextMode="Phone" MaxLength="15" />
-            </div>
-            <asp:RequiredFieldValidator ID="rfvNumber" runat="server" 
-                ControlToValidate="txtNumber" ErrorMessage="Phone number is required." 
-                CssClass="form_errormessage" Display="Dynamic" />
-            <asp:RegularExpressionValidator ID="revNumber" runat="server" 
-                ControlToValidate="txtNumber" ErrorMessage="Invalid phone number format." 
-                ValidationExpression="^[0-9]{10,15}$" 
-                CssClass="form_errormessage" Display="Dynamic" />
-        </div>
+        
+       
+ <br />
+ <br />
 
-        <div class="form-group">
-            <label>Change Profile Picture</label>
-            <asp:FileUpload ID="fuProfileImage" runat="server" CssClass="input-field" />
-            <asp:Label ID="lblImageError" runat="server" CssClass="form_errormessage" Visible="false" />
-        </div>
+ <asp:Button ID="btnUpdate" runat="server" Text="Update Profile" CssClass="btn-update" OnClick="btnUpdate_Click" />
+ <br />
+ <br />
 
-        <!-- Action Buttons -->
-        <asp:Button ID="btnUpdate" runat="server" Text="Update Profile" CssClass="btn-update" OnClick="btnUpdate_Click" />
-        <asp:Button ID="btnDelete" runat="server" Text="Delete Profile" CssClass="btn-update" 
-            OnClientClick="return confirm('Are you sure you want to delete your profile? This cannot be undone.');" 
-            OnClick="btnDelete_Click" style="background-color: #ff6b6b; margin-left: 10px;" />
+ <asp:Button ID="btnDeleteProfile" runat="server" Text="Delete My Account" CssClass="btn-delete" 
+     OnClientClick="return confirm('Are you sure you want to delete your account? This action cannot be undone. And you will be re-directed to the home page.');" 
+     OnClick="btnDeleteProfile_Click" />
+        
         
         <!-- Status Message -->
         <asp:Label ID="lblMessage" runat="server" CssClass="message" />
-    </div>
+
+        </div>
+  
 </asp:Content>

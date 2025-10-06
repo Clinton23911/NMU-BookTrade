@@ -6,6 +6,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Text.RegularExpressions;
+
 
 namespace NMU_BookTrade
 {
@@ -149,6 +151,7 @@ namespace NMU_BookTrade
                 ddlReviewFilter.Items.Add(new ListItem((currentYear - i).ToString(), (currentYear - i).ToString()));
             }
 
+            ddlReviewFilter.SelectedIndex = 0;
             ddlReviewFilter.SelectedIndex = 0;
         }
 
@@ -303,6 +306,7 @@ namespace NMU_BookTrade
 
             int buyerId = Convert.ToInt32(Session["buyerID"]);
             string bookISBN = hfBookISBN.Value;
+            string bookISBN = hfBookISBN.Value;
             int rating = int.Parse(ddlRating.SelectedValue);
             string comment = txtReviewComment.Text?.Trim();
 
@@ -323,6 +327,7 @@ namespace NMU_BookTrade
                         {
                             findSale.Parameters.Add("@buyer", SqlDbType.Int).Value = buyerId;
                             findSale.Parameters.Add("@bookISBN", SqlDbType.VarChar, 32).Value = bookISBN;
+                            findSale.Parameters.Add("@bookISBN", SqlDbType.VarChar, 32).Value = bookISBN;
                             object o = findSale.ExecuteScalar();
                             if (o == null) throw new Exception("No matching purchase found for this product.");
                             saleID = Convert.ToInt32(o);
@@ -336,14 +341,24 @@ namespace NMU_BookTrade
                             nextReviewID = Convert.ToInt32(getNext.ExecuteScalar());
                         }
 
+                        string[] _badWords = { "spam", "fake", "terrible", "awful", "hate", "stupid", "garbage", "ridiculous", "idiots", "damaged", "dumb", "shocked", "avoid", "never", "regret", "concerned", "swear", "don't", "poor", "not", "horrible", "difficult", "hard", "unsure", "delay", "inaccurate", "worthless", "trash", "nonsense", "fraud", "slow", "unresponsive", "driver", "seller", "admin" };
+
+                          int isFlagged = 0;
+
+                        if (_badWords.Any(word => Regex.IsMatch(comment, $@"\b{Regex.Escape(word)}\b", RegexOptions.IgnoreCase)))
+                        {
+                            isFlagged = 1;
+                        }
+
                         using (var insert = new SqlCommand(@"
-                    INSERT INTO Review (reviewID, reviewRating, reviewComment, saleID, reviewDate)
-                    VALUES (@id, @rating, @comment, @saleID, GETDATE());", con, tx))
+                    INSERT INTO Review (reviewID, reviewRating, reviewComment, saleID,isFlagged, reviewDate)
+                    VALUES (@id, @rating, @comment, @saleID,@isFlagged,GETDATE());", con, tx))
                         {
                             insert.Parameters.Add("@id", SqlDbType.Int).Value = nextReviewID;
                             insert.Parameters.Add("@rating", SqlDbType.Int).Value = rating;
                             insert.Parameters.Add("@comment", SqlDbType.NVarChar, -1).Value = (object)comment ?? DBNull.Value;
                             insert.Parameters.Add("@saleID", SqlDbType.Int).Value = saleID;
+                            insert.Parameters.Add("@isFlagged", SqlDbType.Int).Value = isFlagged;
                             insert.ExecuteNonQuery();
                         }
 

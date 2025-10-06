@@ -1,9 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="Cart.aspx.cs" Inherits="NMU_BookTrade.Cart" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="Cart.aspx.cs" Inherits="NMU_BookTrade.Buyer.pabiModule.Cart" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
-
-         <div class="categories-inline">
+ <div class="categories-inline">
         <asp:Repeater ID="rptCategory1" runat="server" OnItemCommand="rptCategory_ItemCommand">
             <ItemTemplate>
                 <asp:LinkButton runat="server"
@@ -182,5 +181,6 @@
 
     <br />
     <br />
+
 
 </asp:Content>

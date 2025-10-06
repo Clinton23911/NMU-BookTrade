@@ -42,6 +42,15 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvUsername;
 
         /// <summary>
+        /// revUsername control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revUsername;
+
+        /// <summary>
         /// txtName control.
         /// </summary>
         /// <remarks>
@@ -123,13 +132,13 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNumber;
 
         /// <summary>
-        /// revNumber control.
+        /// revPhoneNumber control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator revNumber;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revPhoneNumber;
 
         /// <summary>
         /// fuProfileImage control.
@@ -159,13 +168,13 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected global::System.Web.UI.WebControls.Button btnUpdate;
 
         /// <summary>
-        /// btnDelete control.
+        /// btnDeleteProfile control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnDelete;
+        protected global::System.Web.UI.WebControls.Button btnDeleteProfile;
 
         /// <summary>
         /// lblMessage control.

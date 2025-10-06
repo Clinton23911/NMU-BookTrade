@@ -20,6 +20,7 @@
 
 <body>
     <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
 
         <!-- Navigation Header -->
         <nav class="header">
@@ -48,7 +49,7 @@
             <asp:MenuItem Text="Contact Us" NavigateUrl="~/User Management/Contact.aspx"/>
             
         </Items>
-        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+       <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px" VerticalPadding="6px"/>
     </asp:Menu>
 
 
@@ -61,7 +62,7 @@
             <asp:MenuItem Text="Contact" NavigateUrl="~/User Management/Contact.aspx"/>
             
         </Items>
-        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px" VerticalPadding="6px"/>
     </asp:Menu>
 
     <asp:Menu ID="MenuAdmin" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
@@ -72,7 +73,7 @@
             <asp:MenuItem Text="Manage Categories" NavigateUrl="~/Admin/GraceModule/ManageCategories.aspx"/>
             <asp:MenuItem Text="Manage Genres" NavigateUrl="~/Admin/GraceModule/ManageGenres.aspx"/>
         </Items>
-        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+       <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px" VerticalPadding="6px"/>
     </asp:Menu>
 
     <asp:Menu ID="MenuBuyer" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
@@ -80,10 +81,11 @@
             <asp:MenuItem Text="Home" NavigateUrl="~/Buyer/pabiModule/BuyerDashboard.aspx"/>
             <asp:MenuItem Text="About Us" NavigateUrl="~/User Management/AboutUs.aspx"/>
             <asp:MenuItem Text="Reviews" NavigateUrl="~/Buyer/pabiModule/Reviews.aspx"/>
+            <asp:MenuItem Text="Book Conditions" NavigateUrl="~/User Management/BookConditions.aspx"/>
             <asp:MenuItem Text="Contact Us" NavigateUrl="~/User Management/Contact.aspx"/>
             
         </Items>
-        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px" VerticalPadding="6px"/>
     </asp:Menu>
 
     <asp:Menu ID="MenuAnonymous" runat="server" Orientation="Horizontal" CssClass="nav" RenderingMode="List">
@@ -94,7 +96,7 @@
         <asp:MenuItem Text="Contact" NavigateUrl="~/User Management/Contact.aspx"/>
 
         </Items>
-        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px"/>
+        <StaticMenuItemStyle CssClass="menu-link" HorizontalPadding="30px" VerticalPadding="6px"/>
     </asp:Menu>
 
              <!-- Dynamic Profile Picture Panel -->
@@ -114,12 +116,20 @@
      <input type="text" class="search-bar" placeholder="Search for book title" />
      <button class="search-btn">🔍</button>
  </div>
+
         <asp:HyperLink ID="hlCart" runat="server" NavigateUrl="~/Buyer/pabiModule/Cart.aspx" CssClass="cart-link">
+            <asp:UpdatePanel  ID="updCartBadge" runat="server" UpdateMode="Conditional">
+                <ContentTemplate>
+                    <asp:Label ID="lblCartCount" runat="server" CssClass="cart-badge" Text="0"></asp:Label>
+                </ContentTemplate>
+            </asp:UpdatePanel>
              <i class="fas fa-shopping-cart"></i>
+            
         </asp:HyperLink>
+          
 
         <asp:HyperLink ID="hlBuyerProfile" runat="server" NavigateUrl="~/Buyer/pabiModule/BuyerProfile.aspx" CssClass="btn">Profile</asp:HyperLink>
-                <asp:HyperLink ID="hlOrders" runat="server" NavigateUrl="~/Buyer/pabiModule/BuyerOrders.aspx" CssClass="btn">Orders</asp:HyperLink>
+        <asp:HyperLink ID="hlOrders" runat="server" NavigateUrl="~/Buyer/pabiModule/BuyerOrders.aspx" CssClass="btn">Orders</asp:HyperLink>
 <asp:Button ID="btnLogout" CssClass="btn" runat="server" Text="LogOut" PostBackUrl="~/User Management/LogOut.aspx" CausesValidation="false"/>
     </div>
 

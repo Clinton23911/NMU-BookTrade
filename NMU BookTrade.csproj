@@ -77,20 +77,26 @@
     <Content Include="Admin\GraceModule\ManageGenres.aspx" />
     <Content Include="Admin\GraceModule\ManageReviews.aspx" />
     <Content Include="Admin\GraceModule\ViewDriver.aspx" />
+    <Content Include="Buyer\pabiModule\BuyerOrders.aspx" />
     <Content Include="Buyer\pabiModule\BuyerDashboard.aspx" />
     <Content Include="Buyer\pabiModule\BuyerOrders.aspx" />
     <Content Include="Buyer\pabiModule\BuyerProfile.aspx" />
     <Content Include="Buyer\pabiModule\Cart.aspx" />
+<<<<<<< HEAD
     <Content Include="Buyer\pabiModule\Reviews.aspx" />
+=======
+>>>>>>> 4fffb8cec884ef3d47b3f2c8c3edf714a8e84d8d
     <Content Include="Driver\ClintonModule\DriverDashboard.aspx" />
     <Content Include="Driver\ClintonModule\DriverProfile.aspx" />
     <Content Include="Driver\ClintonModule\ManageDeliveries.aspx" />
     <Content Include="Driver\ClintonModule\ViewSchedule.aspx" />
+    <Content Include="Images\1984.jpeg" />
     <Content Include="Images\accounting.jpg" />
     <Content Include="Images\BookImage.png" />
     <Content Include="Images\clint.jpg" />
     <Content Include="Images\commercial law.jpg" />
     <Content Include="Images\database.png" />
+    <Content Include="Images\design_patterns.jpeg" />
     <Content Include="Images\getintouchperson.png" />
     <Content Include="Images\goodbye.png" />
     <Content Include="Images\grace.png" />
@@ -109,6 +115,7 @@
     <Content Include="Images\textbook244.png" />
     <Content Include="Images\User.png" />
     <Content Include="Buyer\pabiModule\SearchResult.aspx" />
+    <Content Include="Buyer\pabiModule\Reviews.aspx" />
     <Content Include="Seller\ClintonModule\CreateListings.aspx" />
     <Content Include="Seller\ClintonModule\ManageListings.aspx" />
     <Content Include="Seller\ClintonModule\SellerDashboard.aspx" />
@@ -190,6 +197,13 @@
     <Compile Include="Admin\GraceModule\ViewDriver.aspx.designer.cs">
       <DependentUpon>ViewDriver.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Buyer\pabiModule\BuyerOrders.aspx.cs">
+      <DependentUpon>BuyerOrders.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\BuyerOrders.aspx.designer.cs">
+      <DependentUpon>BuyerOrders.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Buyer\pabiModule\BuyerDashboard.aspx.cs">
       <DependentUpon>BuyerDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -213,6 +227,7 @@
     </Compile>
     <Compile Include="Buyer\pabiModule\Cart.aspx.cs">
       <DependentUpon>Cart.aspx</DependentUpon>
+<<<<<<< HEAD
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Buyer\pabiModule\Cart.aspx.designer.cs">
@@ -220,10 +235,12 @@
     </Compile>
     <Compile Include="Buyer\pabiModule\Reviews.aspx.cs">
       <DependentUpon>Reviews.aspx</DependentUpon>
+=======
+>>>>>>> 4fffb8cec884ef3d47b3f2c8c3edf714a8e84d8d
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Buyer\pabiModule\Reviews.aspx.designer.cs">
-      <DependentUpon>Reviews.aspx</DependentUpon>
+    <Compile Include="Buyer\pabiModule\Cart.aspx.designer.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
     </Compile>
     <Compile Include="Driver\ClintonModule\DriverDashboard.aspx.cs">
       <DependentUpon>DriverDashboard.aspx</DependentUpon>
@@ -267,6 +284,13 @@
     </Compile>
     <Compile Include="Buyer\pabiModule\SearchResult.aspx.designer.cs">
       <DependentUpon>SearchResult.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\Reviews.aspx.cs">
+      <DependentUpon>Reviews.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\Reviews.aspx.designer.cs">
+      <DependentUpon>Reviews.aspx</DependentUpon>
     </Compile>
     <Compile Include="Seller\ClintonModule\CreateListings.aspx.cs">
       <DependentUpon>CreateListings.aspx</DependentUpon>

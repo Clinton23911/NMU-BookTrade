@@ -152,6 +152,7 @@ namespace NMU_BookTrade
             }
 
             ddlReviewFilter.SelectedIndex = 0;
+            ddlReviewFilter.SelectedIndex = 0;
         }
 
 
@@ -305,6 +306,7 @@ namespace NMU_BookTrade
 
             int buyerId = Convert.ToInt32(Session["buyerID"]);
             string bookISBN = hfBookISBN.Value;
+            string bookISBN = hfBookISBN.Value;
             int rating = int.Parse(ddlRating.SelectedValue);
             string comment = txtReviewComment.Text?.Trim();
 
@@ -324,6 +326,7 @@ namespace NMU_BookTrade
                     ORDER BY saleDate DESC;", con, tx))
                         {
                             findSale.Parameters.Add("@buyer", SqlDbType.Int).Value = buyerId;
+                            findSale.Parameters.Add("@bookISBN", SqlDbType.VarChar, 32).Value = bookISBN;
                             findSale.Parameters.Add("@bookISBN", SqlDbType.VarChar, 32).Value = bookISBN;
                             object o = findSale.ExecuteScalar();
                             if (o == null) throw new Exception("No matching purchase found for this product.");

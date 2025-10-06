@@ -181,6 +181,7 @@ namespace NMU_BookTrade.Buyer.pabiModule
         }
 
 
+
         protected void btnPurchase_Click(object sender, EventArgs e)
         {
             if (Session["buyerID"] == null) return;
@@ -362,6 +363,7 @@ namespace NMU_BookTrade.Buyer.pabiModule
             BindCartItems();
             ((Site1)this.Master).UpdateCartCount();
         }
+
 
 
         protected void rptCartItems_ItemDataBound(object sender, RepeaterItemEventArgs e)

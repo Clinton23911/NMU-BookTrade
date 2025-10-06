@@ -137,7 +137,7 @@
             ">
 
             <div class="message-header">
-                To: <%# Eval("senderEmail") %>
+                From: <%# Eval("senderEmail") %>
                 <span class="message-time"><%# string.Format("{0:MMM dd, yyyy}", Eval("dateSent")) %></span>
 
                 <!-- Delete button -->
@@ -239,7 +239,7 @@
                     // Update UI immediately
                     //element.classList.add("read");
                     //element.dataset.read = "1"; // Mark as read locally
-                    alert('Hello');
+                   
                     updateInboxCount();         // Decrease the counter
                 })
                 .catch(err => console.error("Mark read failed:", err));
@@ -252,7 +252,6 @@
 
     function LoadSentMessages() { 
         showSentSection();
-        alert("About to load the sent messages"); 
         fetch("Inbox.aspx/LoadSentMessages",  {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
@@ -260,7 +259,7 @@
     })
         .then(res => res.text())
         .then(data => { 
-            alert('Hello'); 
+             
         })
         .catch(err => console.error("Failed to load sent messages:", err)); 
     }
@@ -437,7 +436,7 @@
                         .then(() => {
                             //row.classList.add("read");
                             //row.dataset.read = "1";
-                            alert("about to update the inbox count"); 
+                            
                             updateInboxCount();
                     });
                 //}

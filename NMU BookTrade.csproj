@@ -82,10 +82,7 @@
     <Content Include="Buyer\pabiModule\BuyerOrders.aspx" />
     <Content Include="Buyer\pabiModule\BuyerProfile.aspx" />
     <Content Include="Buyer\pabiModule\Cart.aspx" />
-<<<<<<< HEAD
     <Content Include="Buyer\pabiModule\Reviews.aspx" />
-=======
->>>>>>> 4fffb8cec884ef3d47b3f2c8c3edf714a8e84d8d
     <Content Include="Driver\ClintonModule\DriverDashboard.aspx" />
     <Content Include="Driver\ClintonModule\DriverProfile.aspx" />
     <Content Include="Driver\ClintonModule\ManageDeliveries.aspx" />
@@ -227,7 +224,6 @@
     </Compile>
     <Compile Include="Buyer\pabiModule\Cart.aspx.cs">
       <DependentUpon>Cart.aspx</DependentUpon>
-<<<<<<< HEAD
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Buyer\pabiModule\Cart.aspx.designer.cs">
@@ -235,8 +231,6 @@
     </Compile>
     <Compile Include="Buyer\pabiModule\Reviews.aspx.cs">
       <DependentUpon>Reviews.aspx</DependentUpon>
-=======
->>>>>>> 4fffb8cec884ef3d47b3f2c8c3edf714a8e84d8d
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Buyer\pabiModule\Cart.aspx.designer.cs">

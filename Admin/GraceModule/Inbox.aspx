@@ -1,9 +1,16 @@
 ﻿<%@ Page Title="Inbox" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="Inbox.aspx.cs" Inherits="NMU_BookTrade.WebForm9" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="inbox.css" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
-    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" />
+    <asp:ScriptManagerProxy ID="ScriptManagerProxy1" runat="server">
+    <Services>
+        <asp:ServiceReference Path="Inbox.aspx" />
+    </Services>
+</asp:ScriptManagerProxy>
+
+
 
     <div class="inbox-container">
         <!-- Header -->
@@ -42,18 +49,23 @@
                          <div class="inbox-preview-header">
                              <div>
                                  <h2 class="inbox-preview-title" id="previewSubject"></h2>
-                                 <div class="inbox-preview-meta" id="previewSender"></div>
+
+                                 <div class="inbox-preview-meta" id="previewSender" ></div> 
+
                                  <div class="inbox-preview-meta" id="previewTime"></div>
                              </div>
                              <div class="inbox-preview-actions">
-                              <button class="inbox-preview-action-btn" onclick="deleteMessage()">🗑️</button>
+                              
+
                              </div>
                          </div>
                          <div class="inbox-preview-body" id="previewBody"></div>
+
                          <div class="inbox-preview-footer">
-                             <button type="button" class="inbox-preview-btn primary" onclick="replyToMessage()">Reply</button>
-                             <button type="button" class="inbox-preview-btn secondary" onclick="forwardMessage()">Forward</button>
-                            
+                             <button type="button" id="replyMessage" class="inbox-preview-btn primary"
+                                    data-id="" data-sender="" data-email="" onclick="replyToMessage(this)">Reply</button>
+
+                                                        
                          </div>
                      </div>
 
@@ -71,14 +83,81 @@
                 </div>
 
                
-                <!-- Inbox Section -->
+                <!-- Inbox Section NEW --> 
                 <div id="inboxSection" class="inbox-messages-list">
-                    <div class="inbox-messages-container" runat="server" id="inboxMessagesContainer"></div>
+                   <asp:Repeater ID="rptInbox" runat="server" OnItemCommand="rptInbox_ItemCommand">
+                                                                                 <ItemTemplate>
+        <div class="inbox-message-row <%# Convert.ToBoolean(Eval("isRead")) ? "read" : "unread" %>"
+             data-id='<%# Eval("messageID") %>'
+             data-sender='<%# Eval("senderEmail") %>'
+             data-time='<%# string.Format("{0:MMM dd, yyyy hh:mm tt}", Eval("dateSent")) %>'
+             data-body='<%# HttpUtility.HtmlEncode(Eval("messageContent")) %>'
+             data-role='<%# (Eval("senderEmail").ToString() == "gracamanyonganise@gmail.com")   %>'
+             data-read='<%# Eval("isRead") %>'
+             data-email='<%# Eval("senderEmail") %>'
+             ">
+            
+            <div class="message-header">
+                From: <%# Eval("senderEmail") %>
+                <span class="message-time"><%# string.Format("{0:MMM dd, yyyy}", Eval("dateSent")) %></span>
+
+                <!-- Delete button -->
+                <asp:Button ID="btnDeleteInbox" runat="server" Text="🗑️"
+                    CommandName="DeleteMessage"
+                    CommandArgument='<%# Eval("messageID") %>'
+                    CssClass="inbox-preview-action-btn"
+                    OnClientClick="event.stopPropagation(); return confirm('Delete this message?');"
+                    CausesValidation="false" />
+            </div>
+
+            <div class="message-snippet">
+                <%# Eval("messageContent").ToString().Length > 50 
+                    ? Eval("messageContent").ToString().Substring(0, 50) + "..." 
+                    : Eval("messageContent") %>
+            </div>
+        </div>
+    </ItemTemplate>
+
+                 </asp:Repeater>
+
                 </div>
 
-                <!-- Sent Section (hidden by default) -->
+                <!-- Sent Section (hidden by default) NEW -->
                 <div id="sentSection" class="inbox-messages-list" style="display: none;">
-                    <div class="inbox-messages-container" runat="server" id="sentMessagesContainer"></div>
+                    <asp:Repeater ID="rptSent" runat="server" OnItemCommand="rptSent_ItemCommand">
+                                        <ItemTemplate>
+        <div class="inbox-message-row read"
+             data-id='<%# Eval("messageID") %>'
+             data-sender="Me (Admin)"
+             data-time='<%# string.Format("{0:MMM dd, yyyy hh:mm tt}", Eval("dateSent")) %>'
+             data-body='<%# HttpUtility.HtmlEncode(Eval("messageContent")) %>'
+             data-role="admin"
+             data-read="1"
+             data-email='<%# Eval("senderEmail") %>'
+            ">
+
+            <div class="message-header">
+                To: <%# Eval("senderEmail") %>
+                <span class="message-time"><%# string.Format("{0:MMM dd, yyyy}", Eval("dateSent")) %></span>
+
+                <!-- Delete button -->
+                <asp:Button ID="btnDeleteSent" runat="server" Text="🗑️"
+                    CommandName="DeleteMessage"
+                    CommandArgument='<%# Eval("messageID") %>'
+                    CssClass="inbox-preview-action-btn"
+                    OnClientClick="event.stopPropagation(); return confirm('Delete this message?');"
+                    CausesValidation="false" />
+            </div>
+
+            <div class="message-snippet">
+                <%# Eval("messageContent").ToString().Length > 50 
+                    ? Eval("messageContent").ToString().Substring(0, 50) + "..." 
+                    : Eval("messageContent") %>
+            </div>
+        </div>
+    </ItemTemplate>
+                        </asp:Repeater>
+
                 </div>
 
 
@@ -113,20 +192,31 @@
 
 
 <script>
-    let selectedMessageId = null; // Declaring the varriable and setting it to null
-
-
+    
     // Function to handle selecting a message and displaying its preview
     function selectMessage(element) {
         document.querySelectorAll('.inbox-message-row').forEach(msg => msg.classList.remove('selected')); // here we are selecting all html elements with the class inbox-message-row 
         element.classList.add('selected'); 
-        selectedMessageId = element.dataset.id;
-        document.getElementById("previewSubject").innerText = "Message";
-        document.getElementById("previewSender").innerText = element.dataset.sender + " (" + element.dataset.role + ")";
-        document.getElementById("previewTime").innerText = element.dataset.time; // 
-        document.getElementById("previewBody").innerHTML = element.dataset.body;
-        document.getElementById("messagePreviewPanel").style.display = "block";
+        let selectedMessageId = element.dataset.id;   
 
+        //deletion icon 
+        document.getElementById("delete-SingleMessage").setAttribute("data-id", selectedMessageId);
+
+        document.getElementById("delete-SingleMessage").setAttribute("data-sender", element.dataset.sender);
+
+        // updating reply button
+
+        document.getElementById("replyMessage").setAttribute("data-id", selectedMessageId);
+        document.getElementById("replyMessage").setAttribute("data-email", element.dataset.email);
+        document.getElementById("replyMessage").setAttribute("data-sender", element.dataset.sender);
+
+               
+        document.getElementById("previewSubject").innerText = "Message";
+                   
+        
+        document.getElementById("previewTime").innerText = element.dataset.time; 
+        document.getElementById("previewBody").innerHTML = element.dataset.body;
+        document.getElementById("messagePreviewPanel").style.display = "block"; 
         // Check if role is "admin" (i.e., sent by me)
         const role = element.dataset.role;
         // Remove that block entirely OR replace it with a safe check:
@@ -136,8 +226,8 @@
 
 
 
-        // ✅ checking if message has been read
-        if (element.dataset.read === "0") {
+        // checking if message has been read
+        //if (element.dataset.read === "0") {
             // telling the server to mark as read
             fetch("Inbox.aspx/MarkMessageAsRead", {
                 method: "POST",
@@ -147,14 +237,32 @@
                 .then(res => res.json())
                 .then(data => {
                     // Update UI immediately
-                    element.classList.add("read");
-                    element.dataset.read = "1"; // Mark as read locally
+                    //element.classList.add("read");
+                    //element.dataset.read = "1"; // Mark as read locally
+                    alert('Hello');
                     updateInboxCount();         // Decrease the counter
                 })
                 .catch(err => console.error("Mark read failed:", err));
-        }
+        //}
 
 
+    }
+
+
+
+    function LoadSentMessages() { 
+        showSentSection();
+        alert("About to load the sent messages"); 
+        fetch("Inbox.aspx/LoadSentMessages",  {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+    })
+        .then(res => res.text())
+        .then(data => { 
+            alert('Hello'); 
+        })
+        .catch(err => console.error("Failed to load sent messages:", err)); 
     }
 
     function updateInboxCount() {
@@ -164,13 +272,29 @@
             body: JSON.stringify({})
         })
             .then(res => res.json())
-            .then(data => {
+            .then(data => { 
                 const badge = document.getElementById("inboxCountSpan");
                 if (badge) {
                     badge.innerText = data.d;
                 }
             });
     }
+
+    function updateInboxCount2() {
+        PageMethods.GetUnreadMessageCount(
+            function (response) { // success callback
+                const badge = document.getElementById("inboxCountSpan");
+                if (badge) {
+                    badge.innerText = response;
+                }
+            },
+            function (error) { // error callback
+                console.error("Error fetching inbox count:", error);
+            }
+        );
+    }
+
+
 
 
     // Function to apply the search filter
@@ -216,8 +340,11 @@
                         })
                             .then(res => res.json())
                             .then(() => {
-                                LoadSentMessages();
+                                alert("Message Sent Successfully")
+                                // LoadSentMessages();
+                                sessionStorage.setItem('sentMessages', 1);
                                 closeCompose();
+                                location.reload();
                             });
                     } else {
                         alert("Failed to send email: " + data.d);
@@ -228,84 +355,43 @@
             alert("Please complete all fields.");
         }
     }
+     
+     
 
-    // Function to reply to a message
-    function replyToMessage() {
+    function replyToMessage(e) {
+        let selectedMessageId = e.dataset.id;   // same as delete
+        let selectedSender = e.dataset.sender;  // sender info
+        let senderEmail = e.dataset.email;      // optional if you stored email
+
         if (!selectedMessageId) return;
-        openCompose();
-        const messageRow = document.querySelector('.inbox-message-row.selected');
-        const senderEmail = messageRow ? messageRow.dataset.email : "";
 
-        document.getElementById("composeTo").value = senderEmail;
+        openCompose();
+        document.getElementById("composeTo").value = senderEmail || "";
         document.getElementById("composeSubject").value = "RE: " + document.getElementById("previewSubject").innerText;
         document.getElementById("composeBody").value = "";
     }
 
-    // Function to forward a message
-    function forwardMessage() {
-        if (!selectedMessageId) return;
-        openCompose();
-        document.getElementById("composeSubject").value = "FWD: " + document.getElementById("previewSubject").innerText;
-        document.getElementById("composeBody").value = "\n\n--- Forwarded Message ---\n" + document.getElementById("previewBody").innerText;
-    }
-
-    function deleteMessage() {
-        if (!selectedMessageId) return;
-
-        if (confirm("Are you sure you want to delete this message?")) {
-            PageMethods.DeleteMessage(parseInt(selectedMessageId),
-                function (response) {
-                    if (response.includes("deleted")) {
-                        // simplest: reload the page so the list refreshes
-                        window.location.reload();
-                    } else {
-                        alert("Something went wrong: " + response);
-                    }
-                },
-                function (error) {
-                    console.error("PageMethods error:", error);
-                    alert("Failed to delete the message.");
-                });
-        }
-    }
-
-  
-
 
     
 
-   
-
-    function LoadSentMessages() {
-        fetch("Inbox.aspx/LoadSentMessages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({})
-        })
-            .then(res => res.json()) // ✅ FIXED: parse response as JSON
-            .then(data => {
-                // ✅ FIXED: access HTML from `data.d`
-                document.getElementById("<%= sentMessagesContainer.ClientID %>").innerHTML = data.d;
-    })
-            .catch(err => {
-                alert("Failed to load sent messages: " + err);
-            });
-    }
-
-
     window.onload = function () {
         updateInboxCount();
-        LoadSentMessages();  // Ensure it runs after the page is fully loaded
+        let sentMessages = sessionStorage.getItem('sentMessages');
+        if (sentMessages == 1) {
+            showSentSection();
+        }
     };
 
     function showSentSection() {
-        document.getElementById("inboxSection").style.display = "none";
-        document.getElementById("sentSection").style.display = "block";
-        document.getElementById("messagePreviewPanel").style.display = "none";
-
-
-        document.getElementById("sentLink").classList.add("active");
-        document.getElementById("inboxLink").classList.remove("active");
+        
+        
+            document.getElementById("inboxSection").style.display = "none";
+            document.getElementById("sentSection").style.display = "block";
+            document.getElementById("messagePreviewPanel").style.display = "none";
+            document.getElementById("sentLink").classList.add("active");
+            document.getElementById("inboxLink").classList.remove("active");
+            sessionStorage.setItem('sentMessages',0);
+      
     }
 
     function showInboxSection() {
@@ -317,7 +403,49 @@
         document.getElementById("sentLink").classList.remove("active");
     }
 
+    window.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.inbox-message-row').forEach(row => {
+            row.addEventListener('click', function () {
+                document.querySelectorAll('.inbox-message-row').forEach(msg => msg.classList.remove('selected'));
+                row.classList.add('selected');
 
+                let selectedMessageId = row.dataset.id;
+
+                // Update reply button
+                document.getElementById("replyMessage").dataset.id = selectedMessageId;
+                document.getElementById("replyMessage").dataset.email = row.dataset.email;
+                document.getElementById("replyMessage").dataset.sender = row.dataset.sender;
+
+                
+                // Update preview panel content
+                document.getElementById("previewSubject").innerText = "Message";
+                document.getElementById("previewSender").innerText = row.dataset.sender + " (" + row.dataset.role + ")";
+                document.getElementById("previewTime").innerText = row.dataset.time;
+                document.getElementById("previewBody").innerHTML = row.dataset.body;
+
+                // Show preview panel
+                document.getElementById("messagePreviewPanel").style.display = "block";
+
+                // Mark as read if unread
+                //if (row.dataset.read === "0") {
+                    fetch("Inbox.aspx/MarkMessageAsRead", {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ messageID: parseInt(selectedMessageId) })
+                    })
+                        .then(res => res.json())
+                        .then(() => {
+                            //row.classList.add("read");
+                            //row.dataset.read = "1";
+                            alert("about to update the inbox count"); 
+                            updateInboxCount();
+                    });
+                //}
+            });
+        });
+    });
+
+   
 </script>
 
 </asp:Content>

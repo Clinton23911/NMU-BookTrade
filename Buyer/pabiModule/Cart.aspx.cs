@@ -4,9 +4,11 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace NMU_BookTrade
+namespace NMU_BookTrade.Buyer.pabiModule
 {
     public partial class Cart : System.Web.UI.Page
     {
@@ -178,7 +180,7 @@ namespace NMU_BookTrade
             Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?query=" + Server.UrlEncode(searchTerm));
         }
 
-      
+
         protected void btnPurchase_Click(object sender, EventArgs e)
         {
             if (Session["buyerID"] == null) return;
@@ -243,6 +245,16 @@ namespace NMU_BookTrade
 
                     insertSaleCmd.ExecuteNonQuery();
 
+                    // 🔹 NEW: Create Delivery row for this Sale (NYASHA ADDED THIS)so that the delivery table will not be empty. This will allow Admins query's to also work with what's in the delivery table.  
+                    SqlCommand getNextDeliveryIDCmd = new SqlCommand("SELECT ISNULL(MAX(deliveryID), 0) + 1 FROM Delivery", con);
+                    int nextDeliveryID = (int)getNextDeliveryIDCmd.ExecuteScalar();
+
+                    SqlCommand insertDeliveryCmd = new SqlCommand(
+                        "INSERT INTO Delivery (deliveryID, saleID, status) VALUES (@deliveryID, @saleID, 0)", con);
+                    insertDeliveryCmd.Parameters.AddWithValue("@deliveryID", nextDeliveryID);
+                    insertDeliveryCmd.Parameters.AddWithValue("@saleID", nextSaleID);
+                    insertDeliveryCmd.ExecuteNonQuery();
+
                     // Update CartItems to link the sale
                     SqlCommand updateCartItemsCmd = new SqlCommand(
                         "UPDATE CartItems SET saleID = @saleID WHERE cartID = @cartID AND bookISBN = @bookISBN", con);
@@ -269,7 +281,8 @@ namespace NMU_BookTrade
                 pnlDetails.Visible = true;
 
                 LoadCart();
-                BindCartItems();
+                //BindCartItems(); Causing delays and one of them needs to remain and the other deleted because LoadCart() already binds the repeater. 
+                ((Site1)this.Master).UpdateCartCount();
 
                 SqlCommand getOrderDetailsCmd = new SqlCommand(@"
     SELECT s.saleID, s.saleDate, s.amount, ci.quantity, 
@@ -295,6 +308,7 @@ namespace NMU_BookTrade
 
                 pnlDetails.Visible = true;
 
+                
 
             }
         }
@@ -346,9 +360,9 @@ namespace NMU_BookTrade
 
             // Refresh the cart repeater and cart count
             BindCartItems();
-            UpdateCartCount();
+            ((Site1)this.Master).UpdateCartCount();
         }
-        
+
 
         protected void rptCartItems_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
@@ -431,6 +445,7 @@ namespace NMU_BookTrade
 
             // Refresh cart display
             LoadCart();
+            ((Site1)this.Master).UpdateCartCount();
         }
 
         private void BindCartItems()
@@ -471,27 +486,7 @@ namespace NMU_BookTrade
             }
         }
 
-        private void UpdateCartCount()
-        {
-            int buyerID = Convert.ToInt32(Session["buyerID"]);
-            string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                conn.Open();
-                string query = @"SELECT SUM(quantity) FROM CartItems ci
-                         INNER JOIN Cart c ON ci.cartID = c.cartID
-                         WHERE c.buyerID = @buyerID";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@buyerID", buyerID);
-                    object result = cmd.ExecuteScalar();
-                    int count = (result != DBNull.Value) ? Convert.ToInt32(result) : 0;
-
-                    
-                }
-            }
-        }
+        
+       
     }
 }

@@ -67,6 +67,19 @@ namespace NMU_BookTrade
             string address = txtAddress.Text.Trim();
             string newImageName = "";
 
+            if (!System.Text.RegularExpressions.Regex.IsMatch(username, @"^\d{9}$"))
+            {
+                lblMessage.Text = "Username must be exactly 9 digits.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(number, @"^\+?\d{8,15}$"))
+            {
+                lblMessage.Text = "Enter a valid phone number with digits only (optional + at the start, no spaces).";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
 
             // Get the file extension of the uploaded file and convert it to lowercase
             if (fuProfileImage.HasFile)

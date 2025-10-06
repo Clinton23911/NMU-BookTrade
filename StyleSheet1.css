@@ -126,6 +126,8 @@ html, body {
     margin: 0 10px;
     font-size: 20px;
     text-decoration: none;
+    position: relative;
+    display: inline-block;
 }
 
 .btn {
@@ -142,12 +144,13 @@ html, body {
     text-decoration: none;
     background-color: transparent;
     color: whitesmoke;
-    padding: 8px px;
+/*    padding: 8px px;*/
     border: none;
     border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-weight: bold;
 }
 
 input#Regbtn {
@@ -406,7 +409,7 @@ input#middle_section_btnLogin:hover {
 input#middle_section_btnRegister:hover {
     background-color: rgb(181, 221, 219);
     box-shadow: rgba(2, 117, 216, 0.19) 0px 0px 4.71936px 0px;
-    color: white;
+    color: Black;
 }
 
 input#middle_section_btnClear:hover {
@@ -612,6 +615,7 @@ input#middle_section_btnDeleteProfile {
 .message {
     margin-top: 15px;
     font-size: 14px;
+    color:lime;
 }
 
 .profile-circle {
@@ -955,6 +959,7 @@ input#middle_section_btnDeleteProfile {
         font-size: 28px;
         color: ghostwhite;
         margin-bottom: 10px;
+
     }
 
 .cart-container {
@@ -964,7 +969,22 @@ input#middle_section_btnDeleteProfile {
     border-radius: 12px;
     width: 800px;
 }
-
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #015b68;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 9999px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
 .section-line {
     border: 5px;
     height: 2px;
@@ -1007,6 +1027,13 @@ input#middle_section_btnDeleteProfile {
     font-size: 14px;
 }
 
+.cancel-btn {
+    background-color: #e74c3c;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 5px;
+}
 .remove-btn {
     background: none;
     border: none;
@@ -1473,7 +1500,7 @@ input#middle_section_btnReset {
     background: crimson;
     color: white;
     padding: 10px 20px;
-    font-weight: bold;
+    font-weight: revert;
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -1545,6 +1572,7 @@ input#middle_section_btnReset {
     font-size: 34px;
     font-weight: 600;
     color: ghostwhite;
+    margin-left: 270px;
 }
 
 img#Image1 {
@@ -1655,12 +1683,12 @@ img#Image1 {
 }
 
 .left-arrow {
-    left: -789px;
+    left: -1061px;
     top: 185px;
 }
 
 .right-arrow {
-    right: -361px;
+    right: -93px;
     top: 185px;
 }
 
@@ -1845,98 +1873,12 @@ img#Image1 {
     }
 
 
-/*Cart page ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-.cart-header {
-    text-align: left;
-    margin-bottom: 15px;
-}
 
-    .cart-header h2 {
-        text-transform: uppercase;
-        font-size: 28px;
-        margin: 0;
-        color: #333;
-    }
 
-.section-line {
-    border: 5px;
-    height: 3px;
-    background-color: #40E0D0;
-    width: auto;
-    margin-top: 25px;
-    margin-bottom: 20px;
-}
 
-.cart-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 2rem;
-    background: #f9f9f9;
-    border-radius: 10px;
-}
 
-.cart-item {
-    display: flex;
-    margin-bottom: 1rem;
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-}
 
-.cart-item-img {
-    width: 100px;
-    height: 120px;
-    margin-right: 1rem;
-}
 
-.cart-summary {
-    text-align: right;
-    font-size: 1.2rem;
-    margin-top: 1rem;
-}
-
-.checkout-section {
-    margin-top: 2rem;
-    background: #fff;
-    padding: 1rem;
-    border-radius: 8px;
-}
-
-.input {
-    display: block;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    width: 100%;
-}
-
-.checkout-buttons {
-    display: flex;
-    gap: 1rem;
-}
-
-.checkout-btn {
-    background-color: #1cb98f;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 5px;
-}
-
-.cancel-btn {
-    background-color: #e74c3c;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 5px;
-}
-
-.remove-btn {
-    background: none;
-    border: none;
-    color: #d00;
-    font-size: 16px;
-    cursor: pointer;
-}
 
 
 
@@ -2090,16 +2032,23 @@ img#Image1 {
 
 /* Review history */
 .review-history-item {
-    padding: 1rem;
+    
     margin: 0.8rem 0;
     background: #f7f7f7;
     border-radius: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px 0;
 }
 
     .review-history-item .stars {
         color: gold;
         font-size: 1.1rem;
     }
+
+.stars {
+    color: #fbbf24;
+}
+
 
     .review-history-item strong {
         display: block;
@@ -2320,10 +2269,12 @@ img#Image1 {
     border-radius: 12px;
 }
 
+
 .delivery-map {
     width: 100%;
-    max-width: 400px;
+    max-width: 473px;
     border-radius: 12px;
+    padding-right: 229px;
 }
 
 
@@ -2887,15 +2838,17 @@ a.Aboutus-btn {
 
 /*Book Conditions page --------------------------------------------------------------------------------------------------------------------------------------------*/
 /* ===== Centered Container ===== */
-.BCcontainer {
-    max-width: 800px;
-    margin: 0 auto;
+BCcontainer {
+    max-width: 1046px;
+    margin: 267px;
+    margin-bottom: 267px;
     padding: 2rem;
+    margin-bottom: -19px;
+    margin-top:20px;
 }
+    /* ===== Card Styling ===== */
 
-/* ===== Card Styling ===== */
-
-.italics-bookconditions {
+    .italics-bookconditions {
     font-style: italic;
     color: #5dade2; /* lightish blue */
     text-decoration: none;
@@ -2907,11 +2860,16 @@ a.Aboutus-btn {
 }
 
 .BCcard {
-    background-color: rgba(255, 255, 255, 0.9); /* semi-transparent white */
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* soft drop shadow */
     padding: 2rem;
     margin-bottom: 2rem;
+    background-color: rgba(255, 255, 255, 0.9); /* semi-transparent white */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    /* A4-like centered layout */
+    max-width: 850px; /* ~A4 width in pixels */
+    margin: 30px auto; /* centers it */
+    line-height: 1.6; /* improves readability */
 }
 
 /* ===== Page Title Styling ===== */
@@ -3166,15 +3124,16 @@ input#middle_section_txtLastName {
     textarea#middle_section_txtMessage,
     .contact-right .form-field input,
     .contact-right .form-field textarea {
-        width: 100% !important;
+        width: 104% !important;
         background: #ffffff !important;
         color: #000000 !important;
         border: 1px solid #ccc !important;
-        padding: 12px;
-        border-radius: 6px;
+        /*! padding: 12px; */
+        border-radius: 13px;
         box-sizing: border-box;
         font-size: 14px;
         min-height: 20px;
+        padding-left: 38px;
     }
 
     /* Ensure textarea height appropriate */
@@ -3478,13 +3437,14 @@ input#middle_section_txtLastName {
 }
 
 .inbox-message-row {
-    padding: 10px 12px;
-    border-bottom: 1px solid #eee;
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
     cursor: pointer;
+    transition: background 0.2s ease-in-out;
 }
 
     .inbox-message-row:hover {
-        background-color: #f1f1f1;
+        background-color: #f9f9f9;
     }
 
     .inbox-message-row.selected {
@@ -3494,6 +3454,25 @@ input#middle_section_txtLastName {
     .inbox-message-row.unread {
         font-weight: bold;
     }
+
+.message-header {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.message-time {
+    float: right;
+    font-size: 12px;
+    color: #999;
+}
+
+.message-snippet {
+    font-size: 13px;
+    color: #444;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .inbox-message-content {
     display: flex;
@@ -3581,6 +3560,8 @@ input#middle_section_txtLastName {
     border: none;
     background: none;
     cursor: pointer;
+    padding-left: 960px;
+    padding-right: 37px;
 }
 
 .inbox-preview-body {
@@ -4174,7 +4155,11 @@ p.aa-paragraph_1 {
 .highlight {
     font-style: italic;
     color: #5dade2; /* lightish blue */
-    ;
+    
+}
+
+#middle_section_lblMessage {
+    color: lime;
 }
 
 .link {
@@ -4258,10 +4243,14 @@ p.aa-paragraph_1 {
     }
 
 .BCfaq, .BCprivacy {
-    background-color: #f9f9f9;
+    background-color: rgba(255, 255, 255, 0.9); /* semi-transparent white */
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    /* A4-like centered layout */
+    max-width: 850px; /* ~A4 width in pixels */
+    margin: 30px auto; /* centers it */
+    line-height: 1.6; /* improves readability */
 }
 
 .faq-item {
@@ -5473,7 +5462,7 @@ p.assigned-paragraph {
     background: linear-gradient(135deg, #3FD0C9 0%, #02353C 100%);
     color: white;
     border-radius: 10px;
-    position: relative;
+    
 }
 
 .dd-welcome {
@@ -5511,7 +5500,7 @@ p.assigned-paragraph {
     align-items: center;
     justify-content: center;
     min-width: 50px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
     .dd-refresh-btn:hover {
@@ -6579,7 +6568,7 @@ p.assigned-paragraph {
     }
 
 .form-control {
-    width: 100%;
+    width: 90%;
     padding: 12px 15px;
     border: none;
     border-radius: 8px;
@@ -6644,4 +6633,240 @@ textarea.form-control {
     font-size: 20px;
     width: 30px;
     text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ====== MEDIA QUERIES ====== */
+
+/* 📱 Smartphones (portrait) */
+@media (min-width: 601px) and (max-width: 1024px) {
+
+    .hero-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .hero-banner {
+        flex-direction: column;
+    }
+
+    .hero-image, .hero-content {
+        width: 100%;
+        max-width: 90%;
+    }
+
+        .hero-content h2 {
+            font-size: 20px;
+            text-align: center;
+        }
+
+    .section-title {
+        font-size: 1.8rem;
+        margin-top: 30px;
+        margin-left:90px;
+    }
+
+    .book-slide {
+        min-width: 220px;
+    }
+
+    .slider-wrapper {
+        padding: 10px;
+    }
+}
+
+/* ============================= */
+/* 📱 Mobile (max-width: 600px)  */
+/* ============================= */
+/* --- Large screens (desktops under 1200px) --- */
+@media (max-width: 1200px) {
+    .hero-banner {
+        flex-direction: row;
+        gap: 20px;
+    }
+
+    .textbook-card {
+        width: 22%;
+    }
+
+    nav ul {
+        gap: 25px;
+    }
+}
+
+/* --- Tablets and small laptops (under 992px) --- */
+@media (max-width: 992px) {
+    /* Top Menu */
+    nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 0;
+    }
+
+        nav ul li a {
+            font-size: 15px;
+            padding: 8px 10px;
+        }
+
+    /* Recently Added Textbooks Section */
+    .recent-textbooks {
+        padding: 40px 10px;
+    }
+
+    .textbook-list {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .textbook-card {
+        width: 28%;
+        min-width: 220px;
+    }
+
+    .arrow {
+        top: 45%;
+        font-size: 22px;
+    }
+}
+
+/* --- Mobile devices (under 768px) --- */
+@media (max-width: 768px) {
+    /* Hero Section */
+    .hero-banner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .hero-image {
+        width: 80%;
+        margin-top: 20px;
+    }
+
+    /* Top Menu */
+    nav {
+        text-align: center;
+    }
+
+        nav ul {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+            nav ul li a {
+                font-size: 14px;
+            }
+
+    /* Recently Added Textbooks Section */
+    .recent-textbooks h2 {
+        text-align: center;
+        font-size: 22px;
+    }
+
+    .textbook-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .textbook-card {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .arrow {
+        display: none; /* Hide arrows on small screens */
+    }
+}
+
+/* --- Very small phones (under 480px) --- */
+@media (max-width: 480px) {
+    /* Top Menu */
+    nav ul li a {
+        font-size: 13px;
+    }
+
+    /* Recently Added Section */
+    .recent-textbooks h2 {
+        font-size: 20px;
+    }
+
+    .textbook-card {
+        width: 90%;
+        min-width: unset;
+    }
+
+    .hero-image {
+        width: 100%;
+    }
+
+    .hero-section {
+        padding: 20px 0;
+    }
 }

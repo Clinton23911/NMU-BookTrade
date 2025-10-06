@@ -54,38 +54,38 @@ CommandArgument='<%# Eval("bookISBN") %>'>
 
 
     <!-- Reviews Section -->
-   <div class="testimonial-section">
+<div class="testimonial-section">
+
+    <!-- Left side: text -->
     <div class="testimonial-text">
         <h2>Read what our buyers have to say about us</h2>
-        <br />
-      
         <p>Over 200 buyers from diverse backgrounds trust us to help them find the right books at the best prices. We’ve helped students succeed and save money with our service.</p>
         <p>We’re proud to share what they say about us!</p>
-        <br />
-        <br />
-        <asp:Button ID="btnReadStories" runat="server" CssClass="testimonial-button" Text="Read our success stories" OnClick="btnReadStories_Click" />
+        <asp:Button ID="btnReadStories" runat="server" 
+                    CssClass="testimonial-button" 
+                    Text="Read our success stories" 
+                    OnClick="btnReadStories_Click" />
     </div>
 
-<div class="testimonial-cards">
-
-    
-    <asp:Repeater ID="rptTestimonials" runat="server">
-    <ItemTemplate>
-        <div class="testimonial-card">
-            <asp:Image ID="imgProfile" runat="server"
-                       ImageUrl='<%# ResolveUrl("~/UploadedImages/" + Eval("buyerProfileImage")) %>'
-                       CssClass="testimonial-img" AlternateText="Buyer Photo" />
-            <div class="testimonial-content">
-                <p class="testimonial-comment">"<%# Eval("reviewComment") %>"</p>
-                <div class="testimonial-stars">
-                    <%# GetStarHtml(Convert.ToInt32(Eval("reviewRating"))) %>
+    <!-- Right side: testimonial cards -->
+    <div class="testimonial-cards">
+        <asp:Repeater ID="rptTestimonials" runat="server">
+            <ItemTemplate>
+                <div class="testimonial-card">
+                    <asp:Image ID="imgProfile" runat="server"
+                               ImageUrl='<%# ResolveUrl("~/UploadedImages/" + Eval("buyerProfileImage")) %>'
+                               CssClass="testimonial-img" AlternateText="Buyer Photo" />
+                    <div class="testimonial-content">
+                        <p class="testimonial-comment">"<%# Eval("reviewComment") %>"</p>
+                        <div class="testimonial-stars">
+                            <%# GetStarHtml(Convert.ToInt32(Eval("reviewRating"))) %>
+                        </div>
+                        <p class="testimonial-name">- <%# Eval("BuyerName") %> <%# Eval("BuyerSurname") %></p>
+                    </div>
                 </div>
-                <p class="testimonial-name">- <%# Eval("BuyerName") %> <%# Eval("BuyerSurname") %></p>
-            </div>
-        </div>
-    </ItemTemplate>
-</asp:Repeater>
-
+            </ItemTemplate>
+        </asp:Repeater>
+    </div>
 
 </div>
 
@@ -105,30 +105,27 @@ CommandArgument='<%# Eval("bookISBN") %>'>
         <h2>Our Delivery Performance</h2>
         <p>We take pride in delivering your textbooks on time and keeping our promise to make trading seamless.</p>
 
-        <div class="quick-stats">
+          <div class="quick-stats">
             <div class="stat-block">
                 <h3><asp:Label ID="lblTotalDeliveries" runat="server" Text="0"></asp:Label>+</h3>
                 <p>Deliveries Completed</p>
             </div>
+         </div>
+        <br />
             <div class="stat-block">
                 <h3>98%</h3>
                 <p>On-Time Delivery Rate</p>
             </div>
-            <div class="stat-block">
-                    <div class="stat-number">
-                        <asp:Literal ID="litTotalReviews" runat="server"></asp:Literal>
-                    </div>
-                <div class="stat-label">Total Reviews</div>
-            </div>
         </div>
+     <img src="<%= ResolveUrl("~/Images/map.png") %>" alt="Delivery Map" class="delivery-map" />
     </div>
 
     <div class="stats-right">
-    <img src="<%= ResolveUrl("~/Images/map.png") %>" alt="Delivery Map" class="delivery-map" />
-
-    </div>
+   
 
 </div>
+
+
 
     <br />
     <br />

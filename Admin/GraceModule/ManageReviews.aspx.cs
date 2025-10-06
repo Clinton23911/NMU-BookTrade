@@ -23,52 +23,14 @@ namespace NMU_BookTrade.Admin.GraceModule
             //run this only when the page first loads(not on every button click)
             if (!IsPostBack)
             {
-                ProcessReviews();
+                
                 LoadStats();
                 LoadFlaggedReviews();
             }
 
         }
 
-        //First process is to check in the database the comments and see which ones have the inappropriate words and flag them with the number 1.   
-        private void ProcessReviews()
-        {
-            using (SqlConnection con = new SqlConnection(_cs))
-            {
-                con.Open();
-
-                //so we need to get the reveiwID and the reviewComment to check the content
-                SqlCommand cmd = new SqlCommand("Select reviewID, reviewComment FROM Review", con);
-
-                SqlDataReader dataReader = cmd.ExecuteReader();
-
-                // now we create the list here and place it here 
-                List<int> flaggedIDs = new List<int>();
-
-                while (dataReader.Read()) {
-                    //Here we are grabbing the comment and reviewID and placing it into these variables 
-                    string comment = dataReader["reviewComment"].ToString().ToLower();
-                    int reviewID = Convert.ToInt32(dataReader["reviewID"]);
-
-                    //then we have to check if it's inappropriate or not
-
-                    if(_badWords.Any(word => comment.Contains(word))) 
-
-                            flaggedIDs.Add(reviewID); //
-                }
-                dataReader.Close();
-
-                //now that we have the ID that has the bad word. We update the database
-                //
-                foreach (int id in flaggedIDs) { 
-                
-                    SqlCommand updateCmd = new SqlCommand("UPDATE Review SET isFlagged = 1 WHERE reviewID = @id AND isApproved = 0",con);
-                    
-                    updateCmd.Parameters.AddWithValue("@id",id);
-                    updateCmd.ExecuteNonQuery();// this will run the update
-                }
-            }
-        }
+        
 
 
         private void LoadStats()

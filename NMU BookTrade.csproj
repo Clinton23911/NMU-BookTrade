@@ -78,7 +78,9 @@
     <Content Include="Admin\GraceModule\ManageReviews.aspx" />
     <Content Include="Admin\GraceModule\ViewDriver.aspx" />
     <Content Include="Buyer\pabiModule\BuyerDashboard.aspx" />
+    <Content Include="Buyer\pabiModule\BuyerOrders.aspx" />
     <Content Include="Buyer\pabiModule\BuyerProfile.aspx" />
+    <Content Include="Buyer\pabiModule\Cart.aspx" />
     <Content Include="Buyer\pabiModule\Reviews.aspx" />
     <Content Include="Driver\ClintonModule\DriverDashboard.aspx" />
     <Content Include="Driver\ClintonModule\DriverProfile.aspx" />
@@ -195,12 +197,26 @@
     <Compile Include="Buyer\pabiModule\BuyerDashboard.aspx.designer.cs">
       <DependentUpon>BuyerDashboard.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Buyer\pabiModule\BuyerOrders.aspx.cs">
+      <DependentUpon>BuyerOrders.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\BuyerOrders.aspx.designer.cs">
+      <DependentUpon>BuyerOrders.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Buyer\pabiModule\BuyerProfile.aspx.cs">
       <DependentUpon>BuyerProfile.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Buyer\pabiModule\BuyerProfile.aspx.designer.cs">
       <DependentUpon>BuyerProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\Cart.aspx.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Buyer\pabiModule\Cart.aspx.designer.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
     </Compile>
     <Compile Include="Buyer\pabiModule\Reviews.aspx.cs">
       <DependentUpon>Reviews.aspx</DependentUpon>

@@ -18,6 +18,8 @@ namespace NMU_BookTrade
             
             if (!IsPostBack)
             {
+
+                StorePreviousPage();
                 // Default: Anonymous is visible, others are hidden
                 MenuAnonymous.Visible = true;
                 MenuAdmin.Visible = false;
@@ -105,7 +107,46 @@ namespace NMU_BookTrade
 
                     divSearchBar.Visible = Session["buyerID"] == null;
                 }
+                
             }
+            UpdateCartCount();
+          
+        }
+
+        public void UpdateCartCount()
+        {
+            int count = 0;
+
+            if (Session["buyerID"] != null)
+            {
+                int buyerID = Convert.ToInt32(Session["buyerID"]);
+                string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
+                    string countQuery = "SELECT SUM(quantity) FROM CartItems ci JOIN Cart c ON ci.cartID = c.cartID WHERE c.buyerID = @buyerID";
+                    using (SqlCommand cmd = new SqlCommand(countQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@buyerID", buyerID);
+                        object result = cmd.ExecuteScalar();
+                        count = (result != DBNull.Value) ? Convert.ToInt32(result) : 0;
+
+                        UpdatePanel updCartBadge = (UpdatePanel)FindControl("updCartBadge");
+                        if (updCartBadge != null)
+                        {
+                            updCartBadge.Update();
+                        }
+                    }
+                }
+            }
+
+            lblCartCount.Text = count.ToString();
+            lblCartCount.Visible = count > 0; // hide if cart empty
+            hlCart.ToolTip = count > 0 ? $"Cart: {count} item(s)" : "Cart is empty";
+
+            //  Refresh UpdatePanel so badge updates without full reload
+            updCartBadge.Update();
         }
 
 
@@ -177,6 +218,41 @@ namespace NMU_BookTrade
             Response.Redirect("~/User Management/Home.aspx");
         }
 
-        
+        protected void StorePreviousPage()
+
+
+        {
+
+
+            if (Request.UrlReferrer != null)
+
+
+            {
+
+
+                Uri referrer = Request.UrlReferrer;
+
+
+
+
+
+                if (referrer.Host == Request.Url.Host)
+
+
+                {
+
+
+                    Session["PreviousPage"] = referrer.ToString();
+
+
+                }
+
+
+            }
+
+
+        }
+
+
     }
 }

@@ -6,7 +6,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
-                <asp:Label ID="lblCartCount" runat="server" CssClass="cart-count"></asp:Label>
+              
     <div class="categories-inline">
         <asp:Repeater ID="rptCategory" runat="server" OnItemCommand="rptCategory_ItemCommand">
             <ItemTemplate>

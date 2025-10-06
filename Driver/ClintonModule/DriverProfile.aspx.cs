@@ -64,6 +64,8 @@ namespace NMU_BookTrade.Driver.ClintonModule
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
+
+
             if (!Page.IsValid) return;
 
             int driverID = Convert.ToInt32(Session["UserID"]);
@@ -73,6 +75,14 @@ namespace NMU_BookTrade.Driver.ClintonModule
             string email = txtEmail.Text.Trim();
             string number = txtNumber.Text.Trim();
             string newImageName = null;
+
+            // Validate username (must be exactly 9 digits)
+            if (!System.Text.RegularExpressions.Regex.IsMatch(username, @"^\d{10}$"))
+            {
+                lblMessage.Text = "Username must be exactly 9 digits.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
 
             // Handle image upload
             if (fuProfileImage.HasFile)
@@ -149,7 +159,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
             }
         }
 
-        protected void btnDelete_Click(object sender, EventArgs e)
+        protected void btnDeleteProfile_Click(object sender, EventArgs e)
         {
             int driverID = Convert.ToInt32(Session["UserID"]);
 

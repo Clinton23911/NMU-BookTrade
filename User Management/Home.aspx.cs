@@ -14,8 +14,27 @@ namespace NMU_BookTrade
             {
                 
                 LoadBooks(); // Load books for the slider
-                totalReviews();   // Call your method here
+               // totalReviews();   // Call your method here
                 LoadReviews();
+                LoadDeliveryStats();
+            }
+        }
+
+        private void LoadDeliveryStats()
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connStr))
+            {
+                con.Open();
+
+                // Total deliveries completed (status = 3 = completed)
+                string query = "SELECT COUNT(*) FROM Delivery WHERE status = 3";
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    int totalDeliveries = Convert.ToInt32(cmd.ExecuteScalar());
+                    lblTotalDeliveries.Text = totalDeliveries.ToString();
+                }
             }
         }
 
@@ -80,22 +99,22 @@ namespace NMU_BookTrade
         }
 
 
-        private void totalReviews()
-        {
-            string _cs = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(_cs))
-            {
-                conn.Open();
-                // here we are going to count the total reviews 
+        //private void totalReviews()
+        //{
+        //    string _cs = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+        //    using (SqlConnection conn = new SqlConnection(_cs))
+        //    {
+        //        conn.Open();
+        //        // here we are going to count the total reviews 
 
-                SqlCommand totalcmd = new SqlCommand("Select COUNT(*) FROM Review", conn);
-                int TotalReviews = (int)totalcmd.ExecuteScalar();
+        //        SqlCommand totalcmd = new SqlCommand("Select COUNT(*) FROM Review", conn);
+        //        int TotalReviews = (int)totalcmd.ExecuteScalar();
 
-                // After getting the stats and calculating them we send them to the front-end 
+        //        // After getting the stats and calculating them we send them to the front-end 
 
-                litTotalReviews.Text = TotalReviews.ToString();
-            }
-        }
+        //        litTotalReviews.Text = TotalReviews.ToString();
+        //    }
+        //}
 
         protected void btnReadStories_Click(object sender, EventArgs e)
         {

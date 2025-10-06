@@ -33,13 +33,13 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected global::System.Web.UI.WebControls.Label lblDriverName;
 
         /// <summary>
-        /// btnRefreshSummary control.
+        /// BtnRefreshSummary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnRefreshSummary;
+        protected global::System.Web.UI.WebControls.Button BtnRefreshSummary;
 
         /// <summary>
         /// lblTotalDeliveries control.

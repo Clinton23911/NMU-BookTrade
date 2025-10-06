@@ -25,33 +25,41 @@ namespace NMU_BookTrade
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {// we are loading deliveries with books that are sold but not assigned yet to the driver.  
 
-                                        string query = @"
-                                                    SELECT
-                             sa.saleID,
-                           ISNULL(b.title, 'Unknown Book') AS BookTitle,
-                             s.sellerName,
-                             s.sellerAddress AS PickupAddress,
-                             bu.buyerName,
-                             bu.buyerAddress AS DeliveryAddress,
-                             del.deliveryID,      -- may be NULL
-                             del.status,
-                             del.deliveryDate
-                         FROM Sale sa
-                         INNER JOIN Book   b  ON sa.bookISBN = b.bookISBN
-                         INNER JOIN Seller s  ON sa.sellerID = s.sellerID
-                         LEFT JOIN Buyer  bu ON sa.buyerID = bu.buyerID
-                         LEFT JOIN Delivery del ON del.saleID = sa.saleID
-                         WHERE del.status = 0 AND b.status = 'unavailable'
-                         ORDER BY sa.saleDate DESC";
+                string query = @"
+                         SELECT 
+                                  s.saleID,
+                                  b.title,
+                                  se.sellerName,
+                                  se.sellerAddress,
+                                  bu.buyerName,
+                                  bu.buyerAddress,
+                                  d.deliveryID,
+                                  d.status AS deliveryStatus,
+                                  d.deliveryDate
+                          FROM 
+                                  Sale s
+                                  INNER JOIN Book b ON s.bookISBN = b.bookISBN
+                                  INNER JOIN Seller se ON s.sellerID = se.sellerID
+                                  LEFT JOIN Buyer bu ON s.buyerID = bu.buyerID
+                                  LEFT JOIN Delivery d ON s.saleID = d.saleID
+                          WHERE b.status = 'unavailable' AND d.status =0 "; 
+;
 
 
-                // the dataAdapter executes this query and we then fill in the `
                 SqlDataAdapter da = new SqlDataAdapter(query, con);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-                // the information is placed in the grid view 
-                gvDeliveries.DataSource = dt;
-                gvDeliveries.DataBind();
+
+                if (dt.Rows.Count > 0)
+                {
+                    gvDeliveries.DataSource = dt;
+                    gvDeliveries.DataBind();
+                    gvDeliveries.Visible = true;   // show table if there are pending deliveries
+                }
+                else
+                {
+                    gvDeliveries.Visible = false;  // hide if nothing to assign
+                }
             }
         }
 
@@ -64,24 +72,38 @@ namespace NMU_BookTrade
             // Only work on data rows (ignore header/footer rows)
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                // Finding the DropDownList inside the current row
+                // --- Populate DropDownList ---
                 DropDownList ddl = (DropDownList)e.Row.FindControl("ddlDrivers");
-
-                // Fetching the list of drivers from the database
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+                if (ddl != null)
                 {
-                    SqlCommand cmd = new SqlCommand("SELECT driverID, driverName + ' ' + driverSurname AS FullName FROM Driver", con);
-                    con.Open();
+                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+                    {
+                        SqlCommand cmd = new SqlCommand("SELECT driverID, driverName + ' ' + driverSurname AS FullName FROM Driver", con);
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        ddl.DataSource = reader;
+                        ddl.DataTextField = "FullName"; // What users see
+                        ddl.DataValueField = "driverID"; // What gets saved
+                        ddl.DataBind();
 
-                    // Use a data reader to populate the dropdown
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    ddl.DataSource = reader;
-                    ddl.DataTextField = "FullName"; // What users see
-                    ddl.DataValueField = "driverID"; // What gets saved
-                    ddl.DataBind();
+                        // Add placeholder item
+                        ddl.Items.Insert(0, new ListItem("-- Select Driver --", ""));
+                    }
+                }
+
+                // --- Set min date for delivery date TextBox ---
+                TextBox txtDate = (TextBox)e.Row.FindControl("txtDeliveryDate");
+                if (txtDate != null)
+                {
+                    txtDate.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
+                    if (string.IsNullOrEmpty(txtDate.Text))
+                        txtDate.Text = DateTime.Today.ToString("yyyy-MM-dd");
                 }
             }
         }
+
+
+
 
 
         // This handles the "Assign" button click in each row
@@ -89,8 +111,6 @@ namespace NMU_BookTrade
         {
             if (e.CommandName == "AssignDriver")
             {
-
-                //we are picking the index of the row  
                 int rowIndex = ((GridViewRow)((Control)e.CommandSource).NamingContainer).RowIndex;
                 GridViewRow row = gvDeliveries.Rows[rowIndex];
 
@@ -100,66 +120,90 @@ namespace NMU_BookTrade
                 string deliveryID = e.CommandArgument.ToString();
                 string driverID = ddl.SelectedValue;
 
-                DateTime deliveryDate;
-                if (!DateTime.TryParse(txtDate.Text, out deliveryDate))
+                // --- VALIDATION CHECKS ---
+                if (string.IsNullOrEmpty(driverID))
                 {
-                    // Show error or fallback to current date + 2 days which means if the user didn’t enter a valid date, the system automatically sets the delivery date to two days from today at 10 AM.
-                    deliveryDate = DateTime.Now.AddDays(2).Date.AddHours(10);
+                    // Driver not selected
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Please select a driver before assigning.');", true);
+                    return; // stop execution
                 }
 
+                DateTime deliveryDate;
+                if (!DateTime.TryParse(txtDate.Text, out deliveryDate) || deliveryDate.Date < DateTime.Today)
+                {
+                    // Invalid or past date
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Please select a valid delivery date (today or future).');", true);
+                    return; // stop execution
+                }
 
+                // --- If valid, continue with DB update ---
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
                     con.Open();
 
                     SqlCommand cmd = new SqlCommand(
-                        "UPDATE Delivery SET driverID = @driverID, status = 1, deliveryDate = @date WHERE deliveryID = @deliveryID", con);
+                        @"UPDATE Delivery
+                          SET driverID = @driverID,
+                              status = 1,
+                              deliveryDate = @date,
+                              deliveryAddress = @address
+                          WHERE deliveryID = @deliveryID", con);
 
                     cmd.Parameters.AddWithValue("@driverID", driverID);
                     cmd.Parameters.AddWithValue("@deliveryID", deliveryID);
-                    cmd.Parameters.AddWithValue("@date", deliveryDate);
+                    cmd.Parameters.AddWithValue("@date", deliveryDate.Date);
+
+                    // Get BuyerAddress from current row (already selected in LoadDeliveries)
+                    string buyerAddress = ((Label)row.FindControl("lblBuyerAddress"))?.Text ?? "";
+                    cmd.Parameters.AddWithValue("@address", buyerAddress);
 
                     cmd.ExecuteNonQuery();
                 }
 
-                LoadDeliveries();
                 LoadAssignedRecords();
+                LoadDeliveries();
             }
         }
+
 
         // Load deliveries that were already assigned to drivers (history or confirmation)
         protected void LoadAssignedRecords()
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                                // we are only fetch deliveries where a driver has already been assigned (driverID is NOT null)
-                                string query = @"
-                                             SELECT 
-                                    b.title AS BookTitle,
-                                    s.sellerName AS SellerName,
-                                    bu.buyerName AS BuyerName,
-	                                del.status, del.driverID,   
-                                    d.driverName + ' ' + d.driverSurname AS DriverName,
-                                    del.deliveryDate
-                                FROM Delivery del
-                                LEFT JOIN Sale   sa ON del.saleID  = sa.saleID
-                                LEFT JOIN Book    b ON sa.bookISBN = b.bookISBN
-                                LEFT JOIN Seller  s ON sa.sellerID = s.sellerID
-                                LEFT JOIN Buyer  bu ON sa.buyerID = bu.buyerID
-                                LEFT JOIN Driver  d ON del.driverID = d.driverID
-                                WHERE del.status BETWEEN 1 AND 5
-                                ORDER BY del.deliveryDate DESC";
-
-                //REMEMBER . A LEFT JOIN ensures the delivery still shows up, with blank values for the missing details, instead of being completely left out for example a delivery might exist in the Delivery table, but maybe the driver hasn’t been assigned yet, or some book details are missing.
-
+                // we are only fetch deliveries where a driver has already been assigned (driverID is NOT null)
+                string query = @"
+                                  SELECT 
+                b.title AS BookTitle, 
+                se.sellerName,
+                bu.buyerName,
+                d.status,
+                dr.driverID,   
+                dr.driverName + ' ' + dr.driverSurname AS DriverName,
+                d.deliveryDate
+            FROM Delivery d
+            LEFT JOIN Sale s ON d.saleID = s.saleID
+            LEFT JOIN Book b ON s.bookISBN = b.bookISBN
+            LEFT JOIN Seller se ON s.sellerID = se.sellerID
+            LEFT JOIN Buyer bu ON s.buyerID = bu.buyerID
+            LEFT JOIN Driver dr ON d.driverID = dr.driverID
+            WHERE d.driverID IS NOT NULL AND d.status BETWEEN 1 AND 5
+            ORDER BY d.deliveryDate DESC";
 
                 SqlDataAdapter da = new SqlDataAdapter(query, con);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-                gvAssignedDrivers.DataSource = dt;
-                gvAssignedDrivers.DataBind();
-            }
 
-        }
-    }
-}
+                if (dt.Rows.Count > 0)
+                {
+                    gvAssignedDrivers.DataSource = dt;
+                    gvAssignedDrivers.DataBind();
+                    gvAssignedDrivers.Visible = true; // show assigned table
+                }
+                else
+                {
+                    gvAssignedDrivers.Visible = false; // hide if no assigned deliveries
+                }
+
+            }
+        } }}

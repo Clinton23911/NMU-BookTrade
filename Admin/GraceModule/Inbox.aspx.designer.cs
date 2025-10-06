@@ -15,13 +15,13 @@ namespace NMU_BookTrade
     {
 
         /// <summary>
-        /// ScriptManager1 control.
+        /// ScriptManagerProxy1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.ScriptManager ScriptManager1;
+        protected global::System.Web.UI.ScriptManagerProxy ScriptManagerProxy1;
 
         /// <summary>
         /// inboxCountSpan control.
@@ -33,21 +33,21 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl inboxCountSpan;
 
         /// <summary>
-        /// inboxMessagesContainer control.
+        /// rptInbox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl inboxMessagesContainer;
+        protected global::System.Web.UI.WebControls.Repeater rptInbox;
 
         /// <summary>
-        /// sentMessagesContainer control.
+        /// rptSent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl sentMessagesContainer;
+        protected global::System.Web.UI.WebControls.Repeater rptSent;
     }
 }

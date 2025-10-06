@@ -42,13 +42,13 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvUsername;
 
         /// <summary>
-        /// cvUsername control.
+        /// revUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvUsername;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revUsername;
 
         /// <summary>
         /// txtName control.
@@ -132,13 +132,13 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNumber;
 
         /// <summary>
-        /// revNumber control.
+        /// revPhoneNumber control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator revNumber;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revPhoneNumber;
 
         /// <summary>
         /// txtAddress control.

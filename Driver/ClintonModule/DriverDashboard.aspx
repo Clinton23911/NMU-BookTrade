@@ -15,12 +15,11 @@
         <div class="dd-header">
             <h1 class="dd-welcome">Welcome <asp:Label ID="lblDriverName" runat="server" Text="Driver"></asp:Label>!</h1>
             <p class="dd-subtitle">MANAGE YOUR DELIVERIES AND SCHEDULE</p>
-            <div class="dd-header-actions">
-                <asp:Button ID="btnRefreshSummary" runat="server" 
-                    CssClass="dd-refresh-btn" 
-                    Text="🗘" 
-                    OnClick="btnRefreshSummary_Click" />
-            </div>
+            <asp:Button ID="BtnRefreshSummary" runat="server" 
+                CssClass="dd-refresh-btn" 
+                Text="🗘" 
+                OnClick="BtnRefreshSummary_Click" />
+            
         </div>
 
         <!-- Stats Cards -->

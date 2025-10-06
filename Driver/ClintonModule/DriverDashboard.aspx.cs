@@ -634,12 +634,12 @@ namespace NMU_BookTrade.Driver.ClintonModule
             }
         }
 
-        protected void btnRefreshSummary_Click(object sender, EventArgs e)
+        protected void BtnRefreshSummary_Click(object sender, EventArgs e)
         {
             try
             {
                 LoadDriverData();
-                LoadPendingDeliveries();
+                
                 // Clear any error messages
                 lblErrorMessage.Text = "";
                 lblErrorMessage.Visible = false;
@@ -651,6 +651,8 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 // Log the error: LogError(ex);
             }
         }
+
+       
 
         protected void rptPendingDeliveries_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {

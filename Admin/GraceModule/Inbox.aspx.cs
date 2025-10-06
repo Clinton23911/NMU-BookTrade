@@ -7,172 +7,97 @@ using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace NMU_BookTrade
 {
     public partial class WebForm9 : System.Web.UI.Page
-    {
-        
+    { 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
-            {
-                if (Request.QueryString["sent"] == "true")
-                    LoadSentMessages();
-                else
-                    LoadMessages();
-                int messageCount = GetMessageCount();
-                inboxCountSpan.InnerText = messageCount.ToString();
+            {                
+                LoadSentMessages(); 
+                LoadMessages();
+                GetMessageCount();                
             }
         }
 
         private void LoadMessages()
         {
             string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-            string query = "SELECT messageID, dateSent, messageContent, senderEmail, isRead FROM SupportMessages WHERE senderEmail IS NOT NULL AND senderEmail != @adminEmail ORDER BY dateSent DESC";
-            // we are going to display the messages that are in the SupportMessages Table from newest to oldest 
-
-            StringBuilder htmlBuilder = new StringBuilder(); // we use it to build the long string in html for our message 
+            string query = "SELECT messageID, dateSent, messageContent, senderEmail, isRead " +
+                           "FROM SupportMessages WHERE senderEmail IS NOT NULL AND senderEmail != @adminEmail " +
+                           "ORDER BY dateSent DESC";
 
             using (SqlConnection conn = new SqlConnection(connStr))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@adminEmail", "gracamanyonganise@gmail.com");
-
                 conn.Open();
+
                 SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read()) // we are looping through each and every row in the SupportMessages table
-                {
-                    // here we are now accessing the data from the column read e.g. reader['column'].
-                    string id = reader["messageID"].ToString();
-                    DateTime dateSent = Convert.ToDateTime(reader["dateSent"]);
-                    string content = reader["messageContent"].ToString();
-                    string email = reader["senderEmail"].ToString();
-                    bool isRead = Convert.ToBoolean(reader["isRead"]);
-
-                    string[] parts = content.Split(new[] { '\n' }, 2);
-                    string senderInfo = parts.Length > 0 ? parts[0] : "Unknown Sender";
-                    string preview = parts.Length > 1 ? parts[1] : "";
-
-                    string role = "anonymous";
-                    if (senderInfo.ToLower().Contains("(seller)")) role = "seller";
-                    else if (senderInfo.ToLower().Contains("(buyer)")) role = "buyer";
-                    else if (senderInfo.ToLower().Contains("(driver)")) role = "driver";
-                    else if (senderInfo.ToLower().Contains("(admin)")) role = "admin";
-
-                    string bodySafe = preview.Replace("\"", "&quot;").Replace("'", "&apos;").Replace("\n", "<br>"); // Cleans the html and replaces double quotes and single quotes with safe HTML entities to prevent breaking HTML attributes.
-                    string readClass = isRead ? "read" : "unread"; // this sets the readclass to read or unread. 
-
-                    htmlBuilder.Append($@"
-<div class='inbox-message-row {readClass}' onclick='selectMessage(this)'
-     data-read='{(isRead ? "1" : "0")}' 
-
-     data-sender='{senderInfo}'
-     data-email='{email}'
-     data-role='{role}'
-     data-time='{dateSent}'
-     data-body='{bodySafe}'
-     data-id='{id}'> 
-    <div class='inbox-message-content'>
-       
-        <div class='inbox-message-details'>
-            <div class='inbox-message-header'>
-                <div class='inbox-sender-info'>
-                    <span class='inbox-sender-name'>{senderInfo}</span>
-                    <span class='inbox-user-badge {role}'>{role}</span>
-                </div>
-               <span class='inbox-message-time'>{dateSent.ToString("MMM dd, yyyy hh:mm tt")}</span>
-
-
-            </div>
-            
-            <div class='inbox-message-preview'>{(preview.Length > 80 ? preview.Substring(0, 80) + "..." : preview)}</div>
-        </div>
-       
-    </div>
-</div>");
-                }
-            }
-
-            inboxMessagesContainer.InnerHtml = htmlBuilder.ToString();
-        }
-
-        [WebMethod]
-        public static string LoadSentMessages()
-        {
-            try
-            {
-                string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-                string query = "SELECT messageID, dateSent, messageContent, senderEmail FROM SupportMessages WHERE senderEmail = @senderEmail ORDER BY dateSent DESC";
-
-                StringBuilder htmlBuilder = new StringBuilder();
-
-                using (SqlConnection conn = new SqlConnection(connStr))
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@senderEmail", "gracamanyonganise@gmail.com");  // Use admin's email here
-
-                    conn.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        string id = reader["messageID"].ToString();
-                        DateTime dateSent = Convert.ToDateTime(reader["dateSent"]);
-                        string content = reader["messageContent"].ToString();
-                        string email = reader["senderEmail"].ToString();
-
-                        string[] parts = content.Split(new[] { '\n' }, 2);
-                        string header = parts.Length > 0 ? parts[0] : "";
-                        string body = parts.Length > 1 ? parts[1] : "";
-
-                        htmlBuilder.Append($@"
-                <div class='inbox-message-row sent' onclick='selectMessage(this)'
-                     data-sender='Me'
-                     data-email='{email}'
-                     data-role='admin'
-                     data-time='{dateSent}'
-                     data-body='{body.Replace("\"", "&quot;").Replace("'", "&apos;").Replace("\n", "<br>")}'
-                     data-id='{id}'> 
-                    <div class='inbox-message-content'>
-                        
-                        <div class='inbox-message-details'>
-                            <div class='inbox-message-header'>
-                                <div class='inbox-sender-info'>
-                                    <span class='inbox-sender-name'>Me</span>
-                                    <span class='inbox-user-badge admin'>admin</span>
-                                </div>
-                               <span class='inbox-message-time'>{dateSent.ToString("MMM dd, yyyy hh:mm tt")}</span>
-                            </div>
-                           
-                            <div class='inbox-message-preview'>{(body.Length > 80 ? body.Substring(0, 80) + "..." : body)}</div>
-                        </div>
-                       
-                    </div>
-                </div>");
-                    }
-                }
-
-                return htmlBuilder.ToString();
-            }
-            catch (Exception ex)
-            {
-                return "Error: " + ex.Message;
+                rptInbox.DataSource = reader;
+                rptInbox.DataBind();
             }
         }
 
+       
 
-        private int GetMessageCount()
+        private void LoadSentMessages()
         {
             string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-            string query = "SELECT COUNT(*) FROM SupportMessages WHERE isRead = 0";
+            string query = "SELECT messageID, dateSent, messageContent, senderEmail " +
+                            "FROM SupportMessages WHERE senderEmail = @senderEmail " +
+                            "ORDER BY dateSent DESC";
 
             using (SqlConnection conn = new SqlConnection(connStr))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
+                cmd.Parameters.AddWithValue("@senderEmail", "gracamanyonganise@gmail.com");
                 conn.Open();
-                return (int)cmd.ExecuteScalar();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                rptSent.DataSource = reader;
+                rptSent.DataBind();
+            }
+             
+        }
+
+
+        protected void rptInbox_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "DeleteMessage")
+            {
+                int messageID = Convert.ToInt32(e.CommandArgument);
+
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM SupportMessages WHERE messageID = @id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", messageID);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                LoadMessages(); // refresh after delete
+            }
+        }
+
+        protected void rptSent_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "DeleteMessage")
+            {
+                int messageID = Convert.ToInt32(e.CommandArgument);
+
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM SupportMessages WHERE messageID = @id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", messageID);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                LoadSentMessages(); // refresh after delete
             }
         }
 
@@ -181,21 +106,44 @@ namespace NMU_BookTrade
         {
             try
             {
-                string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(connStr))
-                using (SqlCommand cmd = new SqlCommand("DELETE FROM SupportMessages WHERE messageID = @id", conn))
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM Messages WHERE messageID=@id", con);
                     cmd.Parameters.AddWithValue("@id", messageID);
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                    return "Message deleted.";
+                    int rows = cmd.ExecuteNonQuery();
+                    return rows > 0 ? "Message deleted successfully." : "Message not found.";
                 }
             }
             catch (Exception ex)
             {
-                return "Error: " + ex.Message;
+                return "Error deleting: " + ex.Message;
             }
         }
+
+
+
+        private int GetMessageCount()
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+            string query = "SELECT COUNT(*) FROM SupportMessages WHERE isRead = 0";
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+                    int messageCount = (int)cmd.ExecuteScalar(); 
+                    inboxCountSpan.InnerText = messageCount.ToString();
+                    return messageCount;
+                }
+
+            }
+
+        }
+
+        
 
 
         [WebMethod]
@@ -237,6 +185,7 @@ namespace NMU_BookTrade
                     cmd.Parameters.AddWithValue("@id", messageID);
                     conn.Open();
                     cmd.ExecuteNonQuery();
+                                      
                     return "Marked as read";
                 }
             }
@@ -253,10 +202,15 @@ namespace NMU_BookTrade
             string query = "SELECT COUNT(*) FROM SupportMessages WHERE isRead = 0";
 
             using (SqlConnection conn = new SqlConnection(connStr))
-            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                conn.Open();
-                return (int)cmd.ExecuteScalar();
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+                    int messageCount = (int)cmd.ExecuteScalar();
+                    return messageCount;
+                }
+
             }
         }
 
@@ -264,11 +218,10 @@ namespace NMU_BookTrade
         [WebMethod(EnableSession = true)]
         public static string SendMessage(string to, string subject, string body)
         {
+ 
             try
             {
-                string senderEmail = "gracamanyonganise@gmail.com"; // Hardcoded for now
-
-
+                string senderEmail = "gracamanyonganise@gmail.com"; // Hardcoded for now 
                 string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(connStr))
                 using (SqlCommand cmd = new SqlCommand("INSERT INTO SupportMessages (messageContent, senderEmail, dateSent, isRead) VALUES (@content, @senderEmail, @date, 1)", conn))
@@ -278,7 +231,9 @@ namespace NMU_BookTrade
                     cmd.Parameters.AddWithValue("@senderEmail", senderEmail);
                     cmd.Parameters.AddWithValue("@date", DateTime.Now);
                     conn.Open();
-                    cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery(); 
+
+
                     return "Message Sent";
                 }
             }

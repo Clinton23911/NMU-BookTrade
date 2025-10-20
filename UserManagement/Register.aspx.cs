@@ -220,7 +220,7 @@ namespace NMU_BookTrade
 
 
         // This function hashes a plain-text password using SHA256 encryption
-       // public string HashPassword(string password)
+      // public string HashPassword(string password)
        // {
             // Create a SHA256 object that will handle the hashing
             //using (SHA256 sha256 = SHA256.Create())

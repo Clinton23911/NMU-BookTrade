@@ -10,21 +10,107 @@ namespace NMU_BookTrade
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string searchTerm = Request.QueryString["query"].ToString();
+            if (!IsPostBack)
+            {
+                string searchTerm = Request.QueryString["query"];
+                string categoryIdQS = Request.QueryString["categoryID"];
+                string categoryName = Request.QueryString["categoryName"];
 
-            if (!IsPostBack && Request.QueryString["query"] != null)
-            {
-                string displayText = GetDisplayText(searchTerm);
-                lblSearched.Text = Server.HtmlEncode(displayText);
-                LoadSearchResults(searchTerm);
+                lblSearched.Text = "";
+
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    string displayText = GetDisplayText(searchTerm);
+                    lblSearched.Text = "Search results for: " + Server.HtmlEncode(displayText);
+                    LoadSearchResults(searchTerm);
+                    pnlSearchResults.Visible = true;
+                    pnlCategoryResults.Visible = false;
+                }
+                else if (!string.IsNullOrEmpty(categoryIdQS))
+                {
+                    if (int.TryParse(categoryIdQS, out int categoryId))
+                    {
+                        LoadBooksByCategory(categoryId);
+                        lblSearched.Text = !string.IsNullOrEmpty(categoryName)
+                            ? "BOOKS in " + Server.HtmlEncode(categoryName)
+                            : "Books in selected category";
+                        pnlSearchResults.Visible = false;
+                        pnlCategoryResults.Visible = true;
+                    }
+                    else
+                    {
+                        lblSearched.Text = "Invalid category ID.";
+                        pnlSearchResults.Visible = false;
+                        pnlCategoryResults.Visible = false;
+                    }
+                }
+                else
+                {
+                    lblSearched.Text = "No search or category selected.";
+                    pnlSearchResults.Visible = false;
+                    pnlCategoryResults.Visible = false;
+                }
+
                 LoadCategories();
+                ((Site1)this.Master).UpdateCartCount();
             }
-            else if (!IsPostBack)
-            {
-                lblSearched.Text = "nothing";
-            }
-            
         }
+
+        private void LoadBooksByCategory(int categoryId)
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+            {
+                try
+                {
+                    con.Open();
+                    string query = @"
+                SELECT 
+                    b.bookISBN,
+                    b.title,
+                    b.author,
+                    b.price,
+                    b.coverImage,
+                    ISNULL(AVG(r.reviewRating), 0) AS AvgRating,
+                    COUNT(r.reviewID) AS ReviewCount
+                FROM Book b
+                LEFT JOIN Sale s ON b.bookISBN = s.bookISBN
+                LEFT JOIN Review r ON s.saleID = r.saleID
+                WHERE b.categoryID = @categoryID
+                GROUP BY b.bookISBN, b.title, b.author, b.price, b.coverImage";
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@categoryID", categoryId);
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        System.Diagnostics.Debug.WriteLine($"LoadBooksByCategory: Rows returned for categoryId {categoryId}: {dt.Rows.Count}");
+
+                        if (dt.Rows.Count == 0)
+                        {
+                            lblMessage.Text = $"No books found for category ID {categoryId}.";
+                            rptBooks.DataSource = null;
+                        }
+                        else
+                        {
+                            lblMessage.Text = "";
+                            rptBooks.DataSource = dt;
+                        }
+
+                        rptBooks.DataBind();
+                        pnlCategoryResults.Visible = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lblMessage.Text = $"Database error in LoadBooksByCategory: {ex.Message}";
+                    rptBooks.DataSource = null;
+                    rptBooks.DataBind();
+                }
+            }
+        }
+
 
         private string GetDisplayText(string searchTerm)
         {
@@ -60,14 +146,27 @@ namespace NMU_BookTrade
 
             return searchTerm;
         }
+
         private void LoadSearchResults(string searchTerm)
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
                 string query = @"
-            SELECT bookISBN, title, author, price, coverImage, status
-            FROM Book 
-            WHERE (title LIKE @searchTerm OR author LIKE @searchTerm OR bookISBN LIKE @searchTerm)";
+    SELECT 
+        b.bookISBN, 
+        b.title, 
+        b.author, 
+        b.price, 
+        b.coverImage, 
+        b.status,
+        ISNULL(AVG(r.reviewRating), 0) AS AvgRating,
+        COUNT(r.reviewID) AS ReviewCount
+    FROM Book b
+    LEFT JOIN Sale s ON b.bookISBN = s.bookISBN
+    LEFT JOIN Review r ON s.saleID = r.saleID
+    WHERE (b.title LIKE @searchTerm OR b.author LIKE @searchTerm OR b.bookISBN LIKE @searchTerm)
+    GROUP BY b.bookISBN, b.title, b.author, b.price, b.coverImage, b.status";
+
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
@@ -109,18 +208,34 @@ namespace NMU_BookTrade
             }
         }
 
-
-        private void LoadCategories()
+        protected void LoadCategories()
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT DISTINCT categoryName FROM Category", con);
+                SqlCommand cmd = new SqlCommand("SELECT categoryID, categoryName FROM Category ORDER BY categoryName", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
                 dt.Load(reader);
-                rptCategory.DataSource = dt;
-                rptCategory.DataBind();
+
+                int splitIndex = dt.Rows.Count / 2;
+
+                DataTable dt1 = dt.Clone();
+                DataTable dt2 = dt.Clone();
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    if (i < splitIndex)
+                        dt1.ImportRow(dt.Rows[i]);
+                    else
+                        dt2.ImportRow(dt.Rows[i]);
+                }
+
+                rptCategory1.DataSource = dt1;
+                rptCategory1.DataBind();
+
+                rptCategory2.DataSource = dt2;
+                rptCategory2.DataBind();
             }
         }
 
@@ -128,8 +243,66 @@ namespace NMU_BookTrade
         {
             if (e.CommandName == "SelectCategory")
             {
-                string faculty = e.CommandArgument.ToString();
-                Response.Redirect("~/Admin/GraceModule/ManageCategories.aspx?category=" + Server.UrlEncode(faculty));
+                string[] args = e.CommandArgument.ToString().Split('|');
+                int categoryId = Convert.ToInt32(args[0]);
+                string categoryName = args[1];
+
+                Response.Redirect($"~/Buyer/pabiModule/SearchResult.aspx?categoryID={categoryId}&categoryName={Server.UrlEncode(categoryName)}");
+            }
+
+            if (e.Item.ItemIndex == 2)
+            {
+                PlaceHolder phSearchBar = (PlaceHolder)e.Item.FindControl("phSearchBar");
+                if (phSearchBar != null)
+                {
+                    phSearchBar.Visible = true;
+                }
+            }
+        }
+
+        private void PerformSearch(string searchTerm)
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SELECT TOP 2 bookISBN, title, author, coverImage, price " + "FROM Book " + " WHERE title LIKE @SearchTerm OR author LIKE @SearchTerm", con);
+                cmd.Parameters.AddWithValue("@SearchTerm", "%" + searchTerm + "%");
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    lblSearchResults.Text = $"Search results for \"{searchTerm}\"";
+                    lblSearchResults.Visible = true;
+                    rptSearchResults.DataSource = dt;
+                    rptSearchResults.DataBind();
+                }
+                else
+                {
+                    lblSearchResults.Text = $"No results found for \"{searchTerm}\"";
+                    lblSearchResults.Visible = true;
+                    rptSearchResults.DataSource = null;
+                    rptSearchResults.DataBind();
+                }
+
+                pnlSearchResults.Visible = true;
+            }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            string searchTerm = txtSearch.Text.Trim();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                PerformSearch(searchTerm);
+            }
+            else
+            {
+                lblSearchResults.Visible = false;
+                rptSearchResults.Visible = false;
+                pnlSearchResults.Visible = false;
             }
         }
 
@@ -157,7 +330,7 @@ namespace NMU_BookTrade
 
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
-                    SqlCommand cmd = new SqlCommand("SELECT title, coverImage FROM Book WHERE bookISBN = @bookISBN", con);
+                    SqlCommand cmd = new SqlCommand("SELECT title, coverImage, price FROM Book WHERE bookISBN = @bookISBN", con);
                     cmd.Parameters.AddWithValue("@bookISBN", bookISBN);
                     con.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -170,12 +343,12 @@ namespace NMU_BookTrade
 
                 CartPanel.Visible = true;
                 CartPanel.CssClass = "slide-panel slide-panel-visible";
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "PanelOpen",
+                "document.body.classList.add('panel-open');", true);
                 lblMessage.Text = "";
-
                 ((Site1)this.Master).UpdateCartCount();
             }
         }
-
 
         private bool IsBookAvailable(string bookISBN)
         {
@@ -189,11 +362,34 @@ namespace NMU_BookTrade
             }
         }
 
+        protected string GetStarIcons(double rating)
+        {
+            int fullStars = (int)Math.Floor(rating);
+            bool hasHalfStar = (rating - fullStars) >= 0.5;
+            int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+            System.Text.StringBuilder starsHtml = new System.Text.StringBuilder();
+
+            for (int i = 0; i < fullStars; i++)
+                starsHtml.Append("<i class='fa-solid fa-star'></i>");
+
+            if (hasHalfStar)
+                starsHtml.Append("<i class='fa-solid fa-star-half-stroke'></i>");
+
+            for (int i = 0; i < emptyStars; i++)
+                starsHtml.Append("<i class='fa-regular fa-star'></i>");
+
+            return $"<span class='stars'>{starsHtml}</span>";
+        }
+
+
 
         protected void btnClose_Click(object sender, EventArgs e)
         {
             CartPanel.Visible = false;
             CartPanel.CssClass = "slide-panel";
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "PanelClose",
+            "document.body.classList.remove('panel-open');", true);
         }
 
         private void AddToCart(int buyerID, string bookISBN, int quantity)
@@ -229,6 +425,13 @@ namespace NMU_BookTrade
                     insertCmd.ExecuteNonQuery();
                 }
             }
+            CartPanel.Visible = true;
+            CartPanel.CssClass = "slide-panel slide-panel active";
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "PanelOpen",
+            "document.body.classList.add('panel-open');", true);
+            lblMessage.Text = "";
+            lblMessage.Text = "";
+            ((Site1)this.Master).UpdateCartCount();
         }
 
         private int CreateCart(SqlConnection con, int buyerID)
@@ -237,8 +440,5 @@ namespace NMU_BookTrade
             createCartCmd.Parameters.AddWithValue("@buyerID", buyerID);
             return (int)createCartCmd.ExecuteScalar();
         }
-
-      
-
     }
 }

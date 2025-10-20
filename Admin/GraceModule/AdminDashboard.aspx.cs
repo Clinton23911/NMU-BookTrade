@@ -7,13 +7,16 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NMU_BookTrade;
 
 namespace NMU_BookTrade
 {
     public partial class AdminDashboard : System.Web.UI.Page
     {
+       
         protected void Page_Load(object sender, EventArgs e)
         {
+            AuthorizationHelper.Authorize("1"); // 1 = Admin
             // Only load drivers if it's the first time the page is loading (not on postbacks)
             if (!IsPostBack)
             {

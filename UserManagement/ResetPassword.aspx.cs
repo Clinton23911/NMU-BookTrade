@@ -8,7 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 
-namespace NMU_BookTrade.User_Management
+namespace NMU_BookTrade.UserManagement
 {
     public partial class ResetPassword : System.Web.UI.Page
     {

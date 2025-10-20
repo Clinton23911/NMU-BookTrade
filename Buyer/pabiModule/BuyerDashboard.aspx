@@ -9,8 +9,8 @@
             <ItemTemplate>
                 <asp:LinkButton runat="server"
                     CommandName="SelectCategory"
-                    CommandArgument='<%# Eval("categoryName") %>'
-                    CssClass="category-link">
+                    CommandArgument='<%# Eval("categoryID") + "|" + Eval("categoryName") %>'
+                    CssClass="category-link" >
                     <%# Eval("categoryName") %>
                 </asp:LinkButton>
             </ItemTemplate>
@@ -25,15 +25,14 @@
             <ItemTemplate>
                 <asp:LinkButton runat="server"
                     CommandName="SelectCategory"
-                    CommandArgument='<%# Eval("categoryName") %>'
-                    CssClass="category-link">
+                    CommandArgument='<%# Eval("categoryID") + "|" + Eval("categoryName") %>'
+                    CssClass="category-link" >
                     <%# Eval("categoryName") %>
                 </asp:LinkButton>
             </ItemTemplate>
         </asp:Repeater>
     </div>
 </div>
-
 
 <asp:Label ID="lblSearchResults" runat="server" CssClass="results-label" Font-Bold="true"></asp:Label>
 

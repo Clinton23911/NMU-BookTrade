@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
+using System.Web.Security;
 
 namespace NMU_BookTrade
 {
@@ -41,8 +42,10 @@ namespace NMU_BookTrade
                 {
                     Session["AccessID"] = "1";
                     Session["UserID"] = reader["adminID"].ToString();
+                    FormsAuthentication.SetAuthCookie(username, false);
                     Response.Redirect("~/Admin/GraceModule/AdminDashboard.aspx");
                     return;
+
                 }
 
                 reader.Close();
@@ -61,8 +64,10 @@ namespace NMU_BookTrade
                     Session["AccessID"] = "2";
                     Session["UserID"] = reader["buyerID"].ToString();// used for general user tracking 
                     Session["BuyerID"] = reader["buyerID"].ToString();// used for deletion
+                    FormsAuthentication.SetAuthCookie(username, false);
                     Response.Redirect("~/Buyer/pabiModule/BuyerDashboard.aspx");
                     return;
+
                 }
                 reader.Close();
 
@@ -80,8 +85,10 @@ namespace NMU_BookTrade
                     Session["AccessID"] = "3";
                     Session["UserID"] = reader["sellerID"].ToString();// used for general user tracking 
                     Session["SellerID"] = reader["sellerID"].ToString();// used for deletion
+                    FormsAuthentication.SetAuthCookie(username, false);
                     Response.Redirect("~/Seller/ClintonModule/SellerDashboard.aspx");
                     return;
+
                 }
                 reader.Close();
 
@@ -99,8 +106,10 @@ namespace NMU_BookTrade
                     Session["AccessID"] = "4";
                     Session["UserID"] = reader["driverID"].ToString();// used for general user tracking 
                     Session["DriverID"] = reader["driverID"].ToString();// used for deletion
+                    FormsAuthentication.SetAuthCookie(username, false);
                     Response.Redirect("~/Driver/ClintonModule/DriverDashboard.aspx");
                     return;
+
                 }
                 reader.Close();
 

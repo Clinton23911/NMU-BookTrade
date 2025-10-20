@@ -33,6 +33,24 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.TextBox txtCategoryName;
 
         /// <summary>
+        /// rfvCategoryName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCategoryName;
+
+        /// <summary>
+        /// revCategoryName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revCategoryName;
+
+        /// <summary>
         /// btnAddCategory control.
         /// </summary>
         /// <remarks>
@@ -49,6 +67,15 @@ namespace NMU_BookTrade
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFeedback;
+
+        /// <summary>
+        /// lblMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
         /// gvCategories control.

@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NMU_BookTrade
+namespace NMU_BookTrade.Admin.GraceModule
 {
 
 

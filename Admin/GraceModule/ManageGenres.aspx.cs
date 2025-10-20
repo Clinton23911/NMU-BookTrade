@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -58,6 +59,39 @@ namespace NMU_BookTrade
             string name = txtGenreName.Text.Trim();
             string selectedCat = ddlCategories.SelectedValue;
 
+            if (string.IsNullOrEmpty(name))
+            {
+                lblFeedback.ForeColor = System.Drawing.Color.OrangeRed;
+                lblFeedback.Text = "Genre name is required.";
+                lblFeedback.Visible = true;
+                return;
+            }
+
+            if (!Regex.IsMatch(name, @"^[a-zA-Z\s]{1,50}$"))
+            {
+                lblFeedback.ForeColor = System.Drawing.Color.OrangeRed;
+                lblFeedback.Text = "Genre name should only contain letters and spaces (up to 50 characters).";
+                lblFeedback.Visible = true;
+                return;
+            }
+
+            if (string.IsNullOrEmpty(selectedCat))
+            {
+                lblFeedback.ForeColor = System.Drawing.Color.OrangeRed;
+                lblFeedback.Text = "Please select a category.";
+                lblFeedback.Visible = true;
+                return;
+            }
+
+            if (GenreExists(name))
+            {
+                lblFeedback.ForeColor = System.Drawing.Color.OrangeRed;
+                lblFeedback.Text = $"Genre '{name}' already exists.";
+                lblFeedback.Visible = true;
+                return;
+            }
+
+
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(selectedCat)) return; // Don't add if empty
 
             using (SqlConnection con = new SqlConnection(connStr))
@@ -77,6 +111,20 @@ namespace NMU_BookTrade
             lblFeedback.Visible = true;
 
             LoadGenres();
+
+
+        }
+
+        private bool GenreExists(string name)
+        {
+            using (SqlConnection con = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Genre WHERE genreName = @name", con))
+            {
+                cmd.Parameters.AddWithValue("@name", name);
+                con.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
         }
 
         // Edit genre (start edit mode)
@@ -90,7 +138,9 @@ namespace NMU_BookTrade
         protected void GvGenres_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
             int id = Convert.ToInt32(gvGenres.DataKeys[e.RowIndex].Value);
-            string name = ((TextBox)gvGenres.Rows[e.RowIndex].Cells[0].Controls[0]).Text.Trim();
+            TextBox txtName = (TextBox)gvGenres.Rows[e.RowIndex].FindControl("txtEditGenre");
+            string name = txtName.Text.Trim();
+
 
             using (SqlConnection con = new SqlConnection(connStr))
             using (SqlCommand cmd = new SqlCommand("UPDATE Genre SET genreName = @name WHERE genreID = @id", con))

@@ -33,49 +33,40 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected global::System.Web.UI.WebControls.Label lblDriverName;
 
         /// <summary>
-        /// BtnRefreshSummary control.
+        /// btnRefreshSummary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnRefreshSummary;
+        protected global::System.Web.UI.WebControls.Button btnRefreshSummary;
 
         /// <summary>
-        /// lblTotalDeliveries control.
+        /// lblPendingToday control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalDeliveries;
+        protected global::System.Web.UI.WebControls.Label lblPendingToday;
 
         /// <summary>
-        /// lblPendingDeliveries control.
+        /// lblAssignedToday control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingDeliveries;
+        protected global::System.Web.UI.WebControls.Label lblAssignedToday;
 
         /// <summary>
-        /// lblAssignedDeliveries control.
+        /// lblInTransitToday control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblAssignedDeliveries;
-
-        /// <summary>
-        /// lblInTransitDeliveries control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInTransitDeliveries;
+        protected global::System.Web.UI.WebControls.Label lblInTransitToday;
 
         /// <summary>
         /// lblCompletedDeliveries control.
@@ -96,22 +87,31 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected global::System.Web.UI.WebControls.Label lblCompletedThisWeek;
 
         /// <summary>
-        /// lblFailedDeliveries control.
+        /// lblTotalCompleted control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblFailedDeliveries;
+        protected global::System.Web.UI.WebControls.Label lblTotalCompleted;
 
         /// <summary>
-        /// lblCancelledDeliveries control.
+        /// lblFailedThisWeek control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCancelledDeliveries;
+        protected global::System.Web.UI.WebControls.Label lblFailedThisWeek;
+
+        /// <summary>
+        /// lblCancelledThisWeek control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCancelledThisWeek;
 
         /// <summary>
         /// lblDriverRating control.

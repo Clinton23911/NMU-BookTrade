@@ -1,13 +1,14 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="Cart.aspx.cs" Inherits="NMU_BookTrade.Buyer.pabiModule.Cart" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="Cart.aspx.cs" Inherits="NMU_BookTrade.Cart" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
- <div class="categories-inline">
+
+         <div class="categories-inline">
         <asp:Repeater ID="rptCategory1" runat="server" OnItemCommand="rptCategory_ItemCommand">
             <ItemTemplate>
                 <asp:LinkButton runat="server"
                     CommandName="SelectCategory"
-                    CommandArgument='<%# Eval("categoryName") %>'
+                    CommandArgument='<%# Eval("categoryID") + "|" + Eval("categoryName") %>'
                     CssClass="category-link">
                     <%# Eval("categoryName") %>
                 </asp:LinkButton>
@@ -24,7 +25,7 @@
             <ItemTemplate>
                 <asp:LinkButton runat="server"
                     CommandName="SelectCategory"
-                    CommandArgument='<%# Eval("categoryName") %>'
+                    CommandArgument='<%# Eval("categoryID") + "|" + Eval("categoryName") %>'
                     CssClass="category-link">
                     <%# Eval("categoryName") %>
                 </asp:LinkButton>
@@ -73,12 +74,12 @@
                 <div class="cart-item-details">
                     <h4><%# Eval("title") %></h4>
 <p>
-    Qty: 
+    <strong> Qty: </strong>
     <asp:DropDownList ID="ddlQuantity" runat="server" 
         AutoPostBack="true" 
         OnSelectedIndexChanged="ddlQuantity_SelectedIndexChanged">
     </asp:DropDownList>
-    | Price: R<%# Eval("price") %>
+    | <strong> Price: </strong><%# Eval("price") %>
 </p>
 
 <!-- hidden field to store ISBN for dropdown -->
@@ -94,11 +95,9 @@
        </div>
                 </div>
                   <div class="moreInfo">
-     <div class="label">Condition: <%# Eval("condition") %></div>
+     <div class="label"> <strong> Condition: </strong> <%# Eval("condition") %></div>
     <br />
-<div class="label">Seller: <%# Eval("sellerName") + " " + Eval("sellerSurname") %></div>
-<br />
-<div class="label">Version: <%# Eval("version") %></div>
+<div class="label"> <strong> Seller: </strong> <%# Eval("sellerName") + " " + Eval("sellerSurname") %></div>
 <br />
 <div class="delivery">
     <strong>Delivery schedule:</strong> Delivery will take 3 - 5 business days
@@ -119,7 +118,7 @@
 
     <asp:Panel ID="pnlPayment" runat="server" Visible="false" CssClass="checkout-section">
         <h3>Ready to Pay?</h3>
-        <asp:Label AssociatedControlID="txtName" Text="Name on Card:" runat="server" />
+        <asp:Label AssociatedControlID="txtName" Text="Name on Card:" runat="server"  CssClass="checkout-lbl"/>
             <span style="color:red">*</span>
         <asp:TextBox ID="txtName" runat="server" CssClass="input" />
 
@@ -132,7 +131,7 @@
         <br />
         <br />
 
-        <asp:Label AssociatedControlID="txtCard" Text="Card Number:" runat="server" />
+        <asp:Label AssociatedControlID="txtCard" Text="Card Number:" runat="server" CssClass="checkout-lbl"/>
             <span style="color:red">*</span>
         <asp:TextBox ID="txtCard" runat="server" CssClass="input" />
 
@@ -149,6 +148,40 @@
     </asp:Panel>
 
     <asp:Label ID="lblConfirmation" runat="server" Visible="false" ForeColor="Green" Font-Bold="true" />
+</asp:Panel>
+
+    <!-- Thank You & Order Summary Panel -->
+<asp:Panel ID="pnlOrderSummary" runat="server" CssClass="thankyou-card" Visible="false">
+    <div class="thankyou-header">
+        <h2>🎉 Thank You for Purchasing with NMUBookTrade!</h2>
+        <p>We appreciate your trust in us.</p>
+    </div>
+
+    <div class="thankyou-body">
+        <div class="summary-row">
+            <strong>Order Number:</strong> <asp:Label ID="lblOrderNumber" runat="server" />
+        </div>
+        <div class="summary-row">
+            <strong>Buyer Name:</strong> <asp:Label ID="lblBuyerName" runat="server" />
+        </div>
+        <div class="summary-row">
+            <strong>Purchase Date:</strong> <asp:Label ID="lblOrderDate" runat="server" />
+        </div>
+        <div class="summary-row">
+            <strong>Number of Items:</strong> <asp:Label ID="lblItemCount" runat="server" />
+        </div>
+        <div class="summary-row">
+            <strong>Total Amount:</strong> <asp:Label ID="lblOrderTotal" runat="server" />
+        </div>
+        <div class="summary-row">
+            <strong>Estimated Delivery:</strong> <asp:Label ID="lblEstimatedDelivery" runat="server" />
+        </div>
+    </div>
+
+    <div class="thankyou-footer">
+        <asp:Button ID="btnGoToOrders" runat="server" Text="View My Orders" CssClass="btn-primary" PostBackUrl="~/Buyer/pabiModule/BuyerOrders.aspx" />
+        <asp:Button ID="btnContinueShopping" runat="server" Text="Continue Shopping" CssClass="btn-secondary" PostBackUrl="~/Buyer/pabiModule/SearchTextBook.aspx" />
+    </div>
 </asp:Panel>
 
     <!-- ORDER DETAILS -->
@@ -181,6 +214,5 @@
 
     <br />
     <br />
-
 
 </asp:Content>

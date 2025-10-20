@@ -58,9 +58,8 @@ namespace NMU_BookTrade
         {
             Button btn = (Button)sender;
             string bookISBN = btn.CommandArgument;
+            Response.Redirect("/UserManagement/Login.aspx?ReturnUrl=/BookDetails.aspx?query=" + Server.UrlEncode(bookISBN));
 
-            // Redirect to book details page
-            Response.Redirect("BookDetails.aspx?query=" + bookISBN);
         }
 
 

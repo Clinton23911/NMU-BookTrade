@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace NMU_BookTrade.Buyer.pabiModule
+namespace NMU_BookTrade
 {
     public partial class BuyerOrders : System.Web.UI.Page
     {
@@ -23,13 +19,17 @@ namespace NMU_BookTrade.Buyer.pabiModule
             }
         }
 
+
+        protected void btnStartShopping_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Buyer/pabiModule/SearchTextBook.aspx");
+        }
         private int GetBuyerId()
         {
             if (Session["buyerID"] != null && int.TryParse(Session["buyerID"].ToString(), out int id))
                 return id;
 
-            // fallback (for testing)
-            return 1;
+            return 1; // Fallback for testing
         }
 
         private void LoadOrderFilters()
@@ -38,14 +38,13 @@ namespace NMU_BookTrade.Buyer.pabiModule
             orderDate.Items.Add(new ListItem("Last 3 months", "3m"));
             orderDate.Items.Add(new ListItem("Last 6 months", "6m"));
 
-            // Load distinct years from DB
             using (SqlConnection conn = new SqlConnection(connString))
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = @"SELECT DISTINCT YEAR(saleDate) AS OrderYear 
-                                    FROM Sale 
-                                    WHERE buyerID = @buyerID
-                                    ORDER BY OrderYear DESC";
+                                        FROM Sale 
+                                        WHERE buyerID = @buyerID
+                                        ORDER BY OrderYear DESC";
                 cmd.Parameters.AddWithValue("@buyerID", GetBuyerId());
 
                 conn.Open();
@@ -59,15 +58,16 @@ namespace NMU_BookTrade.Buyer.pabiModule
                 }
             }
 
-            // Add "All" option
             if (orderDate.Items.FindByValue("0") == null)
                 orderDate.Items.Insert(0, new ListItem("All", "0"));
 
             orderDate.SelectedIndex = 0;
         }
 
+
         private void BindOrders()
         {
+
             string filter = orderDate.SelectedValue;
             DateTime fromDate = DateTime.MinValue, toDate = DateTime.Now;
             bool useDateFilter = true;
@@ -87,7 +87,6 @@ namespace NMU_BookTrade.Buyer.pabiModule
             }
             else
             {
-                // "All" selected
                 useDateFilter = false;
             }
 
@@ -97,27 +96,20 @@ namespace NMU_BookTrade.Buyer.pabiModule
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = @"
-            SELECT 
-                sl.saleID,
-                sl.saleDate,
-                b.buyerAddress,
-                d.deliveryDate,
-                bk.coverImage,
-                bk.title,
-                bk.price,
-                ci.quantity,
-                s.sellerName,
-                s.sellerSurname
-            FROM Sale sl
-           INNER JOIN Buyer b ON sl.buyerID = b.buyerID
-           LEFT JOIN Delivery d ON sl.saleID = d.saleID
-           INNER JOIN Book bk ON sl.bookISBN = bk.bookISBN
-           LEFT JOIN CartItems ci ON sl.saleID = ci.saleID
-           INNER JOIN Seller s ON sl.sellerID = s.sellerID
-            WHERE sl.buyerID = @buyerID
-              " + (useDateFilter ? "AND sl.saleDate BETWEEN @fromDate AND @toDate" : "") + @"
-            ORDER BY sl.saleDate DESC;
-        ";
+                        SELECT 
+                            MIN(sl.saleID) AS saleID,         
+                            sl.orderGroupId,
+                            MIN(sl.saleDate) AS saleDate,
+                            MAX(d.deliveryDate) AS deliveryDate,
+                            b.buyerAddress
+                        FROM Sale sl
+                        INNER JOIN Buyer b ON sl.buyerID = b.buyerID
+                        LEFT JOIN Delivery d ON sl.saleID = d.saleID
+                        WHERE sl.buyerID = @buyerID
+                          " + (useDateFilter ? "AND sl.saleDate BETWEEN @fromDate AND @toDate" : "") + @"
+                        GROUP BY sl.orderGroupId, b.buyerAddress
+                        ORDER BY MIN(sl.saleDate) DESC;
+                    ";
 
                 cmd.Parameters.AddWithValue("@buyerID", GetBuyerId());
 
@@ -133,13 +125,30 @@ namespace NMU_BookTrade.Buyer.pabiModule
                 }
             }
 
-            rptOrders.DataSource = dt;
-            rptOrders.DataBind();
-        }
+            if (dt.Rows.Count == 0)
+            {
+                pnlNoOrders.Visible = true;
+                rptOrders.Visible = false;
 
+                string filterText = orderDate.SelectedItem != null ? orderDate.SelectedItem.Text : "this period";
+                lblNoOrdersMessage.Text = $"You have no orders in {filterText}";
+            }
+
+            else
+            {
+                pnlNoOrders.Visible = false;
+                rptOrders.Visible = true;
+
+                rptOrders.DataSource = dt;
+                rptOrders.DataBind();
+
+            }
+        }
 
         protected void dateSelected_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+            ViewState["ExpandedGroupId"] = null;
             BindOrders();
         }
 
@@ -148,45 +157,101 @@ namespace NMU_BookTrade.Buyer.pabiModule
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 var drv = e.Item.DataItem as DataRowView;
-                if (drv == null) return;
-
-                var btnTrack = e.Item.FindControl("btnTrack") as Button;
-                if (btnTrack != null)
+                if (drv == null)
                 {
-                    bool hasDeliveryDate = drv["deliveryDate"] != DBNull.Value;
-                    btnTrack.Visible = !hasDeliveryDate;
+                    return;
                 }
 
+                // Handle Panel Visibility
                 var pnl = e.Item.FindControl("pnlDetails") as Panel;
                 if (pnl != null)
                 {
-                    string currentSaleId = drv["saleID"].ToString();
-                    if (ViewState["ExpandedSaleID"] != null && ViewState["ExpandedSaleID"].ToString() == currentSaleId)
-                        pnl.CssClass = "order-details";
-                    else
-                        pnl.CssClass = "order-details hidden-panel";
+                    string expandedId = ViewState["ExpandedGroupId"] as string;
+                    string currentId = drv["orderGroupId"].ToString();
+                    pnl.Visible = (expandedId == currentId);
+                }
+
+                // Bind Nested Repeaters
+                var rptOrderItems = e.Item.FindControl("rptOrderItems") as Repeater;
+                var rptBookCovers = e.Item.FindControl("rptBookCovers") as Repeater;
+
+                if (rptOrderItems != null || rptBookCovers != null)
+                {
+                    Guid orderGroupId = (Guid)drv["orderGroupId"];
+                    DataTable dtItems = new DataTable();
+
+                    using (SqlConnection con = new SqlConnection(connString))
+                    using (SqlCommand cmd = con.CreateCommand())
+                    {
+                        cmd.CommandText = @"
+                                SELECT 
+                                    bk.bookISBN,
+                                    bk.coverImage, 
+                                    bk.title, 
+                                    bk.author,
+                                    bk.price, 
+                                    CAST(sl.amount / bk.price AS INT) AS quantity,
+                                    s.sellerName, 
+                                    s.sellerSurname
+                                FROM Sale sl
+                                INNER JOIN Book bk ON sl.bookISBN = bk.bookISBN
+                                INNER JOIN Seller s ON sl.sellerID = s.sellerID
+                                WHERE sl.orderGroupId = @orderGroupId";
+                        cmd.Parameters.AddWithValue("@orderGroupId", orderGroupId);
+
+                        con.Open();
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            da.Fill(dtItems);
+                        }
+                    }
+
+                    if (dtItems.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dtItems.Rows)
+                        {
+                            if (string.IsNullOrEmpty(row["coverImage"]?.ToString()))
+                            {
+                                row["coverImage"] = "~/Images/no-image.png";
+                            }
+                        }
+
+                        if (rptBookCovers != null)
+                        {
+                            rptBookCovers.DataSource = dtItems;
+                            rptBookCovers.DataBind();
+                        }
+
+                        if (rptOrderItems != null)
+                        {
+                            rptOrderItems.DataSource = dtItems;
+                            rptOrderItems.DataBind();
+                        }
+                    }
                 }
             }
         }
+
+
+
 
         protected void rptOrders_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "ToggleDetails")
             {
-                string saleId = e.CommandArgument.ToString();
-                if (ViewState["ExpandedSaleID"] != null && ViewState["ExpandedSaleID"].ToString() == saleId)
-                    ViewState["ExpandedSaleID"] = null;
-                else
-                    ViewState["ExpandedSaleID"] = saleId;
+                string orderGroupIdStr = e.CommandArgument.ToString();
 
+                if (ViewState["ExpandedGroupId"] as string == orderGroupIdStr)
+                {
+                    ViewState["ExpandedGroupId"] = null;
+                }
+                else
+                {
+                    ViewState["ExpandedGroupId"] = orderGroupIdStr;
+                }
                 BindOrders();
             }
-            else if (e.CommandName == "Track")
-            {
-                string saleId = e.CommandArgument?.ToString();
-                if (!string.IsNullOrEmpty(saleId))
-                    Response.Redirect("~/TrackDelivery.aspx?saleID=" + saleId);
-            }
+
         }
     }
 }

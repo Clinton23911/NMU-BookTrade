@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace NMU_BookTrade
+namespace NMU_BookTrade.Admin.GraceModule
 {
     public partial class WebForm14 : System.Web.UI.Page
     {
@@ -55,11 +55,16 @@ namespace NMU_BookTrade
                     gvDeliveries.DataSource = dt;
                     gvDeliveries.DataBind();
                     gvDeliveries.Visible = true;   // show table if there are pending deliveries
+                                                   
+                    
+
+
                 }
                 else
                 {
                     gvDeliveries.Visible = false;  // hide if nothing to assign
                 }
+               
             }
         }
 
@@ -98,6 +103,15 @@ namespace NMU_BookTrade
                     txtDate.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
                     if (string.IsNullOrEmpty(txtDate.Text))
                         txtDate.Text = DateTime.Today.ToString("yyyy-MM-dd");
+                }
+
+
+                // --- Add data-label attributes for responsive layout ---
+                for (int i = 0; i < gvDeliveries.Columns.Count; i++)
+                {
+                    string headerText = gvDeliveries.Columns[i].HeaderText;
+                    
+                    e.Row.Cells[i].Attributes["data-label"] = headerText;
                 }
             }
         }
@@ -206,4 +220,26 @@ namespace NMU_BookTrade
                 }
 
             }
-        } }}
+
+
+
+        }
+
+        protected void gvAssignedDrivers_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // --- Add data-label attributes for responsive layout ---
+                for (int i = 0; i < gvAssignedDrivers.Columns.Count; i++)
+                {
+                    string headerText = gvAssignedDrivers.Columns[i].HeaderText;
+                    e.Row.Cells[i].Attributes["data-label"] = headerText;
+                }
+            }
+        }
+
+
+
+
+    }
+}

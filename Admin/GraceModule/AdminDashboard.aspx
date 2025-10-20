@@ -3,13 +3,27 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
 
-     <p class="aa-paragraph_1">Welcome   <asp:Label ID="lblCustomerName" runat="server"></asp:Label>. On this dashboard you can manage and oversea the reviews <br /> buyers have placed after their purchase, and <br />
-         the drivers that were hired to deliver the textbooks.</p>
+     <!-- Admin Welcome Section -->
+<div class="admin-card admin-welcome-card">
+  <h1 class="admin-welcome-title">
+    Welcome, <asp:Label ID="lblCustomerName" runat="server"></asp:Label>!
+  </h1>
+  <p class="admin-welcome-text">
+    On this dashboard, you can manage and oversee the reviews buyers have placed after their purchases, 
+    and the drivers that were hired to deliver the textbooks.
+  </p>
+</div>
 
-    <br />
-    <br />
-    <h2 class="section-heading">Remove Inappropriate reviews</h2>
-     <p class="aa-paragraph">To manage the <span class="highlight">inappropriate reviews</span> from the buyers, <a href="ManageReviews.aspx" class="link">click here <i class="fa fa-external-link" aria-hidden="true"></i></a>.</p>
+<!-- Admin Remove Reviews Section -->
+<div class="admin-card admin-review-card">
+  <h2 class="admin-section-heading">Remove Inappropriate Reviews</h2>
+  <p class="admin-paragraph">
+    To manage the <span class="admin-highlight">inappropriate reviews</span> from the buyers, 
+    <a href="ManageReviews.aspx" class="admin-link">
+      click here <i class="fa fa-external-link" aria-hidden="true"></i>
+    </a>.
+  </p>
+</div>
     <br />
     <br />
     <br />

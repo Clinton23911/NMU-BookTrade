@@ -4,6 +4,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.UI.WebControls;
+using NMU_BookTrade;
+
 
 namespace NMU_BookTrade.Driver.ClintonModule
 {
@@ -11,17 +13,18 @@ namespace NMU_BookTrade.Driver.ClintonModule
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            AuthorizationHelper.Authorize("4"); // 4 = Driver
             if (!IsPostBack)
             {
                 // Validate session before proceeding
                 if (!IsDriverAuthenticated())
                 {
-                    Response.Redirect("~/User Management/Login.aspx");
+                    Response.Redirect("~/UserManagement/Login.aspx");
                     return;
                 }
 
                 try
-                    {
+                {
                     LoadDriverData();
                     LoadActiveDeliveries();
                     CheckDatabaseStatus(); // Check database status for debugging
@@ -86,40 +89,42 @@ namespace NMU_BookTrade.Driver.ClintonModule
                     DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek);
                     DateTime endOfWeek = startOfWeek.AddDays(7);
 
-                    // Total deliveries (all time)
-                    string totalQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID";
-                    using (SqlCommand cmd = new SqlCommand(totalQuery, connection))
+                    // OPERATIONAL CARDS - Today's Work
+
+                    // Pending assignments (status = 0, today's date)
+                    string pendingTodayQuery = @"SELECT COUNT(*) FROM Delivery 
+                                                WHERE driverID = @DriverID AND status = 0
+                                                AND CONVERT(DATE, deliveryDate) = @Today";
+                    using (SqlCommand cmd = new SqlCommand(pendingTodayQuery, connection))
                     {
                         cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        cmd.Parameters.AddWithValue("@Today", today);
                         int count = Convert.ToInt32(cmd.ExecuteScalar());
-                        lblTotalDeliveries.Text = count.ToString();
+                        lblPendingToday.Text = count.ToString();
                     }
 
-                    // Assigned deliveries (status = 1)
-                    string assignedQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 1";
-                    using (SqlCommand cmd = new SqlCommand(assignedQuery, connection))
+                    // Ready to start (status = 1, today's date)
+                    string assignedTodayQuery = @"SELECT COUNT(*) FROM Delivery 
+                                                 WHERE driverID = @DriverID AND status = 1
+                                                 AND CONVERT(DATE, deliveryDate) = @Today";
+                    using (SqlCommand cmd = new SqlCommand(assignedTodayQuery, connection))
                     {
                         cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        cmd.Parameters.AddWithValue("@Today", today);
                         int count = Convert.ToInt32(cmd.ExecuteScalar());
-                        lblAssignedDeliveries.Text = count.ToString();
+                        lblAssignedToday.Text = count.ToString();
                     }
 
-                    // Pending deliveries (status = 0)
-                    string pendingQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 0";
-                    using (SqlCommand cmd = new SqlCommand(pendingQuery, connection))
+                    // In Transit (status = 2, today's date)
+                    string transitTodayQuery = @"SELECT COUNT(*) FROM Delivery 
+                                                WHERE driverID = @DriverID AND status = 2
+                                                AND CONVERT(DATE, deliveryDate) = @Today";
+                    using (SqlCommand cmd = new SqlCommand(transitTodayQuery, connection))
                     {
                         cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        cmd.Parameters.AddWithValue("@Today", today);
                         int count = Convert.ToInt32(cmd.ExecuteScalar());
-                        lblPendingDeliveries.Text = count.ToString();
-                    }
-
-                    // In Transit deliveries (status = 2)
-                    string transitQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 2";
-                    using (SqlCommand cmd = new SqlCommand(transitQuery, connection))
-                    {
-                        cmd.Parameters.AddWithValue("@DriverID", driverId);
-                        int count = Convert.ToInt32(cmd.ExecuteScalar());
-                        lblInTransitDeliveries.Text = count.ToString();
+                        lblInTransitToday.Text = count.ToString();
                     }
 
                     // Completed deliveries today
@@ -134,6 +139,8 @@ namespace NMU_BookTrade.Driver.ClintonModule
                         lblCompletedDeliveries.Text = count.ToString();
                     }
 
+                    // PERFORMANCE CARDS - Historical Metrics
+
                     // Completed deliveries this week
                     string completedWeekQuery = @"SELECT COUNT(*) FROM Delivery 
                                                 WHERE driverID = @DriverID AND status = 3
@@ -147,22 +154,39 @@ namespace NMU_BookTrade.Driver.ClintonModule
                         lblCompletedThisWeek.Text = count.ToString();
                     }
 
-                    // Failed deliveries (status = 4)
-                    string failedQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 4";
-                    using (SqlCommand cmd = new SqlCommand(failedQuery, connection))
+                    // Total completed deliveries (all time)
+                    string totalCompletedQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 3";
+                    using (SqlCommand cmd = new SqlCommand(totalCompletedQuery, connection))
                     {
                         cmd.Parameters.AddWithValue("@DriverID", driverId);
                         int count = Convert.ToInt32(cmd.ExecuteScalar());
-                        lblFailedDeliveries.Text = count.ToString();
+                        lblTotalCompleted.Text = count.ToString();
                     }
 
-                    // Cancelled deliveries (status = 5)
-                    string cancelledQuery = "SELECT COUNT(*) FROM Delivery WHERE driverID = @DriverID AND status = 5";
-                    using (SqlCommand cmd = new SqlCommand(cancelledQuery, connection))
+                    // Failed deliveries this week
+                    string failedThisWeekQuery = @"SELECT COUNT(*) FROM Delivery 
+                                                  WHERE driverID = @DriverID AND status = 4
+                                                  AND deliveryDate >= @StartOfWeek AND deliveryDate < @EndOfWeek";
+                    using (SqlCommand cmd = new SqlCommand(failedThisWeekQuery, connection))
                     {
                         cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        cmd.Parameters.AddWithValue("@StartOfWeek", startOfWeek);
+                        cmd.Parameters.AddWithValue("@EndOfWeek", endOfWeek);
                         int count = Convert.ToInt32(cmd.ExecuteScalar());
-                        lblCancelledDeliveries.Text = count.ToString();
+                        lblFailedThisWeek.Text = count.ToString();
+                    }
+
+                    // Cancelled deliveries this week
+                    string cancelledThisWeekQuery = @"SELECT COUNT(*) FROM Delivery 
+                                                     WHERE driverID = @DriverID AND status = 5
+                                                     AND deliveryDate >= @StartOfWeek AND deliveryDate < @EndOfWeek";
+                    using (SqlCommand cmd = new SqlCommand(cancelledThisWeekQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@DriverID", driverId);
+                        cmd.Parameters.AddWithValue("@StartOfWeek", startOfWeek);
+                        cmd.Parameters.AddWithValue("@EndOfWeek", endOfWeek);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblCancelledThisWeek.Text = count.ToString();
                     }
 
                     // Calculate average rating
@@ -216,7 +240,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
                     {
                         checkCmd.Parameters.AddWithValue("@DriverID", driverId);
                         int activeCount = Convert.ToInt32(checkCmd.ExecuteScalar());
-                        
+
                         if (activeCount == 0)
                         {
                             rptPendingDeliveries.DataSource = null;
@@ -298,7 +322,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
                     {
                         checkCmd.Parameters.AddWithValue("@DriverID", driverId);
                         int completedCount = Convert.ToInt32(checkCmd.ExecuteScalar());
-                        
+
                         if (completedCount == 0)
                         {
                             rptCompletedDeliveries.DataSource = null;
@@ -388,7 +412,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
                         checkCmd.Parameters.AddWithValue("@StartDate", startOfWeek);
                         checkCmd.Parameters.AddWithValue("@EndDate", endOfWeek);
                         int weekCount = Convert.ToInt32(checkCmd.ExecuteScalar());
-                        
+
                         if (weekCount == 0)
                         {
                             rptWeeklySchedule.DataSource = null;
@@ -612,34 +636,15 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
-            Response.Redirect("~/User Management/Logout.aspx");
+            Response.Redirect("~/UserManagement/Login.aspx");
         }
 
-        //protected void btnRefreshSummary_Click(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        LoadDriverData();
-        //        LoadActiveDeliveries();
-        //        // Clear any error messages
-        //        lblErrorMessage.Text = "";
-        //        lblErrorMessage.Visible = false;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        lblErrorMessage.Text = "Error refreshing summary data. Please try again.";
-        //        lblErrorMessage.CssClass = "alert alert-danger";
-        //        lblErrorMessage.Visible = true;
-        //        // Log the error: LogError(ex);
-        //    }
-        //}
-
-        protected void BtnRefreshSummary_Click(object sender, EventArgs e)
+        protected void btnRefreshSummary_Click(object sender, EventArgs e)
         {
             try
             {
                 LoadDriverData();
-                
+                LoadActiveDeliveries();
                 // Clear any error messages
                 lblErrorMessage.Text = "";
                 lblErrorMessage.Visible = false;
@@ -647,12 +652,11 @@ namespace NMU_BookTrade.Driver.ClintonModule
             catch (Exception)
             {
                 lblErrorMessage.Text = "Error refreshing summary data. Please try again.";
+                lblErrorMessage.CssClass = "alert alert-danger";
                 lblErrorMessage.Visible = true;
                 // Log the error: LogError(ex);
             }
         }
-
-       
 
         protected void rptPendingDeliveries_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
@@ -696,7 +700,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
             int stars = Convert.ToInt32(rating);
             return new string('★', stars) + new string('☆', 5 - stars);
         }
-        
+
         private void RefreshSummaryData()
         {
             LoadDriverData();
@@ -710,7 +714,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
                     connection.Open();
-                    
+
                     // Check if Delivery table exists and has data
                     string checkDeliveryQuery = "SELECT COUNT(*) FROM Delivery";
                     using (SqlCommand cmd = new SqlCommand(checkDeliveryQuery, connection))

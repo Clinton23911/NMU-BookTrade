@@ -18,7 +18,7 @@ namespace NMU_BookTrade.Seller.ClintonModule
                 // Updated session-based authentication check for sellers
                 if (Session["AccessID"] == null || Session["AccessID"].ToString() != "3" || Session["SellerID"] == null)
                 {
-                    Response.Redirect("~/User Management/Login.aspx");
+                    Response.Redirect("~/UserManagement/Login.aspx");
                     return;
                 }
                 else
@@ -32,7 +32,7 @@ namespace NMU_BookTrade.Seller.ClintonModule
             {
                 Page.Form.Enctype = "multipart/form-data";
             }
-            
+
             // Always register client scripts to ensure drag and drop works after postbacks
             RegisterClientScripts();
         }
@@ -128,93 +128,93 @@ namespace NMU_BookTrade.Seller.ClintonModule
         {
             // Register any necessary startup scripts
             string script = @"
-                function setupFileUpload(dropZoneId, fileInputId, previewId) {
-                    const dropZone = document.getElementById(dropZoneId);
-                    const fileInput = document.getElementById(fileInputId);
-                    const preview = document.getElementById(previewId);
-                    
-                    if (!dropZone || !fileInput || !preview) {
-                        console.log('One or more elements not found:', { dropZoneId, fileInputId, previewId });
-                        return;
-                    }
+        function setupFileUpload(dropZoneId, fileInputId, previewId) {
+            const dropZone = document.getElementById(dropZoneId);
+            const fileInput = document.getElementById(fileInputId);
+            const preview = document.getElementById(previewId);
+            
+            if (!dropZone || !fileInput || !preview) {
+                console.log('One or more elements not found:', { dropZoneId, fileInputId, previewId });
+                return;
+            }
 
-                    // Remove existing event listeners to prevent duplicates
-                    const newDropZone = dropZone.cloneNode(true);
-                    dropZone.parentNode.replaceChild(newDropZone, dropZone);
-                    
-                    // Get the new reference
-                    const newDropZoneRef = document.getElementById(dropZoneId);
-                    
-                    // Add click event to open file dialog
-                    newDropZoneRef.addEventListener('click', () => {
-                        fileInput.click();
-                    });
+            // Remove existing event listeners to prevent duplicates
+            const newDropZone = dropZone.cloneNode(true);
+            dropZone.parentNode.replaceChild(newDropZone, dropZone);
+            
+            // Get the new reference
+            const newDropZoneRef = document.getElementById(dropZoneId);
+            
+            // Add click event to open file dialog
+            newDropZoneRef.addEventListener('click', () => {
+                fileInput.click();
+            });
 
-                    // Add drag and drop events
-                    newDropZoneRef.addEventListener('dragover', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        newDropZoneRef.classList.add('dragover');
-                    });
+            // Add drag and drop events
+            newDropZoneRef.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                newDropZoneRef.classList.add('dragover');
+            });
 
-                    newDropZoneRef.addEventListener('dragenter', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        newDropZoneRef.classList.add('dragover');
-                    });
+            newDropZoneRef.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                newDropZoneRef.classList.add('dragover');
+            });
 
-                    newDropZoneRef.addEventListener('dragleave', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        // Only remove dragover class if we're leaving the drop zone entirely
-                        if (!newDropZoneRef.contains(e.relatedTarget)) {
-                            newDropZoneRef.classList.remove('dragover');
-                        }
-                    });
-
-                    newDropZoneRef.addEventListener('drop', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        newDropZoneRef.classList.remove('dragover');
-                        
-                        if (e.dataTransfer.files.length) {
-                            fileInput.files = e.dataTransfer.files;
-                            const event = new Event('change', { bubbles: true });
-                            fileInput.dispatchEvent(event);
-                        }
-                    });
-
-                    // Handle file input change
-                    fileInput.addEventListener('change', (e) => {
-                        if (e.target.files.length) {
-                            const file = e.target.files[0];
-                            const fileSize = Math.round(file.size / 1024);
-                            preview.innerHTML = `📄 ${file.name} (${fileSize}KB)`;
-                            preview.style.display = 'block';
-                        } else {
-                            preview.innerHTML = '';
-                            preview.style.display = 'none';
-                        }
-                    });
+            newDropZoneRef.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Only remove dragover class if we're leaving the drop zone entirely
+                if (!newDropZoneRef.contains(e.relatedTarget)) {
+                    newDropZoneRef.classList.remove('dragover');
                 }
+            });
 
-                // Initialize for the image upload area
-                function initializeFileUpload() {
-                    setupFileUpload('imageDrop', '" + fuImage.ClientID + @"', '" + imagePreview.ClientID + @"');
-                }
-
-                // Initialize when DOM is ready
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', initializeFileUpload);
-                } else {
-                    initializeFileUpload();
-                }
+            newDropZoneRef.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                newDropZoneRef.classList.remove('dragover');
                 
-                // Also initialize after any postback (for ASP.NET)
-                if (typeof Sys !== 'undefined' && Sys.WebForms) {
-                    Sys.WebForms.PageRequestManager.getInstance().add_endRequest(initializeFileUpload);
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change', { bubbles: true });
+                    fileInput.dispatchEvent(event);
                 }
-            ";
+            });
+
+            // Handle file input change
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    const file = e.target.files[0];
+                    const fileSize = Math.round(file.size / 1024);
+                    preview.innerHTML = 📄 ${file.name} (${fileSize}KB);
+                    preview.style.display = 'block';
+                } else {
+                    preview.innerHTML = '';
+                    preview.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize for the image upload area
+        function initializeFileUpload() {
+            setupFileUpload('imageDrop', '" + fuImage.ClientID + @"', '" + imagePreview.ClientID + @"');
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeFileUpload);
+        } else {
+            initializeFileUpload();
+        }
+        
+        // Also initialize after any postback (for ASP.NET)
+        if (typeof Sys !== 'undefined' && Sys.WebForms) {
+            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(initializeFileUpload);
+        }
+    ";
 
             ScriptManager.RegisterStartupScript(this, GetType(), "FileUploadScript", script, true);
         }
@@ -290,9 +290,9 @@ namespace NMU_BookTrade.Seller.ClintonModule
                     connection.Open();
 
                     string query = @"INSERT INTO Book 
-                                    (bookISBN, title, author, price, condition, sellerID, coverImage, categoryID, genreID)
-                                    VALUES 
-                                    (@ISBN, @Title, @Author, @Price, @Condition, @SellerID, @CoverImage, @CategoryID, @GenreID)";
+                            (bookISBN, title, author, price, condition, sellerID, coverImage, categoryID, genreID)
+                            VALUES 
+                            (@ISBN, @Title, @Author, @Price, @Condition, @SellerID, @CoverImage, @CategoryID, @GenreID)";
 
                     using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
@@ -352,13 +352,13 @@ namespace NMU_BookTrade.Seller.ClintonModule
 
             // Clear the file input value and preview using JavaScript only (preserve attributes)
             string clearFileScript = @"
-                (function(){
-                    var fi = document.getElementById('" + fuImage.ClientID + @"');
-                    var pv = document.getElementById('" + imagePreview.ClientID + @"');
-                    if (fi) { fi.value = ''; }
-                    if (pv) { pv.innerHTML = ''; pv.style.display = 'none'; }
-                })();
-            ";
+        (function(){
+            var fi = document.getElementById('" + fuImage.ClientID + @"');
+            var pv = document.getElementById('" + imagePreview.ClientID + @"');
+            if (fi) { fi.value = ''; }
+            if (pv) { pv.innerHTML = ''; pv.style.display = 'none'; }
+        })();
+    ";
             ScriptManager.RegisterStartupScript(this, GetType(), "ClearFileInput", clearFileScript, true);
         }
 
@@ -370,15 +370,15 @@ namespace NMU_BookTrade.Seller.ClintonModule
         private void ShowAlert(string message, string type = "error")
         {
             string script = $@"Swal.fire({{
-                icon: '{(type == "success" ? "success" : "error")}',
-                title: '{(type == "success" ? "Success!" : "Error")}',
-                text: '{message.Replace("'", "\\'")}',
-                timer: 2000,
-                showConfirmButton: false
-            }});";
+        icon: '{(type == "success" ? "success" : "error")}',
+        title: '{(type == "success" ? "Success!" : "Error")}',
+        text: '{message.Replace("'", "\\'")}',
+        timer: 2000,
+        showConfirmButton: false
+    }});";
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowAlert", script, true);
         }
 
-        // Removed SetActiveTab method as the required tab controls don't exist in this page
+        // Removed SetActiveTab method as the required tab controls don't exist in this page
     }
 }

@@ -15,15 +15,6 @@ namespace NMU_BookTrade.Driver.ClintonModule
     {
 
         /// <summary>
-        /// ScriptManager1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.ScriptManager ScriptManager1;
-
-        /// <summary>
         /// ddlStatus control.
         /// </summary>
         /// <remarks>
@@ -87,15 +78,6 @@ namespace NMU_BookTrade.Driver.ClintonModule
         protected global::System.Web.UI.WebControls.Label lblPendingDeliveries;
 
         /// <summary>
-        /// lblInTransitDeliveries control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInTransitDeliveries;
-
-        /// <summary>
         /// lblAssignedDeliveries control.
         /// </summary>
         /// <remarks>
@@ -103,6 +85,15 @@ namespace NMU_BookTrade.Driver.ClintonModule
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAssignedDeliveries;
+
+        /// <summary>
+        /// lblInTransitDeliveries control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblInTransitDeliveries;
 
         /// <summary>
         /// lblCompletedDeliveries control.

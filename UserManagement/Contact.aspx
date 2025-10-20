@@ -63,6 +63,7 @@
 
             <!-- Info -->
             <div class="contact-info">
+
                 <p><strong>Email:</strong> gracamanyonganise@gmail.com</p>
                 <p><strong>Phone/Message us:</strong> +27 808 69557</p>
                 <p>If you're already registered, please check your inbox for an email from admin.</p>

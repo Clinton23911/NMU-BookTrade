@@ -18,7 +18,7 @@ namespace NMU_BookTrade.Seller.ClintonModule
                 // Session-based authentication check for sellers
                 if (Session["AccessID"] == null || Session["AccessID"].ToString() != "3" || Session["SellerID"] == null)
                 {
-                    Response.Redirect("~/User Management/Login.aspx");
+                    Response.Redirect("~/UserManagement/Login.aspx");
                     return;
                 }
                 LoadCategories();
@@ -182,10 +182,10 @@ namespace NMU_BookTrade.Seller.ClintonModule
             {
                 // Get the data item for this row
                 DataRowView rowView = (DataRowView)e.Row.DataItem;
-                
+
                 // Add tooltip for better UX
                 e.Row.ToolTip = $"Click Edit to modify or Delete to remove this listing";
-                
+
                 // Format and style the condition column
                 string condition = rowView["condition"].ToString().ToLower();
                 Label lblCondition = (Label)e.Row.FindControl("lblCondition");
@@ -224,10 +224,10 @@ namespace NMU_BookTrade.Seller.ClintonModule
                         }
                     }
                 }
-                
+
                 // Add hover effect class
                 e.Row.CssClass = "listing-row";
-                
+
                 // Validate price and add warning if needed
                 if (rowView["price"] != DBNull.Value)
                 {
@@ -238,7 +238,7 @@ namespace NMU_BookTrade.Seller.ClintonModule
                         e.Row.ToolTip += " - Warning: Price is set to zero or negative";
                     }
                 }
-                
+
                 // Add confirmation for delete button
                 Button btnDelete = (Button)e.Row.FindControl("btnDelete");
                 if (btnDelete != null)
@@ -274,20 +274,30 @@ namespace NMU_BookTrade.Seller.ClintonModule
                             decimal price = Convert.ToDecimal(reader["price"]);
                             txtPrice.Text = $"R{price:0.00}";
                             ddlCondition.SelectedValue = reader["condition"].ToString();
-                            
+
                             // Set category and genre
                             if (reader["categoryID"] != DBNull.Value)
                             {
                                 ddlCategory.SelectedValue = reader["categoryID"].ToString();
                                 int categoryId = Convert.ToInt32(reader["categoryID"]);
                                 LoadGenres(categoryId);
-                                
+
                                 if (reader["genreID"] != DBNull.Value)
                                 {
-                                    ddlGenre.SelectedValue = reader["genreID"].ToString();
+                                    string genreId = reader["genreID"].ToString();
+                                    // Check if the genre exists in the dropdown before setting SelectedValue
+                                    if (ddlGenre.Items.FindByValue(genreId) != null)
+                                    {
+                                        ddlGenre.SelectedValue = genreId;
+                                    }
+                                    else
+                                    {
+                                        // Genre not found, select the first item (default)
+                                        ddlGenre.SelectedIndex = 0;
+                                    }
                                 }
                             }
-                            
+
                             // Handle cover image
                             string coverImagePath = reader["coverImage"]?.ToString();
                             if (!string.IsNullOrEmpty(coverImagePath))
@@ -473,12 +483,12 @@ namespace NMU_BookTrade.Seller.ClintonModule
         private void ShowAlert(string message, string type = "error")
         {
             string script = $@"Swal.fire({{
-                icon: '{(type == "success" ? "success" : "error")}',
-                title: '{(type == "success" ? "Success!" : "Error")}',
-                text: '{message.Replace("'", "\\'")}',
-                timer: 2000,
-                showConfirmButton: false
-            }});";
+        icon: '{(type == "success" ? "success" : "error")}',
+        title: '{(type == "success" ? "Success!" : "Error")}',
+        text: '{message.Replace("'", "\\'")}',
+        timer: 2000,
+        showConfirmButton: false
+    }});";
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowAlert", script, true);
         }
     }

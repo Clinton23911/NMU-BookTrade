@@ -20,7 +20,6 @@ namespace NMU_BookTrade
                     txtSearch.Text = query;
                     PerformSearch(query);
                 }
-
                 LoadCategories();
                 LoadOutNowTextbooks();
                 LoadRecentlyAddedTextbooks();
@@ -31,7 +30,7 @@ namespace NMU_BookTrade
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT DISTINCT categoryName FROM Category", con);
+                SqlCommand cmd = new SqlCommand("SELECT categoryID, categoryName FROM Category ORDER BY categoryName", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -144,8 +143,8 @@ namespace NMU_BookTrade
         {
             if (e.CommandName == "SelectCategory")
             {
-                string faculty = e.CommandArgument.ToString();
-                Response.Redirect("~/Admin/GraceModule/ManageCategories.aspx?category=" + Server.UrlEncode(faculty));
+                int categoryId = Convert.ToInt32(e.CommandArgument);
+                Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?categoryID=" + categoryId);
             }
 
             if (e.Item.ItemIndex == 2)
@@ -158,23 +157,23 @@ namespace NMU_BookTrade
             }
         }
 
-       protected void rptOutNow_ItemCommand(object source, RepeaterCommandEventArgs e)
-{
-    if (e.CommandName == "ViewBook")
-    {
-        string bookISBN = e.CommandArgument.ToString();
-        Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?isbn=" + Server.UrlEncode(bookISBN));
-    }
-}
+        protected void rptOutNow_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "ViewBook")
+            {
+                string bookISBN = e.CommandArgument.ToString();
+                Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?isbn=" + Server.UrlEncode(bookISBN));
+            }
+        }
 
-protected void rptRecentlyAdded_ItemCommand(object source, RepeaterCommandEventArgs e)
-{
-    if (e.CommandName == "ViewBook")
-    {
-        string bookISBN = e.CommandArgument.ToString();
-        Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?isbn=" + Server.UrlEncode(bookISBN));
-    }
-}
+        protected void rptRecentlyAdded_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "ViewBook")
+            {
+                string bookISBN = e.CommandArgument.ToString();
+                Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?isbn=" + Server.UrlEncode(bookISBN));
+            }
+        }
 
 
     }

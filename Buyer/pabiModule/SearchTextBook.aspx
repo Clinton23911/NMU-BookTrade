@@ -9,7 +9,7 @@
             <ItemTemplate>
                 <asp:LinkButton runat="server"
                     CommandName="SelectCategory"
-                    CommandArgument='<%# Eval("categoryName") %>'
+                    CommandArgument='<%# Eval("categoryID") + "|" + Eval("categoryName") %>'
                     CssClass="category-link">
                     <%# Eval("categoryName") %>
                 </asp:LinkButton>
@@ -27,7 +27,7 @@
             <ItemTemplate>
                 <asp:LinkButton runat="server"
                     CommandName="SelectCategory"
-                    CommandArgument='<%# Eval("categoryName") %>'
+                    CommandArgument='<%# Eval("categoryID") + "|" + Eval("categoryName") %>'
                     CssClass="category-link">
                     <%# Eval("categoryName") %>
                 </asp:LinkButton>

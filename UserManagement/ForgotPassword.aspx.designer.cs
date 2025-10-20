@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NMU_BookTrade.User_Management
+namespace NMU_BookTrade.UserManagement
 {
 
 

@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.UI;
+using NMU_BookTrade;
 
 namespace NMU_BookTrade
 {
@@ -11,6 +12,8 @@ namespace NMU_BookTrade
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Session["AccessID"] = "3";
+            AuthorizationHelper.Authorize("3"); // 3 = Seller
             if (!IsPostBack)
             {
                 if (Session["AccessID"] == null || Session["AccessID"].ToString() != "3" || Session["SellerID"] == null)

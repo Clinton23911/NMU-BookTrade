@@ -50,31 +50,5 @@
             </asp:Repeater>
         </div>
 
-        <div class="sd-footer">
-            <div class="sd-footer-section">
-                <h3>NMU BookTrade</h3>
-                <p>Thanks for choosing us!</p>
-            </div>
-            <div class="sd-footer-section">
-                <h3>Company</h3>
-                <ul>
-                    <li><a href="Home.aspx">Home</a></li>
-                    <li><a href="CreateListings.aspx">Create Listings</a></li>
-                    <li><a href="ManageListings.aspx">Manage Listings</a></li>
-                    <li><a href="Contact.aspx">Contact Support</a></li>
-                </ul>
-            </div>
-            <div class="sd-footer-section">
-                <h3>Documentation</h3>
-                <ul>
-                    <li><a href="FAQ.aspx">FAQ</a></li>
-                    <li><a href="PrivacyPolicy.aspx">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div class="sd-footer-section">
-                <h3>Social</h3>
-                <a href="#" class="sd-social-icon"><i class="fab fa-whatsapp"></i></a>
-            </div>
-        </div>
-    </div>
+       
 </asp:Content>

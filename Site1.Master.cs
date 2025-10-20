@@ -15,14 +15,45 @@ namespace NMU_BookTrade
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            
+            UpdateCartCount();
+
             if (!IsPostBack)
             {
 
                 StorePreviousPage();
 
-                // Default: Anonymous is visible, others are hidden
-                MenuAnonymous.Visible = true;
+            if (Session["AccessID"] != null)
+            {
+                string accessId = Session["AccessID"].ToString();
+                switch (accessId)
+                {
+                    case "1": // Admin
+                        hlLogo.NavigateUrl = "~/Admin/GraceModule/AdminDashboard.aspx";
+                        break;
+                    case "2": // Buyer
+                        hlLogo.NavigateUrl = "~/Buyer/pabiModule/BuyerDashboard.aspx";
+                        break;
+                    case "3": // Seller
+                        hlLogo.NavigateUrl = "~/Seller/ClintonModule/SellerDashboard.aspx";
+                        break;
+                    case "4": // Driver
+                        hlLogo.NavigateUrl = "~/Driver/ClintonModule/DriverDashboard.aspx";
+                        break;
+                    default:
+                        hlLogo.NavigateUrl = "~/UserManagement/Home.aspx";
+                        break;
+                }
+            }
+            else
+            {
+                hlLogo.NavigateUrl = "~/UserManagement/Home.aspx";
+            }
+
+
+
+
+        // Default: Anonymous is visible, others are hidden
+        MenuAnonymous.Visible = true;
                 MenuAdmin.Visible = false;
                 MenuBuyer.Visible = false;
                 MenuSeller.Visible = false;
@@ -45,7 +76,7 @@ namespace NMU_BookTrade
 
                     string userID = Session["UserID"].ToString();
 
-                    string profileUrl = "~/User Management/Login.aspx"; // Default fallback
+                    string profileUrl = "~/UserManagement/Login.aspx"; // Default fallback
 
 
                     // Load profile image
@@ -54,7 +85,7 @@ namespace NMU_BookTrade
                     switch (Session["AccessID"].ToString())
                     {
                         case "1":
-                           
+
                             MenuAdmin.Visible = true;
                             divAuthenticator_Admin.Visible = true;
                             divAnonymous.Visible = false;
@@ -75,7 +106,7 @@ namespace NMU_BookTrade
                             break;
                         case "3":
                             MenuSeller.Visible = true;
-                            divAuthenticator_seller.Visible = true; 
+                            divAuthenticator_seller.Visible = true;
                             divAnonymous.Visible = false;
                             divAuthenticated_Buyer.Visible = false;
                             divAuthenticated_Buyer.Visible = false;   // Hide cart/profile/logout by default
@@ -99,8 +130,8 @@ namespace NMU_BookTrade
                             divAuthenticator_seller.Visible = false;
                             MenuAdmin.Visible = false;
                             MenuDriver.Visible = false;
-                            MenuBuyer.Visible =false;
-                            MenuSeller.Visible=false;
+                            MenuBuyer.Visible = false;
+                            MenuSeller.Visible = false;
                             break;
                     }
                     hlDynamicProfile.NavigateUrl = ResolveUrl(profileUrl);
@@ -108,12 +139,8 @@ namespace NMU_BookTrade
 
                     divSearchBar.Visible = Session["buyerID"] == null;
                 }
-                
             }
-            UpdateCartCount();
-          
         }
-
         public void UpdateCartCount()
         {
             int count = 0;
@@ -126,29 +153,31 @@ namespace NMU_BookTrade
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
                     conn.Open();
-                    string countQuery = "SELECT SUM(quantity) FROM CartItems ci JOIN Cart c ON ci.cartID = c.cartID WHERE c.buyerID = @buyerID";
+                    string countQuery = @"
+                SELECT ISNULL(SUM(CI.quantity), 0) 
+                FROM CartItems ci 
+                INNER JOIN Cart c ON ci.cartID = c.cartID 
+                WHERE c.buyerID = @buyerID";
+
                     using (SqlCommand cmd = new SqlCommand(countQuery, conn))
                     {
                         cmd.Parameters.AddWithValue("@buyerID", buyerID);
                         object result = cmd.ExecuteScalar();
                         count = (result != DBNull.Value) ? Convert.ToInt32(result) : 0;
-
-                        UpdatePanel updCartBadge = (UpdatePanel)FindControl("updCartBadge");
-                        if (updCartBadge != null)
-                        {
-                            updCartBadge.Update();
-                        }
                     }
                 }
             }
 
+            // Update the label
             lblCartCount.Text = count.ToString();
-            lblCartCount.Visible = count > 0; // hide if cart empty
-            hlCart.ToolTip = count > 0 ? $"Cart: {count} item(s)" : "Cart is empty";
+            lblCartCount.Visible = true;
 
-            //  Refresh UpdatePanel so badge updates without full reload
+            hlCart.ToolTip = $"Cart: {count} item(s)";
+
             updCartBadge.Update();
+
         }
+
 
 
         // Loads the profile image based on user role and ID
@@ -205,18 +234,18 @@ namespace NMU_BookTrade
 
         protected void btnRegister_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/User Management/Register.aspx");
+            Response.Redirect("~/UserManagement/Register.aspx");
         }
 
         protected void btnLogIn_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/User Management/Login.aspx");
+            Response.Redirect("~/UserManagement/Login.aspx");
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
-            Response.Redirect("~/User Management/Home.aspx");
+            Response.Redirect("~/UserManagement/Home.aspx");
         }
 
         protected void StorePreviousPage()

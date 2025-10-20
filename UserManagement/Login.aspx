@@ -71,7 +71,7 @@
                         <asp:HyperLink 
                             ID="lnkForgotPassword" 
                             runat="server" 
-                            NavigateUrl="~/User Management/ForgotPassword.aspx" 
+                            NavigateUrl="~/UserManagement/ForgotPassword.aspx" 
                             CssClass="input-note" 
                             Text="Forgot Password?"/>
                     </td>

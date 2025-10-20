@@ -79,7 +79,6 @@
     <Content Include="Admin\GraceModule\ViewDriver.aspx" />
     <Content Include="Buyer\pabiModule\BuyerOrders.aspx" />
     <Content Include="Buyer\pabiModule\BuyerDashboard.aspx" />
-    <Content Include="Buyer\pabiModule\BuyerOrders.aspx" />
     <Content Include="Buyer\pabiModule\BuyerProfile.aspx" />
     <Content Include="Buyer\pabiModule\Cart.aspx" />
     <Content Include="Buyer\pabiModule\Reviews.aspx" />
@@ -101,11 +100,14 @@
     <Content Include="Images\Image1.png" />
     <Content Include="Images\Image2.png" />
     <Content Include="Images\IS.png" />
+    <Content Include="Images\Letter.gif" />
     <Content Include="Images\map.png" />
     <Content Include="Images\NMUBOOKTRADE.png" />
+    <Content Include="Images\No-orders.jpg" />
     <Content Include="Images\pabi.jpeg" />
     <Content Include="Images\Person reading.png" />
     <Content Include="Buyer\pabiModule\SearchTextBook.aspx" />
+    <Content Include="Images\Ratings.jpg" />
     <Content Include="Images\textbook240 .png" />
     <Content Include="Images\textbook241.png" />
     <Content Include="Images\textbook242.png" />
@@ -118,15 +120,15 @@
     <Content Include="Seller\ClintonModule\SellerDashboard.aspx" />
     <Content Include="Seller\ClintonModule\SellerProfile.aspx" />
     <Content Include="StyleSheet1.css" />
-    <Content Include="User Management\AboutUs.aspx" />
-    <Content Include="User Management\BookConditions.aspx" />
-    <Content Include="User Management\Contact.aspx" />
-    <Content Include="User Management\ForgotPassword.aspx" />
-    <Content Include="User Management\Home.aspx" />
-    <Content Include="User Management\Login.aspx" />
-    <Content Include="User Management\LogOut.aspx" />
-    <Content Include="User Management\Register.aspx" />
-    <Content Include="User Management\ResetPassword.aspx" />
+    <Content Include="UserManagement\AboutUs.aspx" />
+    <Content Include="UserManagement\BookConditions.aspx" />
+    <Content Include="UserManagement\Contact.aspx" />
+    <Content Include="UserManagement\ForgotPassword.aspx" />
+    <Content Include="UserManagement\Home.aspx" />
+    <Content Include="UserManagement\Login.aspx" />
+    <Content Include="UserManagement\LogOut.aspx" />
+    <Content Include="UserManagement\Register.aspx" />
+    <Content Include="UserManagement\ResetPassword.aspx" />
     <Content Include="Buyer\pabiModule\ViewTextBookDetails.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -194,6 +196,7 @@
     <Compile Include="Admin\GraceModule\ViewDriver.aspx.designer.cs">
       <DependentUpon>ViewDriver.aspx</DependentUpon>
     </Compile>
+    <Compile Include="AuthorizationHelper.cs" />
     <Compile Include="Buyer\pabiModule\BuyerOrders.aspx.cs">
       <DependentUpon>BuyerOrders.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -207,13 +210,6 @@
     </Compile>
     <Compile Include="Buyer\pabiModule\BuyerDashboard.aspx.designer.cs">
       <DependentUpon>BuyerDashboard.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Buyer\pabiModule\BuyerOrders.aspx.cs">
-      <DependentUpon>BuyerOrders.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Buyer\pabiModule\BuyerOrders.aspx.designer.cs">
-      <DependentUpon>BuyerOrders.aspx</DependentUpon>
     </Compile>
     <Compile Include="Buyer\pabiModule\BuyerProfile.aspx.cs">
       <DependentUpon>BuyerProfile.aspx</DependentUpon>
@@ -321,67 +317,67 @@
     <Compile Include="Site1.Master.designer.cs">
       <DependentUpon>Site1.Master</DependentUpon>
     </Compile>
-    <Compile Include="User Management\AboutUs.aspx.cs">
+    <Compile Include="UserManagement\AboutUs.aspx.cs">
       <DependentUpon>AboutUs.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="User Management\AboutUs.aspx.designer.cs">
+    <Compile Include="UserManagement\AboutUs.aspx.designer.cs">
       <DependentUpon>AboutUs.aspx</DependentUpon>
     </Compile>
-    <Compile Include="User Management\BookConditions.aspx.cs">
+    <Compile Include="UserManagement\BookConditions.aspx.cs">
       <DependentUpon>BookConditions.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="User Management\BookConditions.aspx.designer.cs">
+    <Compile Include="UserManagement\BookConditions.aspx.designer.cs">
       <DependentUpon>BookConditions.aspx</DependentUpon>
     </Compile>
-    <Compile Include="User Management\Contact.aspx.cs">
+    <Compile Include="UserManagement\Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="User Management\Contact.aspx.designer.cs">
+    <Compile Include="UserManagement\Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
-    <Compile Include="User Management\ForgotPassword.aspx.cs">
+    <Compile Include="UserManagement\ForgotPassword.aspx.cs">
       <DependentUpon>ForgotPassword.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="User Management\ForgotPassword.aspx.designer.cs">
+    <Compile Include="UserManagement\ForgotPassword.aspx.designer.cs">
       <DependentUpon>ForgotPassword.aspx</DependentUpon>
     </Compile>
-    <Compile Include="User Management\Home.aspx.cs">
+    <Compile Include="UserManagement\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="User Management\Home.aspx.designer.cs">
+    <Compile Include="UserManagement\Home.aspx.designer.cs">
       <DependentUpon>Home.aspx</DependentUpon>
     </Compile>
-    <Compile Include="User Management\Login.aspx.cs">
+    <Compile Include="UserManagement\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="User Management\Login.aspx.designer.cs">
+    <Compile Include="UserManagement\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="User Management\LogOut.aspx.cs">
+    <Compile Include="UserManagement\LogOut.aspx.cs">
       <DependentUpon>LogOut.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="User Management\LogOut.aspx.designer.cs">
+    <Compile Include="UserManagement\LogOut.aspx.designer.cs">
       <DependentUpon>LogOut.aspx</DependentUpon>
     </Compile>
-    <Compile Include="User Management\Register.aspx.cs">
+    <Compile Include="UserManagement\Register.aspx.cs">
       <DependentUpon>Register.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="User Management\Register.aspx.designer.cs">
+    <Compile Include="UserManagement\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
-    <Compile Include="User Management\ResetPassword.aspx.cs">
+    <Compile Include="UserManagement\ResetPassword.aspx.cs">
       <DependentUpon>ResetPassword.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="User Management\ResetPassword.aspx.designer.cs">
+    <Compile Include="UserManagement\ResetPassword.aspx.designer.cs">
       <DependentUpon>ResetPassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="Buyer\pabiModule\ViewTextBookDetails.aspx.cs">

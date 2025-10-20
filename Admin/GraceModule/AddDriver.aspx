@@ -4,7 +4,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
   
 
-    <div class="register-container">
+    <div class="register-container-Admin">
         <div class="right-side">
             <h2>Add New Driver</h2>
             <p>Add your drivers details here to create their account.  </p>

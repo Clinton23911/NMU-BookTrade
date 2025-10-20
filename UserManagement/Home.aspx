@@ -21,7 +21,7 @@
     </div>
 
 <div class="slider-wrapper">
-    <h3 class="section-title">Check our recently uploaded textbooks</h3>
+    <h3 class="section-title-slider">Check our recently uploaded textbooks</h3>
 
     <!-- Arrows -->
     <button class="slider-arrow left-arrow" type="button" onclick="scrollSlider(-1)">❮</button>

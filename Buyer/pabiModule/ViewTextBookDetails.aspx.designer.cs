@@ -15,22 +15,13 @@ namespace NMU_BookTrade
     {
 
         /// <summary>
-        /// rptCategory control.
+        /// imgBookCover control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptCategory;
-
-        /// <summary>
-        /// imgCover control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image imgCover;
+        protected global::System.Web.UI.WebControls.Image imgBookCover;
 
         /// <summary>
         /// lblTitle control.
@@ -51,13 +42,22 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.Label lblAuthor;
 
         /// <summary>
-        /// lblPrice control.
+        /// lblEdition control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPrice;
+        protected global::System.Web.UI.WebControls.Label lblEdition;
+
+        /// <summary>
+        /// lblISBN control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblISBN;
 
         /// <summary>
         /// lblCondition control.
@@ -69,84 +69,75 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.Label lblCondition;
 
         /// <summary>
-        /// lblCategory control.
+        /// lblPrice control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCategory;
+        protected global::System.Web.UI.WebControls.Label lblPrice;
 
         /// <summary>
-        /// lblGenre control.
+        /// lblAvailability control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGenre;
+        protected global::System.Web.UI.WebControls.Label lblAvailability;
 
         /// <summary>
-        /// btnAddToCart control.
+        /// lblSellerName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddToCart;
+        protected global::System.Web.UI.WebControls.Label lblSellerName;
 
         /// <summary>
-        /// lblMessage control.
+        /// lblSellerEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMessage;
+        protected global::System.Web.UI.WebControls.Label lblSellerEmail;
 
         /// <summary>
-        /// CartPanel control.
+        /// btnWriteReview control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel CartPanel;
+        protected global::System.Web.UI.WebControls.Button btnWriteReview;
 
         /// <summary>
-        /// lblHeader control.
+        /// lblAverageRating control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblHeader;
+        protected global::System.Web.UI.WebControls.Label lblAverageRating;
 
         /// <summary>
-        /// btnClose control.
+        /// lblTotalReviews control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnClose;
+        protected global::System.Web.UI.WebControls.Label lblTotalReviews;
 
         /// <summary>
-        /// lblCartMessage control.
+        /// rptBookReviews control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCartMessage;
-
-        /// <summary>
-        /// lnkGoToCart control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkGoToCart;
+        protected global::System.Web.UI.WebControls.Repeater rptBookReviews;
     }
 }

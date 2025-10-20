@@ -64,11 +64,11 @@
     <div class="faq-item">
         <h4>Q: How do I know if my textbook qualifies as 'Fair' or 'Poor'?</h4>
         <p>Refer to the seller’s book conditions and compare their list with the list on the 
-       <asp:HyperLink ID="hlBookConditions" runat="server" NavigateUrl="~/User Management/BookConditions.aspx" Text="Book Conditions page" CssClass="italics-bookconditions"  Target="_blank" />. Fair books have limited wear with <strong>less than 20% highlighting</strong>, while Poor books show wear but are still usable and intact.</p>
+       <asp:HyperLink ID="hlBookConditions" runat="server" NavigateUrl="~/UserManagement/BookConditions.aspx" Text="Book Conditions page" CssClass="italics-bookconditions"  Target="_blank" />. Fair books have limited wear with <strong>less than 20% highlighting</strong>, while Poor books show wear but are still usable and intact.</p>
     </div>
     <div class="faq-item">
         <h4>Q: What happens if I list a book with defects?</h4>
-        <p>A: Listings that do not meet the quality guidelines on the   <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/User Management/BookConditions.aspx" Text="Book Conditions page" CssClass="italics-bookconditions"  Target="_blank" /> may be removed to protect buyer experience.</p>
+        <p>A: Listings that do not meet the quality guidelines on the   <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/UserManagement/BookConditions.aspx" Text="Book Conditions page" CssClass="italics-bookconditions"  Target="_blank" /> may be removed to protect buyer experience.</p>
     </div>
     <div class="faq-item">
         <h4>Q: Can I meet the buyer on campus?</h4>
@@ -79,7 +79,7 @@
 
             <br />
             <br />
-            <span class="BCnote"> NOTE:</span> We make sure that our books that we sell, which are listed have met the standard guidelines on the <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/User Management/BookConditions.aspx" Text="Book Conditions page" CssClass="italics-bookconditions"  Target="_blank" />          
+            <span class="BCnote"> NOTE:</span> We make sure that our books that we sell, which are listed have met the standard guidelines on the <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/UserManagement/BookConditions.aspx" Text="Book Conditions page" CssClass="italics-bookconditions"  Target="_blank" />          
         </p>
     </div>
 </div>

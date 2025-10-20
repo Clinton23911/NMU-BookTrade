@@ -224,7 +224,7 @@
               // Redirect to login page
               function redirectToLogin() {
                   // I used a absolute URL (ASP.NET won't process the ~ here in JS)
-                  window.location.href = "/User Management/Login.aspx";
+                  window.location.href = "/UserManagement/Login.aspx";
               }
 
               // Toggle password visibility for input fields

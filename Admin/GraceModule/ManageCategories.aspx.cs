@@ -14,6 +14,8 @@ namespace NMU_BookTrade
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            lblMessage.Visible = false;
+            lblFeedback.Visible = false;
             if (!IsPostBack)
             {
                 LoadCategories();   // Load all categories on page load
@@ -37,9 +39,21 @@ namespace NMU_BookTrade
         // CREATE – Add new category
         protected void btnAddCategory_Click(object sender, EventArgs e)
         {
-            string name = txtCategoryName.Text.Trim();
 
-            if (string.IsNullOrEmpty(name)) return;  // Don’t add empty strings
+            // Check if all validators (RequiredFieldValidator + RegexValidator) passed
+            if (!Page.IsValid)
+                return;
+            string name = txtCategoryName.Text.Trim();
+            if (CategoryExists(name))
+            {
+                lblFeedback.ForeColor = System.Drawing.Color.OrangeRed;
+                lblFeedback.Text = $"Category '{name}' already exists.";
+                lblFeedback.Visible = true;
+                return;
+            }
+
+
+            //if (string.IsNullOrEmpty(name)) return;  // Don’t add empty strings
 
             using (SqlConnection con = new SqlConnection(connStr))
             using (SqlCommand cmd = new SqlCommand("INSERT INTO Category (categoryName) VALUES (@name)", con))
@@ -51,14 +65,26 @@ namespace NMU_BookTrade
 
             txtCategoryName.Text = "";  // Clear input
 
-            lblFeedback.ForeColor = System.Drawing.Color.Green;
+            lblFeedback.ForeColor = System.Drawing.Color.Lime;
             lblFeedback.Text = $"Category '{name}' added successfully.";
             lblFeedback.Visible = true;
+            lblMessage.Visible = false;
 
             LoadCategories();  // Refresh
-            lblFeedback.Text = "";
+           
         }
 
+        private bool CategoryExists(string name)
+        {
+            using (SqlConnection con = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Category WHERE LTRIM(RTRIM(LOWER(categoryName))) = LTRIM(RTRIM(LOWER(@name)))", con))
+            {
+                cmd.Parameters.AddWithValue("@name", name);
+                con.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
         // UPDATE – Begin edit
         protected void gvCategories_RowEditing(object sender, GridViewEditEventArgs e)
         {
@@ -70,19 +96,37 @@ namespace NMU_BookTrade
         protected void gvCategories_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
             int id = (int)gvCategories.DataKeys[e.RowIndex].Value;
-            string name = ((TextBox)gvCategories.Rows[e.RowIndex].Cells[0].Controls[0]).Text.Trim();
-
-            using (SqlConnection con = new SqlConnection(connStr))
-            using (SqlCommand cmd = new SqlCommand("UPDATE Category SET categoryName = @name WHERE categoryID = @id", con))
+            TextBox txtEditCategory = (TextBox)gvCategories.Rows[e.RowIndex].FindControl("txtEditCategory");
+            string name = txtEditCategory.Text.Trim();
+            try
             {
-                cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@id", id);
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
 
-            gvCategories.EditIndex = -1;
-            LoadCategories();
+                            using (SqlConnection con = new SqlConnection(connStr))
+                            using (SqlCommand cmd = new SqlCommand("UPDATE Category SET categoryName = @name WHERE categoryID = @id", con))
+                            {
+                                cmd.Parameters.AddWithValue("@name", name);
+                                cmd.Parameters.AddWithValue("@id", id);
+                                con.Open();
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            gvCategories.EditIndex = -1;
+                            LoadCategories();
+
+
+                //  Success message — CSS will auto fade it after 5 seconds
+                lblMessage.Text = $"Category '{name}' updated successfully.";
+                lblMessage.CssClass = "fade-message"; // success green
+                lblMessage.Visible = true;
+                
+            }
+            catch (Exception ex)
+            {
+                //  Error message
+                lblMessage.Text = "Error updating category: " + ex.Message;
+                lblMessage.CssClass = "fade-message error"; // red background
+                lblMessage.Visible = true;
+            }
         }
 
         // Cancel edit
@@ -95,6 +139,8 @@ namespace NMU_BookTrade
         // DELETE – Trigger modal
         protected void gvCategories_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
+
+
             int id = Convert.ToInt32(gvCategories.DataKeys[e.RowIndex].Value);
             string categoryName = gvCategories.Rows[e.RowIndex].Cells[0].Text;
 
@@ -108,6 +154,7 @@ namespace NMU_BookTrade
         // Modal confirm deletion
         protected void btnConfirmDelete_Click(object sender, EventArgs e)
         {
+      
             if (Session["PendingDeleteCategoryID"] != null)
             {
                 int id = Convert.ToInt32(Session["PendingDeleteCategoryID"]);
@@ -120,9 +167,11 @@ namespace NMU_BookTrade
                     cmd.ExecuteNonQuery();
                 }
 
-                lblFeedback.ForeColor = System.Drawing.Color.LightGreen;
+                lblFeedback.ForeColor = System.Drawing.Color.Lime;
                 lblFeedback.Text = $"Category '{Session["PendingDeleteCategoryName"]}' deleted successfully.";
                 lblFeedback.Visible = true;
+                lblMessage.Visible = false;
+                
             }
 
             Session.Remove("PendingDeleteCategoryID");
@@ -141,6 +190,7 @@ namespace NMU_BookTrade
             lblFeedback.Visible = true;
             LoadCategories();
             lblFeedback.Text = "";
+            lblMessage.Visible= false;
            
 
         }

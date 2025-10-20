@@ -1,12 +1,14 @@
-﻿using System;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 
 namespace NMU_BookTrade.Driver.ClintonModule
 {
@@ -25,7 +27,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
             {
                 if (!IsDriverAuthenticated())
                 {
-                    Response.Redirect("~/User Management/Login.aspx");
+                    Response.Redirect("~/UserManagement/Login.aspx");
                     return;
                 }
 
@@ -66,6 +68,9 @@ namespace NMU_BookTrade.Driver.ClintonModule
         {
             try
             {
+                // Clear any previous error messages before loading new data
+                ClearErrorMessage();
+
                 DataTable deliveries = GetWeekDeliveries();
 
                 if (deliveries.Rows.Count == 0)
@@ -114,7 +119,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@StartDate", CurrentWeekStart);
                         cmd.Parameters.AddWithValue("@EndDate", CurrentWeekStart.AddDays(7));
-                        
+
                         // Always filter by the logged-in driver
                         cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
 
@@ -177,6 +182,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
 
         protected void lnkPrevWeek_Click(object sender, EventArgs e)
         {
+            ClearErrorMessage(); // Clear any previous messages before loading new week
             CurrentWeekStart = CurrentWeekStart.AddDays(-7);
             LoadWeekDates();
             BindScheduleData();
@@ -184,6 +190,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
 
         protected void lnkNextWeek_Click(object sender, EventArgs e)
         {
+            ClearErrorMessage(); // Clear any previous messages before loading new week
             CurrentWeekStart = CurrentWeekStart.AddDays(7);
             LoadWeekDates();
             BindScheduleData();
@@ -193,6 +200,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
         {
             try
             {
+                ClearErrorMessage(); // Clear any previous messages before attempting to print
                 DataTable deliveries = GetWeekDeliveries();
                 if (deliveries.Rows.Count == 0)
                 {
@@ -200,87 +208,124 @@ namespace NMU_BookTrade.Driver.ClintonModule
                     return;
                 }
 
+                // Generate PDF into memory first to avoid sending partial responses
+                byte[] pdfBytes;
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (Document doc = new Document(PageSize.A4, 36f, 36f, 54f, 36f))
+                    {
+                        PdfWriter.GetInstance(doc, memoryStream);
+                        doc.Open();
+
+                        // Fonts/colors
+                        BaseColor primary = new BaseColor(2, 53, 60);
+                        var fontTitle = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16, primary);
+                        var fontSub = FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.BLACK);
+                        var fontHeader = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.WHITE);
+                        var fontCell = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.BLACK);
+
+                        // Title and date range
+                        Paragraph title = new Paragraph("My Delivery Schedule", fontTitle);
+                        title.Alignment = Element.ALIGN_LEFT;
+                        doc.Add(title);
+                        doc.Add(new Paragraph($"Week: {CurrentWeekStart:MMM dd, yyyy} - {CurrentWeekStart.AddDays(6):MMM dd, yyyy}", fontSub));
+                        doc.Add(new Paragraph(" "));
+
+                        // Create table with proper column widths
+                        PdfPTable table = new PdfPTable(7);
+                        table.WidthPercentage = 100;
+                        table.SetWidths(new float[] { 1.1f, 1.1f, 0.8f, 2.0f, 2.0f, 1.2f, 1.4f });
+
+                        // Helper method to add header cells
+                        void AddHeader(string text)
+                        {
+                            PdfPCell cell = new PdfPCell(new Phrase(text ?? string.Empty, fontHeader));
+                            cell.BackgroundColor = primary;
+                            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            cell.Padding = 6f;
+                            cell.Border = Rectangle.BOX;
+                            table.AddCell(cell);
+                        }
+
+                        // Helper method to add data cells
+                        void AddCell(string text)
+                        {
+                            PdfPCell cell = new PdfPCell(new Phrase(text ?? string.Empty, fontCell));
+                            cell.Padding = 5f;
+                            cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            cell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            cell.Border = Rectangle.BOX;
+                            table.AddCell(cell);
+                        }
+
+                        // Add table headers
+                        AddHeader("Day");
+                        AddHeader("Time Slot");
+                        AddHeader("ID");
+                        AddHeader("Book");
+                        AddHeader("Location");
+                        AddHeader("Status");
+                        AddHeader("Date/Time");
+
+                        // Add data rows - order by delivery date
+                        var orderedRows = deliveries.AsEnumerable()
+                            .OrderBy(r => r.Field<DateTime>("deliveryDate"))
+                            .ThenBy(r => r.Field<string>("TimeSlot"));
+
+                        foreach (DataRow row in orderedRows)
+                        {
+                            // Handle null values safely
+                            string day = row["Day"]?.ToString() ?? "Unknown";
+                            string timeSlot = row["TimeSlot"]?.ToString() ?? "Unknown";
+                            string deliveryId = row["deliveryID"]?.ToString() ?? "N/A";
+                            string bookTitle = row["BookTitle"]?.ToString() ?? "No Title";
+                            string location = row["Location"]?.ToString() ?? "No Address";
+                            string status = row["Status"]?.ToString() ?? "Unknown";
+                            string deliveryDate = "N/A";
+
+                            // Safely handle DateTime conversion
+                            if (row["deliveryDate"] != DBNull.Value && row["deliveryDate"] is DateTime dateTime)
+                            {
+                                deliveryDate = dateTime.ToString("yyyy-MM-dd HH:mm");
+                            }
+
+                            AddCell(day);
+                            AddCell(timeSlot);
+                            AddCell(deliveryId);
+                            AddCell(bookTitle);
+                            AddCell(location);
+                            AddCell(status);
+                            AddCell(deliveryDate);
+                        }
+
+                        doc.Add(table);
+                        doc.Close();
+                    }
+                    pdfBytes = memoryStream.ToArray();
+                }
+
+                // Send the completed PDF in one go
                 Response.Clear();
                 Response.ContentType = "application/pdf";
                 Response.AddHeader("Content-Disposition", $"attachment; filename=schedule_{CurrentWeekStart:yyyyMMdd}.pdf");
-
-                using (Document doc = new Document(PageSize.A4, 36f, 36f, 54f, 36f))
-                {
-                    PdfWriter.GetInstance(doc, Response.OutputStream);
-                    doc.Open();
-
-                    // Fonts/colors
-                    BaseColor primary = new BaseColor(2, 53, 60);
-                    var fontTitle = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16, primary);
-                    var fontSub = FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.BLACK);
-                    var fontHeader = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.WHITE);
-                    var fontCell = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.BLACK);
-
-                    Paragraph title = new Paragraph("My Delivery Schedule", fontTitle);
-                    title.Alignment = Element.ALIGN_LEFT;
-                    doc.Add(title);
-                    doc.Add(new Paragraph($"Week: {CurrentWeekStart:MMM dd, yyyy} - {CurrentWeekStart.AddDays(6):MMM dd, yyyy}", fontSub));
-                    doc.Add(new Paragraph(" "));
-
-                    PdfPTable table = new PdfPTable(7) { WidthPercentage = 100 };
-                    table.SetWidths(new float[] { 1.1f, 1.1f, 0.8f, 2.0f, 2.0f, 1.2f, 1.4f });
-
-                    void AddHeader(string text)
-                    {
-                        PdfPCell cell = new PdfPCell(new Phrase(text, fontHeader))
-                        {
-                            BackgroundColor = primary,
-                            HorizontalAlignment = Element.ALIGN_CENTER,
-                            Padding = 6f
-                        };
-                        table.AddCell(cell);
-                    }
-
-                    AddHeader("Day");
-                    AddHeader("Time Slot");
-                    AddHeader("ID");
-                    AddHeader("Book");
-                    AddHeader("Location");
-                    AddHeader("Status");
-                    AddHeader("Date/Time");
-
-                    foreach (DataRow row in deliveries.AsEnumerable().OrderBy(r => r.Field<DateTime>("deliveryDate")))
-                    {
-                        void AddCell(string text)
-                        {
-                            PdfPCell c = new PdfPCell(new Phrase(text ?? string.Empty, fontCell))
-                            {
-                                Padding = 5f,
-                                HorizontalAlignment = Element.ALIGN_LEFT,
-                                VerticalAlignment = Element.ALIGN_MIDDLE
-                            };
-                            table.AddCell(c);
-                        }
-
-                        AddCell(row["Day"].ToString());
-                        AddCell(row["TimeSlot"].ToString());
-                        AddCell(row["DeliveryID"].ToString());
-                        AddCell(row["BookTitle"].ToString());
-                        AddCell(row["Location"].ToString());
-                        AddCell(row["Status"].ToString());
-                        AddCell(((DateTime)row["deliveryDate"]).ToString("yyyy-MM-dd HH:mm"));
-                    }
-
-                    doc.Add(table);
-                    doc.Close();
-                }
-
-                Response.End();
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.BinaryWrite(pdfBytes);
+                Response.Flush();
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+                return;
             }
             catch (Exception ex)
             {
                 LogError($"Error generating PDF: {ex.Message}");
-                ShowErrorMessage("Failed to generate PDF. Please try again.");
+                LogError($"Stack trace: {ex.StackTrace}");
+
+                ShowErrorMessage($"Failed to generate PDF: {ex.Message}");
             }
         }
 
         protected void btnExportCSV_Click(object sender, EventArgs e)
         {
+            ClearErrorMessage(); // Clear any previous messages before attempting to export
             DataTable deliveries = GetWeekDeliveries();
 
             if (deliveries.Rows.Count == 0)
@@ -327,6 +372,16 @@ namespace NMU_BookTrade.Driver.ClintonModule
         private void LogError(string message)
         {
             System.Diagnostics.Debug.WriteLine($"[{DateTime.Now}] ERROR: {message}");
+            // Also log to event log or file if needed
+            try
+            {
+                // You can add additional logging here if needed
+                // For example, writing to a log file or event log
+            }
+            catch
+            {
+                // Don't let logging errors break the application
+            }
         }
     }
 }

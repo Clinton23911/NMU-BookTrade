@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace NMU_BookTrade.User_Management
+namespace NMU_BookTrade.UserManagement
 {
     public partial class ForgotPassword : System.Web.UI.Page
     {
@@ -46,7 +46,7 @@ namespace NMU_BookTrade.User_Management
                         Session["ResetRole"] = table; //storing the table into the session
                         reader.Close();
 
-                        Response.Redirect("~/User Management/ResetPassword.aspx"); // redirect to reset page
+                        Response.Redirect("~/UserManagement/ResetPassword.aspx"); // redirect to reset page
                         return;
                     }
 

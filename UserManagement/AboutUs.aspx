@@ -161,7 +161,7 @@
 <section class="cta reveal">
     <h2>Join the Movement</h2>
     <p class="aboutus-p">Be part of Nelson Mandela Universities smarter student economy. Sign up,purchase a textbook or trade, and thrive.</p>
-    <a class="Aboutus-btn" href="<%= ResolveUrl("~/User Management/Register.aspx") %>">Get Started</a>
+    <a class="Aboutus-btn" href="<%= ResolveUrl("~/UserManagement/Register.aspx") %>">Get Started</a>
 </section>
     
 

@@ -4,11 +4,9 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace NMU_BookTrade.Buyer.pabiModule
+namespace NMU_BookTrade
 {
     public partial class Cart : System.Web.UI.Page
     {
@@ -44,8 +42,7 @@ namespace NMU_BookTrade.Buyer.pabiModule
                    ci.quantity AS Quantity, 
                    b.coverImage, 
                    s.SellerName AS SellerName, 
-                   s.SellerSurname AS SellerSurname,
-                   b.version AS Version
+                   s.SellerSurname AS SellerSurname
             FROM Cart c
             INNER JOIN CartItems ci ON c.cartID = ci.cartID
             INNER JOIN Book b ON b.bookISBN = ci.bookISBN
@@ -88,7 +85,7 @@ namespace NMU_BookTrade.Buyer.pabiModule
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT DISTINCT categoryName FROM Category", con);
+                SqlCommand cmd = new SqlCommand("SELECT categoryID, categoryName FROM Category ORDER BY categoryName", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -119,8 +116,11 @@ namespace NMU_BookTrade.Buyer.pabiModule
         {
             if (e.CommandName == "SelectCategory")
             {
-                string faculty = e.CommandArgument.ToString();
-                Response.Redirect("~/Admin/GraceModule/ManageCategories.aspx?category=" + Server.UrlEncode(faculty));
+                string[] args = e.CommandArgument.ToString().Split('|');
+                int categoryId = Convert.ToInt32(args[0]);
+                string categoryName = args[1];
+
+                Response.Redirect($"~/Buyer/pabiModule/SearchResult.aspx?categoryID={categoryId}&categoryName={Server.UrlEncode(categoryName)}");
             }
 
             if (e.Item.ItemIndex == 2)
@@ -180,139 +180,181 @@ namespace NMU_BookTrade.Buyer.pabiModule
             Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?query=" + Server.UrlEncode(searchTerm));
         }
 
-
-
         protected void btnPurchase_Click(object sender, EventArgs e)
         {
-            if (Session["buyerID"] == null) return;
+            if (Session["buyerID"] == null)
+            {
+                Response.Redirect("~/UserManagement/Login.aspx");
+                return;
+            }
 
             int buyerID = Convert.ToInt32(Session["buyerID"]);
 
-            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
+            Guid orderGroupId = Guid.NewGuid(); // one ID per purchase batch
+            DateTime purchaseDate = DateTime.Now;
+
+            // collect cart items first (ISBN + qty)
+            List<(string ISBN, int Qty)> cartBooks = new List<(string, int)>();
+            int cartID = 0;
+
+            string connStr = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(connStr))
             {
                 con.Open();
 
-                // Get the cartID for this buyer
-                SqlCommand getCartCmd = new SqlCommand("SELECT cartID FROM Cart WHERE buyerID = @buyerID", con);
-                getCartCmd.Parameters.AddWithValue("@buyerID", buyerID);
-                int cartID = (int)getCartCmd.ExecuteScalar();
-
-                // Get all books in the cart
-                SqlCommand getCartItemsCmd = new SqlCommand(
-                    "SELECT bookISBN FROM CartItems WHERE cartID = @cartID", con);
-                getCartItemsCmd.Parameters.AddWithValue("@cartID", cartID);
-
-                List<string> bookISBNs = new List<string>();
-                using (SqlDataReader reader = getCartItemsCmd.ExecuteReader())
+                // get cartID (defensive)
+                using (SqlCommand getCartCmd = new SqlCommand("SELECT cartID FROM Cart WHERE buyerID = @buyerID", con))
                 {
-                    while (reader.Read())
+                    getCartCmd.Parameters.AddWithValue("@buyerID", buyerID);
+                    object o = getCartCmd.ExecuteScalar();
+                    if (o == null)
                     {
-                        bookISBNs.Add(reader["bookISBN"].ToString());
+                        lblConfirmation.Text = "⚠️ Your cart is emp.";
+                        lblConfirmation.Visible = true;
+                        return;
                     }
+                    cartID = Convert.ToInt32(o);
                 }
 
-                foreach (var bookISBN in bookISBNs)
+                using (SqlCommand getCartItemsCmd = new SqlCommand("SELECT bookISBN, quantity FROM CartItems WHERE cartID = @cartID", con))
                 {
-                    // Generate next saleID manually
-                    SqlCommand getNextSaleIDCmd = new SqlCommand("SELECT ISNULL(MAX(saleID), 0) + 1 FROM Sale", con);
-                    int nextSaleID = (int)getNextSaleIDCmd.ExecuteScalar();
-
-                    // Get price + sellerID of the book in one query
-                    SqlCommand getBookCmd = new SqlCommand("SELECT price, sellerID FROM Book WHERE bookISBN = @bookISBN", con);
-                    getBookCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-
-                    decimal amount = 0;
-                    int sellerID = 0;
-                    using (SqlDataReader bookReader = getBookCmd.ExecuteReader())
+                    getCartItemsCmd.Parameters.AddWithValue("@cartID", cartID);
+                    using (SqlDataReader reader = getCartItemsCmd.ExecuteReader())
                     {
-                        if (bookReader.Read())
+                        while (reader.Read())
                         {
-                            amount = Convert.ToDecimal(bookReader["price"]);
-                            sellerID = Convert.ToInt32(bookReader["sellerID"]);
+                            cartBooks.Add((reader["bookISBN"].ToString(), Convert.ToInt32(reader["quantity"])));
                         }
                     }
-
-                    // Insert into Sale
-                    SqlCommand insertSaleCmd = new SqlCommand(
-                        "INSERT INTO Sale (saleID, buyerID, sellerID, bookISBN, amount, saleDate) " +
-                        "VALUES (@saleID, @buyerID, @sellerID, @bookISBN, @amount, @saleDate)", con);
-
-                    insertSaleCmd.Parameters.AddWithValue("@saleID", nextSaleID);
-                    insertSaleCmd.Parameters.AddWithValue("@buyerID", buyerID);
-                    insertSaleCmd.Parameters.AddWithValue("@sellerID", sellerID);   // ✅ now valid
-                    insertSaleCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-                    insertSaleCmd.Parameters.AddWithValue("@amount", amount);
-                    insertSaleCmd.Parameters.AddWithValue("@saleDate", DateTime.Now);
-
-                    insertSaleCmd.ExecuteNonQuery();
-
-                    // 🔹 NEW: Create Delivery row for this Sale (NYASHA ADDED THIS)so that the delivery table will not be empty. This will allow Admins query's to also work with what's in the delivery table.  
-                    SqlCommand getNextDeliveryIDCmd = new SqlCommand("SELECT ISNULL(MAX(deliveryID), 0) + 1 FROM Delivery", con);
-                    int nextDeliveryID = (int)getNextDeliveryIDCmd.ExecuteScalar();
-
-                    SqlCommand insertDeliveryCmd = new SqlCommand(
-                        "INSERT INTO Delivery (deliveryID, saleID, status) VALUES (@deliveryID, @saleID, 0)", con);
-                    insertDeliveryCmd.Parameters.AddWithValue("@deliveryID", nextDeliveryID);
-                    insertDeliveryCmd.Parameters.AddWithValue("@saleID", nextSaleID);
-                    insertDeliveryCmd.ExecuteNonQuery();
-
-                    // Update CartItems to link the sale
-                    SqlCommand updateCartItemsCmd = new SqlCommand(
-                        "UPDATE CartItems SET saleID = @saleID WHERE cartID = @cartID AND bookISBN = @bookISBN", con);
-                    updateCartItemsCmd.Parameters.AddWithValue("@saleID", nextSaleID);
-                    updateCartItemsCmd.Parameters.AddWithValue("@cartID", cartID);
-                    updateCartItemsCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-                    updateCartItemsCmd.ExecuteNonQuery();
-
-                    // Mark book as unavailable
-                    SqlCommand updateBookStatusCmd = new SqlCommand(
-                        "UPDATE Book SET status = 'unavailable' WHERE bookISBN = @bookISBN", con);
-                    updateBookStatusCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-                    updateBookStatusCmd.ExecuteNonQuery();
                 }
 
-                // Clear cart
-                SqlCommand clearCartCmd = new SqlCommand("DELETE FROM CartItems WHERE cartID = @cartID", con);
-                clearCartCmd.Parameters.AddWithValue("@cartID", cartID);
-                clearCartCmd.ExecuteNonQuery();
+                if (cartBooks.Count == 0)
+                {
+                    lblConfirmation.Text = "⚠️ Your cart is empty.";
+                    lblConfirmation.Visible = true;
+                    return;
+                }
 
-                lblConfirmation.Text = "Purchase successful!";
-                lblConfirmation.Visible = true;
-                pnlPayment.Visible = false;
-                pnlDetails.Visible = true;
+                // process each item (you can wrap in a transaction if desired)
+                foreach (var item in cartBooks)
+                {
+                    string bookISBN = item.ISBN;
+                    int qty = item.Qty;
 
-                LoadCart();
-                //BindCartItems(); Causing delays and one of them needs to remain and the other deleted because LoadCart() already binds the repeater. 
-                ((Site1)this.Master).UpdateCartCount();
+                    // Generate next saleID
+                    using (SqlCommand getNextSaleIDCmd = new SqlCommand("SELECT ISNULL(MAX(saleID), 0) + 1 FROM Sale", con))
+                    {
+                        int nextSaleID = Convert.ToInt32(getNextSaleIDCmd.ExecuteScalar());
 
-                SqlCommand getOrderDetailsCmd = new SqlCommand(@"
-    SELECT s.saleID, s.saleDate, s.amount, ci.quantity, 
-           b.title, b.coverImage, b.price, 
-           se.sellerName, se.sellerSurname,
-           bu.buyerAddress,
-           DATEADD(DAY, 5, s.saleDate) AS estimatedDelivery
-    FROM Sale s
-    INNER JOIN Book b ON s.bookISBN = b.bookISBN
-    INNER JOIN Seller se ON s.sellerID = se.sellerID
-    INNER JOIN CartItems ci ON ci.saleID = s.saleID
-    INNER JOIN Buyer bu ON s.buyerID = bu.buyerID
-    WHERE s.buyerID = @buyerID AND CAST(s.saleDate AS DATE) = CAST(GETDATE() AS DATE)", con);
+                        // Get book price + seller
+                        decimal price = 0;
+                        int sellerID = 0;
+                        using (SqlCommand getBookCmd = new SqlCommand("SELECT price, sellerID FROM Book WHERE bookISBN = @bookISBN", con))
+                        {
+                            getBookCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                            using (SqlDataReader bookReader = getBookCmd.ExecuteReader())
+                            {
+                                if (bookReader.Read())
+                                {
+                                    price = Convert.ToDecimal(bookReader["price"]);
+                                    sellerID = Convert.ToInt32(bookReader["sellerID"]);
+                                }
+                            }
+                        }
 
-                getOrderDetailsCmd.Parameters.AddWithValue("@buyerID", buyerID);
+                        decimal totalAmount = price * qty;
 
-                SqlDataAdapter da = new SqlDataAdapter(getOrderDetailsCmd);
-                DataTable orderDetails = new DataTable();
-                da.Fill(orderDetails);
+                        // Insert into Sale with orderGroupId
+                        using (SqlCommand insertSaleCmd = new SqlCommand(@"
+                    INSERT INTO Sale (saleID, buyerID, sellerID, bookISBN, amount, saleDate, orderGroupId)
+                    VALUES (@saleID, @buyerID, @sellerID, @bookISBN, @amount, @saleDate, @orderGroupId)", con))
+                        {
+                            insertSaleCmd.Parameters.AddWithValue("@saleID", nextSaleID);
+                            insertSaleCmd.Parameters.AddWithValue("@buyerID", buyerID);
+                            insertSaleCmd.Parameters.AddWithValue("@sellerID", sellerID);
+                            insertSaleCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                            insertSaleCmd.Parameters.AddWithValue("@amount", totalAmount);
+                            insertSaleCmd.Parameters.AddWithValue("@saleDate", purchaseDate);
+                            insertSaleCmd.Parameters.AddWithValue("@orderGroupId", orderGroupId);
+                            insertSaleCmd.ExecuteNonQuery();
+                        }
 
-                rptOrderDetails.DataSource = orderDetails;
-                rptOrderDetails.DataBind();
+                        // Insert into Delivery
+                        using (SqlCommand getNextDeliveryIDCmd = new SqlCommand("SELECT ISNULL(MAX(deliveryID), 0) + 1 FROM Delivery", con))
+                        {
+                            int nextDeliveryID = Convert.ToInt32(getNextDeliveryIDCmd.ExecuteScalar());
+                            using (SqlCommand insertDeliveryCmd = new SqlCommand(
+                                "INSERT INTO Delivery (deliveryID, saleID, status) VALUES (@deliveryID, @saleID, 0)", con))
+                            {
+                                insertDeliveryCmd.Parameters.AddWithValue("@deliveryID", nextDeliveryID);
+                                insertDeliveryCmd.Parameters.AddWithValue("@saleID", nextSaleID);
+                                insertDeliveryCmd.ExecuteNonQuery();
+                            }
+                        }
 
-                pnlDetails.Visible = true;
+                        // Link CartItems → Sale
+                        using (SqlCommand updateCartItemsCmd = new SqlCommand(
+                            "UPDATE CartItems SET saleID = @saleID WHERE cartID = @cartID AND bookISBN = @bookISBN", con))
+                        {
+                            updateCartItemsCmd.Parameters.AddWithValue("@saleID", nextSaleID);
+                            updateCartItemsCmd.Parameters.AddWithValue("@cartID", cartID);
+                            updateCartItemsCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                            updateCartItemsCmd.ExecuteNonQuery();
+                        }
 
-                
+                        // Mark book unavailable
+                        using (SqlCommand updateBookStatusCmd = new SqlCommand("UPDATE Book SET status = 'unavailable' WHERE bookISBN = @bookISBN", con))
+                        {
+                            updateBookStatusCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                            updateBookStatusCmd.ExecuteNonQuery();
+                        }
+                    }
+                }
 
+                // Clear the cart items for this cart
+                using (SqlCommand clearCartCmd = new SqlCommand("DELETE FROM CartItems WHERE cartID = @cartID", con))
+                {
+                    clearCartCmd.Parameters.AddWithValue("@cartID", cartID);
+                    clearCartCmd.ExecuteNonQuery();
+                }
             }
+
+            lblConfirmation.Text = "Your purchase was successful!";
+            lblConfirmation.Visible = true;
+
+            pnlPayment.Visible = false;
+            pnlCart.Visible = false;
+
+            lblOrderNumber.Text = orderGroupId.ToString().Substring(0, 8).ToUpper();
+            lblBuyerName.Text = Session["buyerName"] != null ? Session["buyerName"].ToString() : "Valued Buyer";
+            lblOrderDate.Text = purchaseDate.ToString("dd MMM yyyy");
+            lblItemCount.Text = cartBooks.Sum(c => c.Qty).ToString();
+
+            decimal orderTotal = 0;
+            using (SqlConnection con2 = new SqlConnection(connStr))
+            {
+                con2.Open();
+                foreach (var it in cartBooks)
+                {
+                    using (SqlCommand cmd = new SqlCommand("SELECT price FROM Book WHERE bookISBN = @isbn", con2))
+                    {
+                        cmd.Parameters.AddWithValue("@isbn", it.ISBN);
+                        object priceObj = cmd.ExecuteScalar();
+                        if (priceObj != null && priceObj != DBNull.Value)
+                        {
+                            orderTotal += Convert.ToDecimal(priceObj) * it.Qty;
+                        }
+                    }
+                }
+            }
+
+            lblOrderTotal.Text = orderTotal.ToString("0.00");
+            lblEstimatedDelivery.Text = purchaseDate.AddDays(5).ToString("dd MMM yyyy");
+
+            pnlOrderSummary.Visible = true;
+            ((Site1)this.Master).UpdateCartCount();
         }
+
 
         protected void btnShowPayment_Click(object sender, EventArgs e)
         {
@@ -363,7 +405,6 @@ namespace NMU_BookTrade.Buyer.pabiModule
             BindCartItems();
             ((Site1)this.Master).UpdateCartCount();
         }
-
 
 
         protected void rptCartItems_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -460,7 +501,7 @@ namespace NMU_BookTrade.Buyer.pabiModule
                 conn.Open();
 
                 string query = @"SELECT ci.bookISBN, ci.quantity, b.title, b.price, b.coverImage, b.condition, 
-                         s.sellerName, s.sellerSurname, b.version
+                         s.sellerName, s.sellerSurname
                          FROM CartItems ci
                          INNER JOIN Book b ON ci.bookISBN = b.bookISBN
                          INNER JOIN Seller s ON b.sellerID = s.sellerID
@@ -487,8 +528,5 @@ namespace NMU_BookTrade.Buyer.pabiModule
                 }
             }
         }
-
-        
-       
     }
 }

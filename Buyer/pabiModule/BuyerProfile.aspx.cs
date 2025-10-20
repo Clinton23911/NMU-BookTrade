@@ -161,7 +161,7 @@ namespace NMU_BookTrade
                 {
                     // Clear session and redirect
                     Session.Clear();
-                    Response.Redirect("~/User Management/Home.aspx");
+                    Response.Redirect("~/UserManagement/Home.aspx");
                 }
                 else
                 {

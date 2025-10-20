@@ -89,14 +89,14 @@
                                                                                  <ItemTemplate>
         <div class="inbox-message-row <%# Convert.ToBoolean(Eval("isRead")) ? "read" : "unread" %>"
              data-id='<%# Eval("messageID") %>'
-             data-sender='<%# Eval("senderEmail") %>'
+             data-sender='<%# Eval("senderEmail") %>'                     
              data-time='<%# string.Format("{0:MMM dd, yyyy hh:mm tt}", Eval("dateSent")) %>'
              data-body='<%# HttpUtility.HtmlEncode(Eval("messageContent")) %>'
              data-role='<%# (Eval("senderEmail").ToString() == "gracamanyonganise@gmail.com")   %>'
              data-read='<%# Eval("isRead") %>'
              data-email='<%# Eval("senderEmail") %>'
              ">
-            
+          
             <div class="message-header">
                 From: <%# Eval("senderEmail") %>
                 <span class="message-time"><%# string.Format("{0:MMM dd, yyyy}", Eval("dateSent")) %></span>

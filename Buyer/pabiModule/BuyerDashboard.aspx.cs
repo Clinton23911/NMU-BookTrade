@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI.WebControls;
+using NMU_BookTrade;
 
 namespace NMU_BookTrade
 {
@@ -10,7 +11,7 @@ namespace NMU_BookTrade
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            AuthorizationHelper.Authorize("2"); // 2 = Buyer
             if (!IsPostBack)
             {
 
@@ -30,7 +31,7 @@ namespace NMU_BookTrade
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT DISTINCT categoryName FROM Category", con);
+                SqlCommand cmd = new SqlCommand("SELECT categoryID, categoryName FROM Category ORDER BY categoryName", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -56,7 +57,6 @@ namespace NMU_BookTrade
                 rptCategory2.DataBind();
             }
         }
-
 
         private void LoadOutNowTextbooks()
         {
@@ -106,8 +106,11 @@ namespace NMU_BookTrade
         {
             if (e.CommandName == "SelectCategory")
             {
-                string faculty = e.CommandArgument.ToString();
-                Response.Redirect("~/Admin/GraceModule/ManageCategories.aspx?category=" + Server.UrlEncode(faculty));
+                string[] args = e.CommandArgument.ToString().Split('|');
+                int categoryId = Convert.ToInt32(args[0]);
+                string categoryName = args[1];
+
+                Response.Redirect($"~/Buyer/pabiModule/SearchResult.aspx?categoryID={categoryId}&categoryName={Server.UrlEncode(categoryName)}");
             }
 
             if (e.Item.ItemIndex == 2)

@@ -16,7 +16,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 // Updated session-based authentication check for drivers
                 if (Session["AccessID"] == null || Session["AccessID"].ToString() != "4" || Session["DriverID"] == null)
                 {
-                    Response.Redirect("~/User Management/Login.aspx");
+                    Response.Redirect("~/UserManagement/Login.aspx");
                     return;
                 }
                 else
@@ -28,10 +28,10 @@ namespace NMU_BookTrade.Driver.ClintonModule
                     txtEndDate.Attributes["min"] = today;
                     txtStartDate.Text = today;
                     txtEndDate.Text = nextWeek;
-                    
+
                     // Test database connection for debugging
                     TestDatabaseConnection();
-                    
+
                     LoadDeliveries();
                     UpdateSummary();
                 }
@@ -306,7 +306,7 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 lblCompletedDeliveries.Text = "0";
                 lblFailedDeliveries.Text = "0";
                 lblCancelledDeliveries.Text = "0";
-                
+
                 // Log the error or show a user-friendly message
                 ShowAlert($"Error updating summary: {ex.Message}");
             }
@@ -361,12 +361,12 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 // Find the status dropdown and hidden field
                 DropDownList ddlStatus = (DropDownList)e.Row.FindControl("ddlStatusUpdate");
                 HiddenField hfDeliveryID = (HiddenField)e.Row.FindControl("hfDeliveryID");
-                
+
                 if (ddlStatus != null && hfDeliveryID != null)
                 {
                     // Get the current status from the data source
                     string currentStatus = DataBinder.Eval(e.Row.DataItem, "Status").ToString();
-                    
+
                     // Set the dropdown to match the current status
                     switch (currentStatus)
                     {
@@ -401,10 +401,10 @@ namespace NMU_BookTrade.Driver.ClintonModule
             DropDownList ddl = (DropDownList)sender;
             GridViewRow row = (GridViewRow)ddl.NamingContainer;
             HiddenField hfDeliveryID = (HiddenField)row.FindControl("hfDeliveryID");
-            
+
             int deliveryID = Convert.ToInt32(hfDeliveryID.Value);
             int newStatus = Convert.ToInt32(ddl.SelectedValue);
-            
+
             UpdateDeliveryStatus(deliveryID, newStatus);
         }
 
@@ -415,22 +415,22 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
                     connection.Open();
-                    
+
                     string query = "UPDATE Delivery SET status = @Status WHERE deliveryID = @DeliveryID AND driverID = @DriverID";
-                    
+
                     using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@Status", newStatus);
                         cmd.Parameters.AddWithValue("@DeliveryID", deliveryID);
                         cmd.Parameters.AddWithValue("@DriverID", Session["DriverID"]);
-                        
+
                         cmd.ExecuteNonQuery();
                     }
                 }
-                
+
                 LoadDeliveries();
                 UpdateSummary();
-                
+
                 // Show success message
                 ShowAlert("Delivery status updated successfully!", "success");
             }
@@ -513,17 +513,17 @@ namespace NMU_BookTrade.Driver.ClintonModule
                 using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
                 {
                     connection.Open();
-                    
+
                     // Test basic queries
                     string[] testQueries = {
                         "SELECT COUNT(*) FROM Delivery",
-                        "SELECT COUNT(*) FROM Sale", 
+                        "SELECT COUNT(*) FROM Sale",
                         "SELECT COUNT(*) FROM Book",
                         "SELECT COUNT(*) FROM Seller",
                         "SELECT COUNT(*) FROM Buyer",
                         "SELECT COUNT(*) FROM Driver"
                     };
-                    
+
                     foreach (string query in testQueries)
                     {
                         using (SqlCommand cmd = new SqlCommand(query, connection))

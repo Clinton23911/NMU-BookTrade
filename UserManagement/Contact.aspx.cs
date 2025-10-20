@@ -114,7 +114,7 @@ namespace NMU_BookTrade
             mail.Body = body;
 
             SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-            smtp.Credentials = new NetworkCredential("gracamanyonganise@gmail.com", "sdijpajgbcnwuizi");
+            smtp.Credentials = new NetworkCredential("gracamanyonganise@gmail.com", "swywlbrcvkkhisdh");
             smtp.EnableSsl = true;
 
             smtp.Send(mail);

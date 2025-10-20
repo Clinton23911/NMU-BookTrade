@@ -2,57 +2,57 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="middle_section" runat="server">
-     <div class="categories">
-    <asp:Repeater ID="rptCategory" runat="server" OnItemCommand="rptCategory_ItemCommand">
-         <ItemTemplate>
-             <asp:LinkButton runat="server" CommandName="SelectFaculty" CommandArgument='<%# Eval("categoryName") %>' CssClass="category-link">
-                 <%# Eval("categoryName") %>
-             </asp:LinkButton>
-         </ItemTemplate>
-     </asp:Repeater>
- </div>
-<div class="container">
-  <div class="book-details">
-    <asp:Image ID="imgCover" runat="server" CssClass="book-cover" />
-
-      <div class="info">
-        <asp:Label CssClass="detail-label" runat="server" Text="Title"></asp:Label>
-        <asp:Label ID="lblTitle" runat="server" CssClass="label-title"></asp:Label><br /><br />
-                    
-        <asp:Label CssClass="detail-label" runat="server" Text="Author"></asp:Label>
-        <asp:Label ID="lblAuthor" runat="server"></asp:Label><br /><br />
-                    
-        <asp:Label CssClass="detail-label" runat="server" Text="Price"></asp:Label>
-        <asp:Label ID="lblPrice" runat="server"></asp:Label><br /><br />
-                    
-        <asp:Label CssClass="detail-label" runat="server" Text="Condition"></asp:Label>
-        <asp:Label ID="lblCondition" runat="server"></asp:Label><br /><br />
-        
-        <asp:Label CssClass="detail-label" runat="server" Text="Category"></asp:Label>
-        <asp:Label ID="lblCategory" runat="server"></asp:Label><br /><br />
-        <asp:Label CssClass="detail-label" runat="server" Text="Genre"></asp:Label>
-        <asp:Label ID="lblGenre" runat="server"></asp:Label><br /><br />
-                    
-       <div class="buttons">
-          <asp:Button ID="btnAddToCart" runat="server" Text="Add to Cart ➤" OnClick="btnAddToCart_Click" />
-          <%--<asp:Button ID="btnAddToFavourites" runat="server" Text="Purchase ➤" OnClick="btnAddToFavourites_Click" />--%>
-<%--           <asp:Button ID="btnCancel" runat="server" Text="Cancel ➤" CssClass="form-button" OnClick="btnCancel" CausesValidation="false" />--%>
-             </div>
-           <asp:Label ID="lblMessage" runat="server"></asp:Label>
-          </div>
-      <asp:Panel ID="CartPanel" runat="server" CssClass="slide-panel" Visible="false">
-    <div class="panel-header">
-        <asp:Label ID="lblHeader" runat="server" Text="Added to Cart"></asp:Label>
-        <asp:Button ID="btnClose" runat="server" Text="X" CssClass="close-btn" OnClick="btnClose_Click" />
+     <div class="reviews-title">
+        <h2>Textbook Details</h2>
     </div>
-    <div class="panel-content">
-        <asp:Label ID="lblCartMessage" runat="server" Text=""></asp:Label>
-        <br /><br />
-        <asp:HyperLink ID="lnkGoToCart" runat="server" NavigateUrl="Cart.aspx" CssClass="go-to-cart">Go to Cart</asp:HyperLink>
-    </div>
-</asp:Panel>
+    <hr class="section-line" />
 
-      
-     </div>
-   </div>
+    <div class="details-container">
+
+        <!-- Cover -->
+        <div class="book-cover">
+            <asp:Image ID="imgBookCover" runat="server" AlternateText="Book Cover" />
+        </div>
+
+        <!-- Info -->
+        <div class="book-info">
+            <h2><asp:Label ID="lblTitle" runat="server" /></h2>
+            <p class="book-meta">Author: <asp:Label ID="lblAuthor" runat="server" /></p>
+            <p class="book-meta">Edition: <asp:Label ID="lblEdition" runat="server" /></p>
+            <p class="book-meta">ISBN: <asp:Label ID="lblISBN" runat="server" /></p>
+            <p class="book-meta">Condition: <asp:Label ID="lblCondition" runat="server" /></p>
+            <p class="price">R<asp:Label ID="lblPrice" runat="server" /></p>
+            <p class="availability"><asp:Label ID="lblAvailability" runat="server" /></p>
+
+            <!-- Seller Info -->
+            <div class="seller-box">
+                <h4>Seller Information</h4>
+                <p><strong>Name:</strong> <asp:Label ID="lblSellerName" runat="server" /></p>
+                <p><strong>Email:</strong> <asp:Label ID="lblSellerEmail" runat="server" /></p>
+            </div>
+
+            <!-- Write Review Button -->
+            <asp:Button ID="btnWriteReview" runat="server" Text="Write a Review" CssClass="btn-write-review" OnClick="btnWriteReview_Click" />
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-summary">
+        <h4>Ratings & Reviews</h4>
+        <p><span class="stars">★★★★★</span>
+            <asp:Label ID="lblAverageRating" runat="server" /> average rating based on 
+            <asp:Label ID="lblTotalReviews" runat="server" /> reviews</p>
+
+        <asp:Repeater ID="rptBookReviews" runat="server">
+            <ItemTemplate>
+                <div class="review-item">
+                    <strong><%# Eval("buyerName") %></strong>
+                    <span class="stars"><%# new string('★', (int)Eval("reviewRating")) %></span><br />
+                    <p><%# Eval("reviewComment") %></p>
+                    <small><%# Eval("reviewDate", "{0:dd MMM yyyy}") %></small>
+                </div>
+            </ItemTemplate>
+        </asp:Repeater>
+    </div>
+
 </asp:Content>

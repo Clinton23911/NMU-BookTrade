@@ -18,6 +18,8 @@
         <div class="right-side">
             <h2 class=" LR-formheadings" > Create an account </h2>
             <h3 class=" LR-formheadings">Lets get started </h3>
+            <asp:ValidationSummary ID="valSummary" runat="server" CssClass="form_errormessage" DisplayMode="List" />
+
 
             <table class="register-table">
                 <tr>
@@ -73,10 +75,17 @@
                         <div class="input-wrapper">
                             <div class="input-icon">
                                 <i class="fas fa-envelope"></i>
-                                <asp:TextBox ID="txtEmail" runat="server" CssClass="input-field" ToolTip="Email" placeholder="Email"></asp:TextBox>
+                                <asp:TextBox ID="txtEmail" runat="server" CssClass="input-field"
+    ToolTip="Email" placeholder="Email" TextMode="Email"></asp:TextBox>
+
                             </div>
                             <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ErrorMessage="Please enter your email address" ControlToValidate="txtEmail" CssClass="form_errormessage" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
-                            <asp:RegularExpressionValidator ID="revEmail" runat="server" ErrorMessage="Invalid email address. Please enter your email address correctly.  " ForeColor="Red" ControlToValidate="txtEmail" ValidationExpression="^\S+@\S+\.\S+$" Display="Dynamic"></asp:RegularExpressionValidator>
+                           <asp:RegularExpressionValidator ID="revEmail" runat="server"
+                            ControlToValidate="txtEmail"
+                            ErrorMessage="Invalid email address."
+                            ValidationExpression="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,24}$"
+                            Display="Dynamic" ForeColor="Red" />
+
                         </div>
                     </td>  
                 </tr>  

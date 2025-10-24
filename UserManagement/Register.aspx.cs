@@ -100,7 +100,8 @@ namespace NMU_BookTrade
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Username", username);
-                    cmd.Parameters.AddWithValue("@Password", password);
+                    string hashedPassword = HashPassword(password);
+                    cmd.Parameters.AddWithValue("@Password", hashedPassword);
                     cmd.Parameters.AddWithValue("@Name", name);
                     cmd.Parameters.AddWithValue("@Surname", surname);
                     cmd.Parameters.AddWithValue("@Email", email);
@@ -219,32 +220,32 @@ namespace NMU_BookTrade
 
 
 
-        // This function hashes a plain-text password using SHA256 encryption
-      // public string HashPassword(string password)
-       // {
-            // Create a SHA256 object that will handle the hashing
-            //using (SHA256 sha256 = SHA256.Create())
-           // {
-                // Convert the input string (password) into a byte array using UTF-8 encoding
-               // byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+     //   This function hashes a plain-text password using SHA256 encryption
+       public string HashPassword(string password)
+    {
+       // Create a SHA256 object that will handle the hashing
+            using (SHA256 sha256 = SHA256.Create())
+        {
+           // Convert the input string(password) into a byte array using UTF-8 encoding
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
 
-                // Create a StringBuilder to build the hashed string
-               // StringBuilder builder = new StringBuilder();
+           // Create a StringBuilder to build the hashed string
+           StringBuilder builder = new StringBuilder();
 
-                // Loop through each byte in the byte array
-               // foreach (byte b in bytes)
-              //  {
-                    // Convert each byte to a hexadecimal string (2 characters) and append to the builder
-               //     builder.Append(b.ToString("x2"));
-               // }
+           // Loop through each byte in the byte array
+                foreach (byte b in bytes)
+            {
+              //  Convert each byte to a hexadecimal string(2 characters) and append to the builder
+                    builder.Append(b.ToString("x2"));
+            }
 
-                // Return the final hashed string (e.g., "a3c5b4d6...")
-               // return builder.ToString();
-          //  }
-       // }
+           // Return the final hashed string(e.g., "a3c5b4d6...")
+                return builder.ToString();
+        }
+    }
 
 
-        protected void btnClear_Click(object sender, EventArgs e)
+    protected void btnClear_Click(object sender, EventArgs e)
         {
             txtUsername.Text = "";
             txtPassword.Text = "";

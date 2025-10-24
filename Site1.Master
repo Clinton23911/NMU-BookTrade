@@ -113,8 +113,8 @@
     <!-- Auth section: Right side -->
     <div id="divAuthenticated_Buyer" runat="server" class="auth-section">
      <div id="divSearchBar" runat="server" class="auth-left">
-     <input type="text" class="search-bar" placeholder="Search for book title" />
-     <button class="search-btn">🔍</button>
+     <!--  <input type="text" class="search-bar" placeholder="Search for book title" />
+     <button class="search-btn">🔍</button> -->
  </div>
         <asp:HyperLink ID="hlCart" runat="server" NavigateUrl="~/Buyer/pabiModule/Cart.aspx" CssClass="cart-link">
             <asp:UpdatePanel  ID="updCartBadge" runat="server" UpdateMode="Conditional">

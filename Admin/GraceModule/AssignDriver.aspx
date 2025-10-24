@@ -94,7 +94,8 @@
         <asp:BoundField DataField="SellerName" HeaderText="Seller" />
         <asp:BoundField DataField="BuyerName" HeaderText="Buyer" />
         <asp:BoundField DataField="DriverName" HeaderText="Assigned Driver" />
-        <asp:BoundField DataField="deliveryDate" HeaderText="Delivery Date" DataFormatString="{0:yyyy-MM-dd HH:mm}" />
+        <asp:BoundField DataField="deliveryDate" HeaderText="Delivery Date" DataFormatString="{0:yyyy-MM-dd}" HtmlEncode="false" />
+
     </Columns>
 </asp:GridView>
 

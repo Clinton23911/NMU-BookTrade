@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 
 namespace NMU_BookTrade.UserManagement
 {
@@ -29,6 +31,8 @@ namespace NMU_BookTrade.UserManagement
                 return;
             }
 
+
+           
             // Step 2: Retrieve session values
             string userId = Session["ResetUserID"] as string;
             string role = Session["ResetRole"] as string;
@@ -39,8 +43,8 @@ namespace NMU_BookTrade.UserManagement
                 return;
             }
 
-            // Optional: Re-enable this if using hashing again
-            // newPassword = HashPassword(newPassword);
+            
+             newPassword = HashPassword(newPassword);
 
             // Step 3: Build update query
             string query = $"UPDATE {role} SET {role.ToLower()}Password = @Password WHERE {role.ToLower()}ID = @ID";
@@ -67,6 +71,29 @@ namespace NMU_BookTrade.UserManagement
             }
         }
 
+        //   This function hashes a plain-text password using SHA256 encryption
+        public string HashPassword(string password)
+        {
+            // Create a SHA256 object that will handle the hashing
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                // Convert the input string(password) into a byte array using UTF-8 encoding
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                // Create a StringBuilder to build the hashed string
+                StringBuilder builder = new StringBuilder();
+
+                // Loop through each byte in the byte array
+                foreach (byte b in bytes)
+                {
+                    //  Convert each byte to a hexadecimal string(2 characters) and append to the builder
+                    builder.Append(b.ToString("x2"));
+                }
+
+                // Return the final hashed string(e.g., "a3c5b4d6...")
+                return builder.ToString();
+            }
+        }
 
         protected void btnClear4_Click(object sender, EventArgs e)
         {

@@ -18,7 +18,7 @@
 
         <div class="search-bar-bd">
             <asp:TextBox ID="txtSearch" runat="server" CssClass="search-bd" Placeholder="Search textbook title..." />
-            <asp:Button ID="btnSearch" runat="server" Text="🔍" OnClick="btnSearch_Click" CssClass="search-btn" />
+          <asp:Button ID="btnSearch" runat="server" Text="🔍" OnClick="btnSearch_Click" CssClass="search-btn" />
         </div>
 
         <asp:Repeater ID="rptCategory2" runat="server" OnItemCommand="rptCategory_ItemCommand">

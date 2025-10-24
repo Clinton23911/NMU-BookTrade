@@ -122,6 +122,27 @@
         <asp:Button ID="btnDeleteProfile" runat="server" Text="Delete My Account" CssClass="btn-delete" 
             OnClientClick="return confirm('Are you sure you want to delete your account? This action cannot be undone. And you will be re-directed to the home page.');" 
             OnClick="btnDeleteProfile_Click" />
+
+        <hr />
+<h3>Change Password</h3>
+
+<div class="form-group">
+    <label>Current Password</label>
+    <asp:TextBox ID="txtCurrentPassword" runat="server" CssClass="input-field" TextMode="Password" />
+</div>
+
+<div class="form-group">
+    <label>New Password</label>
+    <asp:TextBox ID="txtNewPassword" runat="server" CssClass="input-field" TextMode="Password" />
+</div>
+
+<div class="form-group">
+    <label>Confirm New Password</label>
+    <asp:TextBox ID="txtConfirmPassword" runat="server" CssClass="input-field" TextMode="Password" />
+</div>
+
+<asp:Button ID="btnChangePassword" runat="server" Text="Change Password"
+    CssClass="btn-update" OnClick="btnChangePassword_Click" />
         
         <asp:Label ID="lblMessage" runat="server" CssClass="message" />
     </div>

@@ -110,6 +110,7 @@ html, body {
     border-radius: 17px;
     border: 1px solid #cccccc;
     width: 180px;
+    display:none;
 }
 
 .search-btn {
@@ -119,6 +120,7 @@ html, body {
     cursor: pointer;
     border-radius: 4px;
     font-size: 30px;
+   
 }
 
 
@@ -622,7 +624,10 @@ input#middle_section_btnDeleteProfile {
     transition: background-color 0.3s ease, color 0.3s ease;
     font-size: 16px;
     /* margin: 0px 10px; */
+    width: 162px;
 }
+
+
 
     input#middle_section_btnDeleteProfile:hover {
         background-color: #3fd0c9;
@@ -3735,7 +3740,7 @@ input#middle_section_txtLastName {
 }
 
 input, textarea {
-    width: 25%;
+    width: 27%;
     padding: 10px;
     margin-top: 0.5rem;
     border: 1px solid #ccc;
@@ -4504,7 +4509,7 @@ input#middle_section_btnConfirmDelete:hover {
             display: block;
             margin-bottom: 6px;
             text-align: center;
-            width: 100%;
+            width: 80%;
         }
 }
 
@@ -7636,56 +7641,100 @@ textarea.form-control {
 @media (max-width: 940px) {
 
 /*ADMIN-ASSIGN DRIVER PAGE*/
-    .assigned-grid,
-    .assigned-grid table {
-        border: 0;
+    .assigned-grid {
         width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        background-color: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
     }
 
-        /* Hide header row for GridView */
-        .assigned-grid th,
-        .assigned-grid tr:first-child {
-            display: none !important;
+        /* Keep headers visible but compact */
+        .assigned-grid thead {
+            background-color: #00796b;
+            color: white;
         }
 
-        .assigned-grid tr {
-            display: block;
-            background: #ffffff;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        .assigned-grid th {
             padding: 10px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            text-align: center;
+        }
+
+        /* Compact rows as mini cards */
+        .assigned-grid tr {
+            border-bottom: 1px solid #e5e5e5;
         }
 
         .assigned-grid td {
-            display: flex;
-            justify-content: space-between;
-            text-align: left;
-            padding: 8px 10px;
-            border: none;
-            border-bottom: 1px solid #eee;
+            padding: 10px 8px;
             font-size: 14px;
+            text-align: center;
+            color: #333;
+            vertical-align: middle;
         }
 
-            .assigned-grid td::before {
-                content: attr(data-label);
-                font-weight: 600;
-                color: #333;
-                flex: 1;
-                text-align: left;
-                padding-right: 10px;
-            }
+        /* Neat spacing and visuals */
+        .assigned-grid tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
 
-            .assigned-grid td:last-child {
-                border-bottom: none;
-            }
+        .assigned-grid tr:last-child {
+            border-bottom: none;
+        }
 
+    /* Make it scrollable on very small screens */
+    .assigned-grid-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 10px;
+    }
+
+    /* Assign button styling */
     .assign-btn {
-        width: 100%;
-        margin-top: 5px;
-        margin-left: 130px;
-        padding: 5px 16px 6px 16px;
+        background-color: #00796b;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 14px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: background-color 0.2s ease;
+    }
+
+        .assign-btn:hover {
+            background-color: #009688;
+        }
+
+    /* Tighter card container spacing */
+    .assigned-grid tr td select,
+    .assigned-grid tr td input {
+        font-size: 13px;
+        padding: 6px;
+        width: 90%;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    /* Make sure the table is centered nicely */
+    .assigned-heading {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+        color: #004d40;
+        margin-top: 15px;
+    }
+
+    .assigned-paragraph {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 10px;
     }
 
     .responsive-gif {
@@ -7758,6 +7807,29 @@ textarea.form-control {
 }
 
 @media only screen and (max-width: 866px) {
+/*  ASSIGN DRIVER PAGE  */
+    .assigned-grid {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* smooth scroll on mobile */
+        white-space: nowrap; /* keeps table columns in one line */
+    }
+
+        .assigned-grid table {
+            width: 100%;
+            min-width: 600px; /* optional: adjust based on your table's columns */
+        }
+
+        /* Optional: improve scroll appearance */
+        .assigned-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .assigned-grid::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
 
 /*ADMIN-MANAGE GENRES PAGE*/
     .manage-cat-left {
@@ -7806,6 +7878,8 @@ textarea.form-control {
 
 
 @media all and (max-width:856px){
+
+
 
     /*PROFILE IMAGE*/
     .profile-circle {
@@ -7860,16 +7934,17 @@ textarea.form-control {
 
     /*   SELLER HOME PAGE MENU TOP RIGHT */
     div#divAuthenticator_seller {
-        top: 72px;
-        margin-right: 23px;
+        top: 69px;
+        margin-right: 3px;
     }
 
     /*   DRIVER HOME PAGE MENU TOP RIGHT */
     div#divAuthenticated_driver {
-        top: 72px;
-        margin-right: 23px;
+        top: 69px;
+        margin-right: 3px;
     }
 }
+
 
 
 /*BUYER- MENUE TOP RIGHT*/
@@ -7923,13 +7998,13 @@ textarea.form-control {
     /*   SELLER HOME PAGE MENU TOP RIGHT */
     div#divAuthenticator_seller {
         top: 72px;
-        margin-right: 23px;
+        margin-right: 3px;
     }
 
     /*   DRIVER HOME PAGE MENU TOP RIGHT */
     div#divAuthenticated_driver {
         top: 72px;
-        margin-right: 23px;
+        margin-right: 3px;
     }
 }
 
@@ -7964,13 +8039,34 @@ textarea.form-control {
         /*   SELLER HOME PAGE MENU TOP RIGHT */
         div#divAuthenticator_seller {
             top: 72px;
-            margin-right: 23px;
+            margin-right: 0px;
         }
 
         /*   DRIVER HOME PAGE MENU TOP RIGHT */
         div#divAuthenticated_driver {
             top: 72px;
-            margin-right: 23px;
+            margin-right: 0px;
+        }
+
+       /* NAV - HEADER       */
+        #MenuAnonymous a.static {
+            padding: 5px 10px !important;
+        }
+
+        .header {
+            
+            padding: 15px 0px;
+            flex-direction: column;
+        }
+
+        .section-title {
+            margin: 20px 20px 20px 20px;
+            text-align: center;
+        }
+
+        .delivery-stats-section {
+            margin-left: 20px;
+            margin-right: 20px;
         }
     }
 
@@ -8051,6 +8147,9 @@ textarea.form-control {
     @media all and (max-width:605px) {
 
         /*MENU*/
+
+       
+
         .btn {
             margin-left: 44px;
         }
@@ -8072,14 +8171,14 @@ textarea.form-control {
 
         /*   SELLER HOME PAGE MENU TOP RIGHT */
         div#divAuthenticator_seller {
-            top: 72px;
-            margin-right: 23px;
+            top: 69px;
+            margin-right: -8px;
         }
 
         /*   DRIVER HOME PAGE MENU TOP RIGHT */
         div#divAuthenticated_driver {
-            top: 72px;
-            margin-right: 23px;
+            top: 69px;
+            margin-right: -8px;
         }
     }
 
@@ -8088,8 +8187,10 @@ textarea.form-control {
 
 
         /*MENU*/
+
+       
         .btn {
-            margin-left: -18px;
+            margin-left: 33px;
         }
 
         input#btnLogout4 {
@@ -8163,14 +8264,14 @@ textarea.form-control {
 
         /*   SELLER HOME PAGE MENU TOP RIGHT */
         div#divAuthenticator_seller {
-            top: 72px;
-            margin-right: 23px;
+            top: 69px;
+            margin-right: -8px;
         }
 
         /*   DRIVER HOME PAGE MENU TOP RIGHT */
         div#divAuthenticated_driver {
-            top: 72px;
-            margin-right: 23px;
+            top: 69px;
+            margin-right: -8px;
         }
     }
 
@@ -8262,17 +8363,26 @@ textarea.form-control {
     .login-auth-section,
     .bias-auth-section {
         position: fixed;
-        top: 68px;
-        right: 29px;
+        top: -13px;
+        right: -10px;
         display: flex;
-        flex-direction: column; /* profile above text */
+        flex-direction: column;
         align-items: center;
         gap: 5px;
-        background-color: transparent; /* fully transparent, no tile */
+        background-color: transparent;
         border: none;
-        padding: 0; /* no extra padding */
-        z-index: 999; /* above everything */
+        padding: 0;
+        z-index: 999;
         position: absolute !important;
+    }
+    div#divAnonymous {
+        top: 17px;
+        right: -10px;
+    }
+
+    div#divAuthenticator_Admin {
+        top: 44px;
+        right: -7px;
     }
 
         .auth-section .profile-circle,
@@ -8303,6 +8413,14 @@ textarea.form-control {
         cursor: pointer;
         margin-right: -1px;
     }
+
+    .btn{
+        padding: 5px 45px;
+    }
+
+    .left-side-contact {
+        display:none;
+    }
 }
 
 /* Smaller tablets / large phones */
@@ -8314,13 +8432,18 @@ textarea.form-control {
     .profile-auth-section,
     .login-auth-section,
     .bias-auth-section {
-        top: 69px;
-        right: 29px;
-        gap: 4px;
+        top: 42px;
+        right: 2px;
+        gap: 0px;
         flex-direction: column;
         align-items: center;
         padding: 0;
         position: absolute !important;
+    }
+
+    div#divAuthenticated_Buyer {
+        top: 0px;
+        right: -9px;
     }
 
         .auth-section .profile-circle,
@@ -8378,4 +8501,7 @@ textarea.form-control {
         width: auto;
         min-width: 50px;
     }
+}
+input#middle_section_btnReset {
+    padding: 10px;
 }

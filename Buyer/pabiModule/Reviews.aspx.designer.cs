@@ -114,6 +114,42 @@ namespace NMU_BookTrade
         protected global::System.Web.UI.WebControls.Repeater rptReviewHistory;
 
         /// <summary>
+        /// hfDeleteReviewID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfDeleteReviewID;
+
+        /// <summary>
+        /// pnlDeleteConfirm control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDeleteConfirm;
+
+        /// <summary>
+        /// btnConfirmYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnConfirmYes;
+
+        /// <summary>
+        /// btnConfirmNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnConfirmNo;
+
+        /// <summary>
         /// pnlProductSummary control.
         /// </summary>
         /// <remarks>

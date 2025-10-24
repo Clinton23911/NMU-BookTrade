@@ -127,6 +127,12 @@
         ErrorMessage="Name on card is required."
         ForeColor="Red"
         Display="Dynamic" />
+        <asp:RegularExpressionValidator ID="revName" runat="server"
+        ControlToValidate="txtName"
+        ErrorMessage="Name must contain only letters, spaces, hyphens, or apostrophes (2-50 characters)."
+        ValidationExpression="^[a-zA-Z\s'-]{2,50}$"
+        ForeColor="Red"
+        Display="Dynamic" />
 
         <br />
         <br />
@@ -140,6 +146,18 @@
         ErrorMessage="Card number is required."
         ForeColor="Red"
         Display="Dynamic" />
+        <asp:RegularExpressionValidator ID="revCard" runat="server"
+        ControlToValidate="txtCard"
+        ErrorMessage="Card number must be 13-19 digits."
+        ValidationExpression="^\d{13,19}$"
+        ForeColor="Red"
+        Display="Dynamic" />
+    <asp:CustomValidator ID="cvCard" runat="server"
+        ControlToValidate="txtCard"
+        ErrorMessage="Invalid card number (failed Luhn check)."
+        ForeColor="Red"
+        Display="Dynamic"
+        OnServerValidate="cvCard_ServerValidate" />
 
     <br />
     <br />

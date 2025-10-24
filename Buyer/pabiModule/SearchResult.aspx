@@ -93,14 +93,19 @@ CommandArgument='<%# Eval("bookISBN") %>'>
     <div class="book-title"><%# Eval("title") %></div>
     <div class="book-author">by <%# Eval("author") %></div>
 
-   <div class="book-rating">
+ <div class="book-rating">
     <%# GetStarIcons(Convert.ToDouble(Eval("AvgRating"))) %>
-    <span class="review-count">
-        <%# Convert.ToInt32(Eval("ReviewCount")) > 0 
-            ? $"({Eval("ReviewCount")} reviews)" 
-            : "(No reviews yet)" %>
-    </span>
+    <asp:LinkButton ID="lnkReviews" runat="server"
+        Text='<%# Convert.ToInt32(Eval("ReviewCount")) > 0 
+            ? "(" + Eval("ReviewCount") + " reviews)" 
+            : "(No reviews yet)" %>'
+        CommandName="ViewReviews"
+        CommandArgument='<%# Eval("bookISBN") %>'
+        CssClass="review-link"
+        CausesValidation="false"
+        UseSubmitBehavior="false" />
 </div>
+
 
     <div class="book-price-sr">R <%# Eval("price", "{0:N2}") %></div>
 </div>

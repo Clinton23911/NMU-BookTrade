@@ -32,7 +32,7 @@ namespace NMU_BookTrade
                     {
                         LoadBooksByCategory(categoryId);
                         lblSearched.Text = !string.IsNullOrEmpty(categoryName)
-                            ? "BOOKS in " + Server.HtmlEncode(categoryName)
+                            ? "Books in " + Server.HtmlEncode(categoryName)
                             : "Books in selected category";
                         pnlSearchResults.Visible = false;
                         pnlCategoryResults.Visible = true;
@@ -89,7 +89,7 @@ namespace NMU_BookTrade
 
                         if (dt.Rows.Count == 0)
                         {
-                            lblMessage.Text = $"No books found for category ID {categoryId}.";
+                            lblMessage.Text = $"No books found in this category.";
                             rptBooks.DataSource = null;
                         }
                         else
@@ -308,6 +308,12 @@ namespace NMU_BookTrade
 
         protected void rptBooks_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
+            if (e.CommandName == "ViewReviews")
+            {
+                string bookISBN = e.CommandArgument.ToString();
+                Response.Redirect("~/Buyer/pabiModule/ViewTextBookDetails.aspx?bookISBN=" + Server.UrlEncode(bookISBN));
+            }
+
             if (e.CommandName == "AddToCart")
             {
                 if (Session["buyerID"] == null)

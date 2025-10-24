@@ -99,7 +99,7 @@ namespace NMU_BookTrade
 
         protected void lnkViewAllResults_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?query=" + Server.UrlEncode(txtSearch.Text.Trim()));
+            Response.Redirect("~/Buyer/pabiModule/SearchResults.aspx?query=" + Server.UrlEncode(txtSearch.Text.Trim()));
         }
 
         protected void rptCategory_ItemCommand(object source, RepeaterCommandEventArgs e)
@@ -110,7 +110,7 @@ namespace NMU_BookTrade
                 int categoryId = Convert.ToInt32(args[0]);
                 string categoryName = args[1];
 
-                Response.Redirect($"~/Buyer/pabiModule/SearchResult.aspx?categoryID={categoryId}&categoryName={Server.UrlEncode(categoryName)}");
+                Response.Redirect($"~/Buyer/pabiModule/SearchResults.aspx?categoryID={categoryId}&categoryName={Server.UrlEncode(categoryName)}");
             }
 
             if (e.Item.ItemIndex == 2)
@@ -128,7 +128,7 @@ namespace NMU_BookTrade
             if (e.CommandName == "ViewBook")
             {
                 string bookISBN = e.CommandArgument.ToString();
-                Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?query=" + Server.UrlEncode(bookISBN));
+                Response.Redirect("~/Buyer/pabiModule/ViewTextBookDetails.aspx?bookISBN=" + Server.UrlEncode(bookISBN));
             }
         }
 
@@ -137,7 +137,7 @@ namespace NMU_BookTrade
             if (e.CommandName == "ViewBook")
             {
                 string bookISBN = e.CommandArgument.ToString();
-                Response.Redirect("~/Buyer/pabiModule/SearchResult.aspx?query=" + Server.UrlEncode(bookISBN));
+                Response.Redirect("~/Buyer/pabiModule/ViewTextBookDetails.aspx?bookISBN=" + Server.UrlEncode(bookISBN));
             }
         }
     }

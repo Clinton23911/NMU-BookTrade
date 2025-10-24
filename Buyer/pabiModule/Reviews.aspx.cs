@@ -45,6 +45,12 @@ namespace NMU_BookTrade
                 pnlGuidelines.CssClass = "guidelines hidden";
                 btnShowPurchases.CssClass = "tab-btn active";
                 btnShowHistory.CssClass = "tab-btn";
+
+                if (!IsPostBack)
+                {
+                    if (Session["PreviousPage"] == null && Request.UrlReferrer != null)
+                        Session["PreviousPage"] = Request.UrlReferrer.ToString();
+                }
             }
         }
 
@@ -403,25 +409,79 @@ namespace NMU_BookTrade
             }
         }
 
+        // --- DELETE REVIEW SECTION ---
+
         protected void btnDeleteReview_Click(object sender, EventArgs e)
         {
-            int reviewID = Convert.ToInt32(((Button)sender).CommandArgument);
-
-            using (var con = new SqlConnection(connStr))
-            using (var cmd = new SqlCommand("DELETE FROM Review WHERE reviewID = @reviewID", con))
+            try
             {
-                cmd.Parameters.AddWithValue("@reviewID", reviewID);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                Button btn = (Button)sender;
+                hfDeleteReviewID.Value = btn.CommandArgument;
+                pnlDeleteConfirm.Visible = true; // Use Visible to show the panel
+                lblError.Visible = false;
             }
-
-            int buyerId = Convert.ToInt32(Session["buyerID"]);
-            LoadReviewHistory(buyerId);
-
-            lblSuccess.Text = "🗑️ Your review has been deleted successfully.";
-            lblError.Visible = false;
+            catch (Exception ex)
+            {
+                lblError.Text = "⚠️ Error preparing delete: " + ex.Message;
+                lblError.Visible = true;
+            }
         }
 
+        protected void btnConfirmYes_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(hfDeleteReviewID.Value))
+            {
+                lblError.Text = "⚠️ No review selected for deletion.";
+                lblError.Visible = true;
+                pnlDeleteConfirm.Visible = false;
+                return;
+            }
+
+            try
+            {
+                int reviewID = Convert.ToInt32(hfDeleteReviewID.Value);
+
+                using (var con = new SqlConnection(connStr))
+                using (var cmd = new SqlCommand("DELETE FROM Review WHERE reviewID = @reviewID", con))
+                {
+                    cmd.Parameters.AddWithValue("@reviewID", reviewID);
+                    con.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected == 0)
+                    {
+                        lblError.Text = "⚠️ Review not found or already deleted.";
+                        lblError.Visible = true;
+                        pnlDeleteConfirm.Visible = false;
+                        return;
+                    }
+                }
+
+                int buyerId = Convert.ToInt32(Session["buyerID"]);
+                LoadReviewHistory(buyerId); // Refresh history
+
+                lblSuccess.Text = "🗑️ Review deleted successfully.";
+                lblSuccess.Visible = true;
+
+                // Auto-hide success message after 5 seconds
+                ClientScript.RegisterStartupScript(this.GetType(), "HideMessage",
+                    $"setTimeout(function() {{ document.getElementById('{lblSuccess.ClientID}').style.display='none'; }}, 5000);", true);
+
+                pnlDeleteConfirm.Visible = false;
+                hfDeleteReviewID.Value = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = "⚠️ Error deleting review: " + ex.Message;
+                lblError.Visible = true;
+                pnlDeleteConfirm.Visible = false;
+            }
+        }
+
+        protected void btnConfirmNo_Click(object sender, EventArgs e)
+        {
+            pnlDeleteConfirm.Visible = false; // Just hide the panel, no redirect
+            hfDeleteReviewID.Value = string.Empty;
+        }
         protected void btnCloseReview_Click(object sender, EventArgs e)
         {
             pnlReviewPanel.CssClass = "side-panel";

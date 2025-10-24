@@ -107,8 +107,8 @@
 
         <!-- Member 2 -->
         <div class="team-member">
-            <img src='<%: ResolveUrl("~/Images/pabi.jpeg") %>' alt="Pabalo Nkanyane" />
-            <h3>Pabalo Nkanyane</h3>
+            <img src='<%: ResolveUrl("~/Images/pabi.jpeg") %>' alt="Paballo Nkanyane" />
+            <h3>Paballo Nkanyane</h3>
         </div>
 
         <!-- Member 3 -->

@@ -47,11 +47,25 @@
                         <strong><%# Eval("title") %></strong>
                         <p><%# Eval("reviewComment") %></p>
                         <small><%# Eval("reviewDate", "{0:dd MMM yyyy}") %></small><br />
-                        <asp:Button ID="btnDeleteReview" runat="server" Text="Delete" CommandArgument='<%# Eval("reviewID") %>' OnClick="btnDeleteReview_Click" OnClientClick="return confirm('Are you sure you want to delete this review?');" CssClass="delete-btn" />
+                        <asp:Button ID="btnDeleteReview" runat="server" Text="Delete" CommandArgument='<%# Eval("reviewID") %>' OnClick="btnDeleteReview_Click" CssClass="delete-btn" />
                     </div>
                 </ItemTemplate>
             </asp:Repeater>
         </asp:Panel>
+
+    <!-- Hidden field to store selected review ID -->
+<asp:HiddenField ID="hfDeleteReviewID" runat="server" />
+
+    <!-- Delete Confirmation Panel -->
+<asp:Panel ID="pnlDeleteConfirm" runat="server" CssClass="confirm-panel" Visible="false">
+    <div class="confirm-box">
+        <h4>Are you sure you want to delete this review?</h4>
+        <div class="confirm-buttons">
+            <asp:Button ID="btnConfirmYes" runat="server" Text="Yes" CssClass="btn btn-primary" OnClick="btnConfirmYes_Click" CausesValidation="false" UseSubmitBehavior="false" />
+            <asp:Button ID="btnConfirmNo" runat="server" Text="No" CssClass="btn btn-secondary" OnClick="btnConfirmNo_Click" CausesValidation="false" UseSubmitBehavior="false" />
+        </div>
+    </div>
+</asp:Panel>
 
         <!-- Product Summary Section (used when viewing reviews for a specific book) -->
         <asp:Panel ID="pnlProductSummary" runat="server" Visible="false" CssClass="product-summary">

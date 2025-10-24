@@ -42,8 +42,8 @@
             <div class="textbook">
                 <asp:LinkButton ID="lnkCover" runat="server" 
     CommandName="ViewBook" 
-    CommandArgument='<%# Eval("bookISBN") %>'>
-                <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' /><br />
+    CommandArgument='<%# Eval("bookISBN") %>' >
+            <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' alt="Book Cover" />
                     </asp:LinkButton>
             </div>
         </ItemTemplate>
@@ -54,11 +54,11 @@
         <div class="section-title">Recently Added Textbooks!</div>
     <hr class="section-line" />
         <div>
-                  <asp:Repeater ID="rptRecentlyAdded" runat="server" OnItemCommand="rptRecentlyAdded_ItemCommand">
+<asp:Repeater ID="rptRecentlyAdded" runat="server" OnItemCommand="rptRecentlyAdded_ItemCommand">
 <ItemTemplate>
     <asp:LinkButton ID="lnkCover" runat="server" 
         CommandName="ViewBook" 
-        CommandArgument='<%# Eval("bookISBN") %>'>
+        CommandArgument='<%# Eval("bookISBN") %>' >
         <div class="textbook">
             <img src='<%# ResolveUrl(Eval("coverImage").ToString()) %>' alt="Book Cover" />
             <br />

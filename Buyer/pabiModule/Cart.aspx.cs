@@ -182,6 +182,11 @@ namespace NMU_BookTrade
 
         protected void btnPurchase_Click(object sender, EventArgs e)
         {
+            if (!Page.IsValid) 
+            {
+                return;
+            }
+
             if (Session["buyerID"] == null)
             {
                 Response.Redirect("~/UserManagement/Login.aspx");
@@ -355,6 +360,47 @@ namespace NMU_BookTrade
             ((Site1)this.Master).UpdateCartCount();
         }
 
+        protected void cvCard_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            string cardNumber = args.Value.Replace(" ", "").Replace("-", ""); // Remove spaces or dashes
+            if (!LuhnCheck(cardNumber))
+            {
+                args.IsValid = false;
+            }
+            else
+            {
+                args.IsValid = true;
+            }
+        }
+
+        private bool LuhnCheck(string cardNumber)
+        {
+            if (string.IsNullOrEmpty(cardNumber) || cardNumber.Length < 13 || cardNumber.Length > 19)
+                return false;
+
+            int sum = 0;
+            bool isEven = false;
+
+            for (int i = cardNumber.Length - 1; i >= 0; i--)
+            {
+                if (!char.IsDigit(cardNumber[i]))
+                    return false;
+
+                int digit = cardNumber[i] - '0';
+
+                if (isEven)
+                {
+                    digit *= 2;
+                    if (digit > 9)
+                        digit -= 9;
+                }
+
+                sum += digit;
+                isEven = !isEven;
+            }
+
+            return (sum % 10 == 0);
+        }
 
         protected void btnShowPayment_Click(object sender, EventArgs e)
         {

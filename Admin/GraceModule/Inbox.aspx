@@ -41,7 +41,7 @@
                 </div>
             </div>
 
-            <!-- Main Content -->
+            <!-- Main Content Shown -->
             <div class="inbox-main-content">
 
                  <!-- Preview Panel -->

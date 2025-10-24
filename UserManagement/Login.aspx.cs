@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
-using System.Web.Security;
 
 namespace NMU_BookTrade
 {
@@ -22,7 +24,7 @@ namespace NMU_BookTrade
         {
             // here we are grabbing the users input from the textboxes 
             string username = txtUsername.Text.Trim();// trim removes the white spaces users make
-            string password = txtPassword.Text.Trim();
+            string hashedPassword = HashPassword(txtPassword.Text);
 
             using (SqlConnection constr = new SqlConnection(ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString))
             {
@@ -31,8 +33,8 @@ namespace NMU_BookTrade
                 //Now we are checking ADMIN TABLE
                 SqlCommand cmd = new SqlCommand("SELECT * FROM Admin WHERE adminUsername =@Username and adminPassword = @Password", constr); // building an sqlcommand so that we check the admin table for matching username and passwords  
 
-                cmd.Parameters.AddWithValue("@Username", username); 
-                cmd.Parameters.AddWithValue("@Password", password);
+                cmd.Parameters.AddWithValue("@Username", username);
+                cmd.Parameters.AddWithValue("@Password", hashedPassword);
 
                 // now we need to execute the SQL and get the result using the data reader
                 SqlDataReader reader = cmd .ExecuteReader();
@@ -56,7 +58,7 @@ namespace NMU_BookTrade
                 // Checking Buyer Table 
                 cmd = new SqlCommand("SELECT * FROM Buyer WHERE buyerUsername=@Username AND buyerPassword=@Password", constr);
                 cmd.Parameters.AddWithValue("@Username", username);
-                cmd.Parameters.AddWithValue("@Password", password);
+                cmd.Parameters.AddWithValue("@Password", hashedPassword);
 
                 reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -77,7 +79,7 @@ namespace NMU_BookTrade
                 // Check Seller table
                 cmd = new SqlCommand("SELECT * FROM Seller WHERE sellerUsername=@Username AND sellerPassword=@Password", constr);
                 cmd.Parameters.AddWithValue("@Username", username);
-                cmd.Parameters.AddWithValue("@Password", password);
+                cmd.Parameters.AddWithValue("@Password", hashedPassword);
 
                 reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -98,7 +100,7 @@ namespace NMU_BookTrade
                 // Check Driver table
                 cmd = new SqlCommand("SELECT * FROM Driver WHERE driverUsername=@Username AND driverPassword=@Password", constr);
                 cmd.Parameters.AddWithValue("@Username", username);
-                cmd.Parameters.AddWithValue("@Password", password);
+                cmd.Parameters.AddWithValue("@Password", hashedPassword);
 
                 reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -119,6 +121,30 @@ namespace NMU_BookTrade
             }
          
         }
+
+        public string HashPassword(string password)
+        {
+            // Create a SHA256 object that will handle the hashing
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                // Convert the input string(password) into a byte array using UTF-8 encoding
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                // Create a StringBuilder to build the hashed string
+                StringBuilder builder = new StringBuilder();
+
+                // Loop through each byte in the byte array
+                foreach (byte b in bytes)
+                {
+                    //  Convert each byte to a hexadecimal string(2 characters) and append to the builder
+                    builder.Append(b.ToString("x2"));
+                }
+
+                // Return the final hashed string(e.g., "a3c5b4d6...")
+                return builder.ToString();
+            }
+        }
+
 
         protected void btnClear_Click(object sender, EventArgs e)
         {

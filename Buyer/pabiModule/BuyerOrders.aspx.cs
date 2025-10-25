@@ -38,32 +38,12 @@ namespace NMU_BookTrade
             orderDate.Items.Add(new ListItem("Last 3 months", "3m"));
             orderDate.Items.Add(new ListItem("Last 6 months", "6m"));
 
-            using (SqlConnection conn = new SqlConnection(connString))
-            using (SqlCommand cmd = conn.CreateCommand())
-            {
-                cmd.CommandText = @"SELECT DISTINCT YEAR(saleDate) AS OrderYear 
-                                        FROM Sale 
-                                        WHERE buyerID = @buyerID
-                                        ORDER BY OrderYear DESC";
-                cmd.Parameters.AddWithValue("@buyerID", GetBuyerId());
-
-                conn.Open();
-                using (SqlDataReader dr = cmd.ExecuteReader())
-                {
-                    while (dr.Read())
-                    {
-                        string year = dr["OrderYear"].ToString();
-                        orderDate.Items.Add(new ListItem(year, year));
-                    }
-                }
-            }
-
-            if (orderDate.Items.FindByValue("0") == null)
-                orderDate.Items.Insert(0, new ListItem("All", "0"));
+            int currentYear = DateTime.Now.Year;
+            for (int i = 0; i < 5; i++)
+                orderDate.Items.Add(new ListItem((currentYear - i).ToString(), (currentYear - i).ToString()));
 
             orderDate.SelectedIndex = 0;
         }
-
 
         private void BindOrders()
         {
@@ -162,7 +142,6 @@ namespace NMU_BookTrade
                     return;
                 }
 
-                // Handle Panel Visibility
                 var pnl = e.Item.FindControl("pnlDetails") as Panel;
                 if (pnl != null)
                 {
@@ -171,7 +150,6 @@ namespace NMU_BookTrade
                     pnl.Visible = (expandedId == currentId);
                 }
 
-                // Bind Nested Repeaters
                 var rptOrderItems = e.Item.FindControl("rptOrderItems") as Repeater;
                 var rptBookCovers = e.Item.FindControl("rptBookCovers") as Repeater;
 
@@ -184,19 +162,22 @@ namespace NMU_BookTrade
                     using (SqlCommand cmd = con.CreateCommand())
                     {
                         cmd.CommandText = @"
-                                SELECT 
-                                    bk.bookISBN,
-                                    bk.coverImage, 
-                                    bk.title, 
-                                    bk.author,
-                                    bk.price, 
-                                    CAST(sl.amount / bk.price AS INT) AS quantity,
-                                    s.sellerName, 
-                                    s.sellerSurname
-                                FROM Sale sl
-                                INNER JOIN Book bk ON sl.bookISBN = bk.bookISBN
-                                INNER JOIN Seller s ON sl.sellerID = s.sellerID
-                                WHERE sl.orderGroupId = @orderGroupId";
+                    SELECT 
+                        bk.bookISBN,
+                        bk.coverImage, 
+                        bk.title, 
+                        bk.author,
+                        bk.price, 
+                        CASE 
+                            WHEN bk.price > 0 THEN CAST(sl.amount / bk.price AS INT) 
+                            ELSE 1 
+                        END AS quantity,
+                        s.sellerName, 
+                        s.sellerSurname
+                    FROM Sale sl
+                    LEFT JOIN Book bk ON sl.bookISBN = bk.bookISBN
+                    LEFT JOIN Seller s ON sl.sellerID = s.sellerID
+                    WHERE sl.orderGroupId = @orderGroupId";
                         cmd.Parameters.AddWithValue("@orderGroupId", orderGroupId);
 
                         con.Open();
@@ -206,33 +187,47 @@ namespace NMU_BookTrade
                         }
                     }
 
-                    if (dtItems.Rows.Count > 0)
+                    if (dtItems.Rows.Count == 0)
                     {
-                        foreach (DataRow row in dtItems.Rows)
+
+                        var lblMessage = e.Item.FindControl("lblMessage") as Label;
+                        if (lblMessage != null)
                         {
-                            if (string.IsNullOrEmpty(row["coverImage"]?.ToString()))
+                            lblMessage.Text = "No items found for this order.";
+                            lblMessage.CssClass = "error-message";
+                        }
+                    }
+
+                    foreach (DataRow row in dtItems.Rows)
+                    {
+                        if (row["coverImage"] == DBNull.Value || string.IsNullOrEmpty(row["coverImage"]?.ToString()))
+                        {
+                            row["coverImage"] = "~/Images/no-image.png";
+                        }
+                        else
+                        {
+                            string coverImage = row["coverImage"].ToString().Trim();
+                            if (!coverImage.StartsWith("~/Images/"))
                             {
-                                row["coverImage"] = "~/Images/no-image.png";
+                                row["coverImage"] = "~/Images/" + coverImage;
                             }
                         }
+                    }
 
-                        if (rptBookCovers != null)
-                        {
-                            rptBookCovers.DataSource = dtItems;
-                            rptBookCovers.DataBind();
-                        }
+                    if (rptBookCovers != null)
+                    {
+                        rptBookCovers.DataSource = dtItems;
+                        rptBookCovers.DataBind();
+                    }
 
-                        if (rptOrderItems != null)
-                        {
-                            rptOrderItems.DataSource = dtItems;
-                            rptOrderItems.DataBind();
-                        }
+                    if (rptOrderItems != null)
+                    {
+                        rptOrderItems.DataSource = dtItems;
+                        rptOrderItems.DataBind();
                     }
                 }
             }
         }
-
-
 
 
         protected void rptOrders_ItemCommand(object source, RepeaterCommandEventArgs e)

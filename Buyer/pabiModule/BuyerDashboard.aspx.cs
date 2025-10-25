@@ -110,7 +110,7 @@ namespace NMU_BookTrade
                 int categoryId = Convert.ToInt32(args[0]);
                 string categoryName = args[1];
 
-                Response.Redirect($"~/Buyer/pabiModule/SearchResults.aspx?categoryID={categoryId}&categoryName={Server.UrlEncode(categoryName)}");
+                Response.Redirect($"~/Buyer/pabiModule/SearchResult.aspx?categoryID={categoryId}&categoryName={Server.UrlEncode(categoryName)}");
             }
 
             if (e.Item.ItemIndex == 2)

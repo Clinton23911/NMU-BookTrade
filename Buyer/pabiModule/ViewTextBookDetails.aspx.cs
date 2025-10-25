@@ -9,171 +9,161 @@ namespace NMU_BookTrade
 {
     public partial class ViewTextBookDetails : System.Web.UI.Page
     {
-        string connectionString = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
-        string bookISBN;
+        private readonly string connString = ConfigurationManager.ConnectionStrings["NMUBookTradeConnection"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                if (Request.QueryString["bookISBN"] != null)
+                string bookISBN = Request.QueryString["bookISBN"];
+                if (!string.IsNullOrEmpty(bookISBN))
                 {
-                    bookISBN = Request.QueryString["bookISBN"];
                     LoadBookDetails(bookISBN);
-                    LoadReviews();
+                    LoadReviews(bookISBN);
                 }
                 else
                 {
-                    Response.Redirect("~/BuyerDashboard.aspx");
+                    lblMessage.Text = "No book selected.";
+                    lblMessage.CssClass = "error-message";
                 }
-                ((Site1)this.Master).UpdateCartCount();
             }
         }
 
         private void LoadBookDetails(string bookISBN)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(connString))
             {
-                string query = @"
-                   SELECT 
-                        b.title,
-                        b.author,
-                        b.bookISBN,
-                        c.categoryName,
-                        g.genreName,
-                        b.condition,
-                        b.price,
-                        s.sellerName,
-                        b.coverImage
-                   FROM Book b
-                   INNER JOIN Category c ON b.categoryID = c.categoryID
-                   INNER JOIN Genre g ON b.genreID = g.genreID
-                   INNER JOIN Seller s ON b.sellerID = s.sellerID
-                   WHERE b.bookISBN = @bookISBN";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
+                try
                 {
-                    lblTitle.Text = reader["title"].ToString();
-                    lblAuthor.Text = reader["author"].ToString();
-                    lblISBN.Text = reader["bookISBN"].ToString();
-                    lblCategory.Text = reader["categoryName"].ToString();
-                    lblGenre.Text = reader["genreName"].ToString();
-                    lblCondition.Text = reader["condition"].ToString();
-                    lblPrice.Text = reader["price"].ToString();
-                    lblSeller.Text = reader["sellerName"].ToString();
-                    string coverImage = reader["coverImage"].ToString();
-                    imgBookCover.ImageUrl = ResolveUrl("~/Images/" + coverImage);
-                }
-            }
-        }
+                    con.Open();
+                    string query = @"
+                        SELECT 
+                            b.bookISBN,
+                            b.title,
+                            b.author,
+                            b.price,
+                            b.coverImage,
+                            b.status,
+                            b.condition,
+                            c.categoryName,
+                            g.genreName,
+                            s.sellerName,
+                            s.sellerSurname
+                        FROM Book b
+                        LEFT JOIN Category c ON b.categoryID = c.categoryID
+                        LEFT JOIN Genre g ON b.genreID = g.genreID
+                        LEFT JOIN Seller s ON b.sellerID = s.sellerID
+                        WHERE b.bookISBN = @bookISBN";
 
-        private void LoadReviews()
-        {
-            string query = @"
-                SELECT 
-                    r.reviewID,
-                    r.reviewRating,
-                    r.reviewComment,
-                    r.reviewDate,
-                    b.buyerName,
-                    b.buyerSurname,
-                    b.buyerProfileImage
-                FROM Review r
-                INNER JOIN Sale s ON r.saleID = s.saleID
-                INNER JOIN Buyer b ON s.buyerID = b.buyerID
-                INNER JOIN Book bk ON s.bookISBN = bk.bookISBN
-                WHERE bk.bookISBN = @bookISBN
-                ORDER BY r.reviewDate DESC";
-
-            using (SqlConnection con = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand(query, con))
-            {
-                cmd.Parameters.AddWithValue("@bookISBN", Request.QueryString["bookISBN"]);
-
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                DataTable dt = new DataTable();
-                dt.Load(reader);
-                rptTestimonials.DataSource = dt;
-                rptTestimonials.DataBind();
-
-                if (dt.Rows.Count == 0)
-                {
-                    RepeaterItem footer = rptTestimonials.Controls[rptTestimonials.Controls.Count - 1] as RepeaterItem;
-                    if (footer != null)
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
-                        Panel pnlNoReviews = (Panel)footer.FindControl("pnlNoReviews");
-                        if (pnlNoReviews != null)
-                            pnlNoReviews.Visible = true;
+                        cmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                lblTitle.Text = reader["title"] != DBNull.Value ? reader["title"].ToString() : "N/A";
+                                lblAuthor.Text = reader["author"] != DBNull.Value ? reader["author"].ToString() : "N/A";
+                                lblISBN.Text = reader["bookISBN"] != DBNull.Value ? reader["bookISBN"].ToString() : "N/A";
+                                lblCategory.Text = reader["categoryName"] != DBNull.Value ? reader["categoryName"].ToString() : "N/A";
+                                lblGenre.Text = reader["genreName"] != DBNull.Value ? reader["genreName"].ToString() : "N/A";
+                                lblCondition.Text = reader["condition"] != DBNull.Value ? reader["condition"].ToString() : "N/A";
+                                lblPrice.Text = reader["price"] != DBNull.Value ? Convert.ToDecimal(reader["price"]).ToString("F2") : "N/A";
+                                lblSeller.Text = reader["sellerName"] != DBNull.Value && reader["sellerSurname"] != DBNull.Value
+                                    ? $"{reader["sellerName"]} {reader["sellerSurname"]}" : "N/A";
+
+                                // Normalize coverImage path
+                                string coverImage = reader["coverImage"] != DBNull.Value ? reader["coverImage"].ToString() : "";
+                                string imagePath = string.IsNullOrEmpty(coverImage) ? "~/Images/no-image.png" : "~/Images/" + coverImage.Trim();
+                                bookCover.Src = ResolveUrl(imagePath);
+                                System.Diagnostics.Debug.WriteLine($"LoadBookDetails: ISBN={bookISBN}, Raw coverImage='{coverImage}', Resolved Src='{bookCover.Src}'");
+
+                                // Set page title
+                                litPageTitle.Text = $"Textbook Details: {lblTitle.Text}";
+
+                                // Disable Add to Cart if book is not available
+                                btnAddToCart.Enabled = reader["status"] != DBNull.Value && reader["status"].ToString().ToLower() == "available";
+                                if (!btnAddToCart.Enabled)
+                                {
+                                    lblMessage.Text = "This book is not available.";
+                                    lblMessage.CssClass = "error-message";
+                                }
+                            }
+                            else
+                            {
+                                lblMessage.Text = "Book not found.";
+                                lblMessage.CssClass = "error-message";
+                                btnAddToCart.Enabled = false;
+                            }
+                        }
                     }
                 }
-            }
-        }
-
-        public static string GetStarHtml(int rating)
-        {
-            string stars = "";
-            for (int i = 1; i <= 5; i++)
-            {
-                stars += (i <= rating)
-                    ? "<span style='color: gold;'>&#9733;</span>"
-                    : "<span style='color: lightgray;'>&#9734;</span>";
-            }
-            return stars;
-        }
-
-        private void AddToCart(int buyerID, string bookISBN, int quantity)
-        {
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                con.Open();
-
-                SqlCommand getCartCmd = new SqlCommand("SELECT cartID FROM Cart WHERE buyerID = @buyerID", con);
-                getCartCmd.Parameters.AddWithValue("@buyerID", buyerID);
-                object result = getCartCmd.ExecuteScalar();
-                int cartID = result != null ? Convert.ToInt32(result) : CreateCart(con, buyerID);
-
-                SqlCommand checkCmd = new SqlCommand("SELECT quantity FROM CartItems WHERE cartID = @cartID AND bookISBN = @bookISBN", con);
-                checkCmd.Parameters.AddWithValue("@cartID", cartID);
-                checkCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-                object qtyResult = checkCmd.ExecuteScalar();
-
-                if (qtyResult != null)
+                catch (Exception ex)
                 {
-                    SqlCommand updateCmd = new SqlCommand("UPDATE CartItems SET quantity = quantity + @qty WHERE cartID = @cartID AND bookISBN = @bookISBN", con);
-                    updateCmd.Parameters.AddWithValue("@qty", quantity);
-                    updateCmd.Parameters.AddWithValue("@cartID", cartID);
-                    updateCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-                    updateCmd.ExecuteNonQuery();
-                }
-                else
-                {
-                    SqlCommand insertCmd = new SqlCommand("INSERT INTO CartItems (cartID, bookISBN, quantity) VALUES (@cartID, @bookISBN, @qty)", con);
-                    insertCmd.Parameters.AddWithValue("@cartID", cartID);
-                    insertCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-                    insertCmd.Parameters.AddWithValue("@qty", quantity);
-                    insertCmd.ExecuteNonQuery();
+                    lblMessage.Text = $"Error loading book details: {ex.Message}";
+                    lblMessage.CssClass = "error-message";
+                    btnAddToCart.Enabled = false;
+                    System.Diagnostics.Debug.WriteLine($"LoadBookDetails Error: ISBN={bookISBN}, Exception={ex.Message}, StackTrace={ex.StackTrace}");
                 }
             }
-
-            CartPanel.Visible = true;
-            CartPanel.CssClass = "slide-panel slide-panel-visible";
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "PanelOpen",
-                "document.body.classList.add('panel-open');", true);
-            ((Site1)this.Master).UpdateCartCount();
         }
 
-        private int CreateCart(SqlConnection con, int buyerID)
+        private void LoadReviews(string bookISBN)
         {
-            SqlCommand createCartCmd = new SqlCommand("INSERT INTO Cart (buyerID) OUTPUT INSERTED.cartID VALUES (@buyerID)", con);
-            createCartCmd.Parameters.AddWithValue("@buyerID", buyerID);
-            return (int)createCartCmd.ExecuteScalar();
+            using (SqlConnection con = new SqlConnection(connString))
+            {
+                try
+                {
+                    con.Open();
+                    string query = @"
+                        SELECT 
+                            r.reviewComment,
+                            r.reviewRating,
+                            b.buyerName,
+                            b.buyerSurname,
+                            b.buyerProfileImage
+                        FROM Review r
+                        INNER JOIN Sale s ON r.saleID = s.saleID
+                        INNER JOIN Buyer b ON s.buyerID = b.buyerID
+                        WHERE s.bookISBN = @bookISBN";
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        // Normalize buyerProfileImage paths
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            if (row["buyerProfileImage"] == DBNull.Value || string.IsNullOrEmpty(row["buyerProfileImage"]?.ToString()))
+                            {
+                                row["buyerProfileImage"] = "~/Images/no-profile.png";
+                            }
+                            else
+                            {
+                                string profileImage = row["buyerProfileImage"].ToString().Trim();
+                                if (!profileImage.StartsWith("~/UploadedImages/"))
+                                {
+                                    row["buyerProfileImage"] = "~/UploadedImages/" + profileImage;
+                                }
+                            }
+                        }
+
+                        System.Diagnostics.Debug.WriteLine($"LoadReviews: Rows returned for bookISBN={bookISBN}: {dt.Rows.Count}");
+
+                        rptTestimonials.DataSource = dt;
+                        rptTestimonials.DataBind();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lblMessage.Text = $"Error loading reviews: {ex.Message}";
+                    lblMessage.CssClass = "error-message";
+                    System.Diagnostics.Debug.WriteLine($"LoadReviews Error: ISBN={bookISBN}, Exception={ex.Message}, StackTrace={ex.StackTrace}");
+                }
+            }
         }
 
         protected void btnAddToCart_Click(object sender, EventArgs e)
@@ -196,16 +186,30 @@ namespace NMU_BookTrade
 
             AddToCart(buyerID, bookISBN, 1);
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(connString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT title, coverImage FROM Book WHERE bookISBN = @bookISBN", con);
-                cmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
+                try
                 {
-                    lblCartBookTitle.Text = reader["title"].ToString();
-                    imgCartBook.ImageUrl = "~/Images/" + reader["coverImage"].ToString();
+                    SqlCommand cmd = new SqlCommand("SELECT title, coverImage FROM Book WHERE bookISBN = @bookISBN", con);
+                    cmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                    con.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            lblCartBookTitle.Text = reader["title"] != DBNull.Value ? reader["title"].ToString() : "N/A";
+                            string coverImage = reader["coverImage"] != DBNull.Value ? reader["coverImage"].ToString() : "";
+                            string imagePath = string.IsNullOrEmpty(coverImage) ? "~/Images/no-image.png" : "~/Images/" + coverImage.Trim();
+                            imgCartBook.ImageUrl = ResolveUrl(imagePath);
+                            System.Diagnostics.Debug.WriteLine($"btnAddToCart: ISBN={bookISBN}, Raw coverImage='{coverImage}', Resolved ImageUrl='{imgCartBook.ImageUrl}'");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lblMessage.Text = $"Error loading cart image: {ex.Message}";
+                    lblMessage.CssClass = "error-message";
+                    System.Diagnostics.Debug.WriteLine($"btnAddToCart Error: ISBN={bookISBN}, Exception={ex.Message}, StackTrace={ex.StackTrace}");
                 }
             }
 
@@ -213,17 +217,85 @@ namespace NMU_BookTrade
             CartPanel.CssClass = "slide-panel slide-panel-visible";
             Page.ClientScript.RegisterStartupScript(this.GetType(), "PanelOpen",
                 "document.body.classList.add('panel-open');", true);
+            lblMessage.Text = "";
+            ((Site1)this.Master).UpdateCartCount();
         }
 
         private bool IsBookAvailable(string bookISBN)
         {
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(connString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Book WHERE bookISBN = @bookISBN AND status = 'available'", con);
-                cmd.Parameters.AddWithValue("@bookISBN", bookISBN);
-                con.Open();
-                int count = (int)cmd.ExecuteScalar();
-                return count > 0;
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Book WHERE bookISBN = @bookISBN AND status = 'available'", con);
+                    cmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                    con.Open();
+                    int count = (int)cmd.ExecuteScalar();
+                    return count > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"IsBookAvailable Error: ISBN={bookISBN}, Exception={ex.Message}, StackTrace={ex.StackTrace}");
+                    return false;
+                }
+            }
+        }
+
+        private void AddToCart(int buyerID, string bookISBN, int quantity)
+        {
+            using (SqlConnection con = new SqlConnection(connString))
+            {
+                try
+                {
+                    con.Open();
+                    SqlCommand getCartCmd = new SqlCommand("SELECT cartID FROM Cart WHERE buyerID = @buyerID", con);
+                    getCartCmd.Parameters.AddWithValue("@buyerID", buyerID);
+                    object result = getCartCmd.ExecuteScalar();
+                    int cartID = result != null ? Convert.ToInt32(result) : CreateCart(con, buyerID);
+
+                    SqlCommand checkCmd = new SqlCommand("SELECT quantity FROM CartItems WHERE cartID = @cartID AND bookISBN = @bookISBN", con);
+                    checkCmd.Parameters.AddWithValue("@cartID", cartID);
+                    checkCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                    object qtyResult = checkCmd.ExecuteScalar();
+
+                    if (qtyResult != null)
+                    {
+                        SqlCommand updateCmd = new SqlCommand("UPDATE CartItems SET quantity = quantity + @qty WHERE cartID = @cartID AND bookISBN = @bookISBN", con);
+                        updateCmd.Parameters.AddWithValue("@qty", quantity);
+                        updateCmd.Parameters.AddWithValue("@cartID", cartID);
+                        updateCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                        updateCmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        SqlCommand insertCmd = new SqlCommand("INSERT INTO CartItems (cartID, bookISBN, quantity) VALUES (@cartID, @bookISBN, @qty)", con);
+                        insertCmd.Parameters.AddWithValue("@cartID", cartID);
+                        insertCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
+                        insertCmd.Parameters.AddWithValue("@qty", quantity);
+                        insertCmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lblMessage.Text = $"Error adding to cart: {ex.Message}";
+                    lblMessage.CssClass = "error-message";
+                    System.Diagnostics.Debug.WriteLine($"AddToCart Error: ISBN={bookISBN}, BuyerID={buyerID}, Exception={ex.Message}, StackTrace={ex.StackTrace}");
+                }
+            }
+        }
+
+        private int CreateCart(SqlConnection con, int buyerID)
+        {
+            try
+            {
+                SqlCommand createCartCmd = new SqlCommand("INSERT INTO Cart (buyerID) OUTPUT INSERTED.cartID VALUES (@buyerID)", con);
+                createCartCmd.Parameters.AddWithValue("@buyerID", buyerID);
+                return (int)createCartCmd.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CreateCart Error: BuyerID={buyerID}, Exception={ex.Message}, StackTrace={ex.StackTrace}");
+                throw;
             }
         }
 
@@ -233,6 +305,21 @@ namespace NMU_BookTrade
             CartPanel.CssClass = "slide-panel";
             Page.ClientScript.RegisterStartupScript(this.GetType(), "PanelClose",
                 "document.body.classList.remove('panel-open');", true);
+        }
+
+        protected string GetStarHtml(int rating)
+        {
+            System.Text.StringBuilder starsHtml = new System.Text.StringBuilder();
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (i < rating)
+                    starsHtml.Append("<i class='fa-solid fa-star'></i>");
+                else
+                    starsHtml.Append("<i class='fa-regular fa-star'></i>");
+            }
+
+            return $"<span class='stars'>{starsHtml}</span>";
         }
     }
 }

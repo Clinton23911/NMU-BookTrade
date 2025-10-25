@@ -137,14 +137,14 @@
     <img src='<%= ResolveUrl("~/Images/Ratings.png") %>' alt="No Orders" class="reviews-image" />
 </div>
             <h3>Review Guidelines</h3>
-            <h6>✅ Do</h6>
+            <h6> Do</h6>
             <ul>
                 <li>Keep content useful and relevant to others.</li>
                 <li>Focus on the product and your experience with it.</li>
                 <li>Share details about what you like or dislike.</li>
                 <li>Complete your review in English.</li>
             </ul>
-            <h6>🚫 Don’t</h6>
+            <h6> Don’t</h6>
             <ul>
                 <li>Include your personal details.</li>
                 <li>Share prices from NMUBookTrade.</li>

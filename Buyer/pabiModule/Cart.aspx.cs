@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace NMU_BookTrade
@@ -13,8 +14,11 @@ namespace NMU_BookTrade
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
-                LoadCart();
-            LoadCategories();
+            {
+                LoadCategories();
+            }
+
+            LoadCart();
         }
 
         private void LoadCart()
@@ -35,19 +39,20 @@ namespace NMU_BookTrade
                 con.Open();
 
                 SqlCommand cmd = new SqlCommand(@"
-            SELECT b.bookISBN AS bookISBN, 
-                   b.title AS Title, 
-                   b.price AS Price, 
-                   b.condition AS Condition, 
-                   ci.quantity AS Quantity, 
-                   b.coverImage, 
-                   s.SellerName AS SellerName, 
-                   s.SellerSurname AS SellerSurname
-            FROM Cart c
-            INNER JOIN CartItems ci ON c.cartID = ci.cartID
-            INNER JOIN Book b ON b.bookISBN = ci.bookISBN
-            INNER JOIN Seller s ON s.sellerID = b.sellerID
-            WHERE c.buyerID = @buyerID", con);
+           SELECT 
+        b.bookISBN AS bookISBN, 
+        b.title AS Title, 
+        b.price AS Price, 
+        b.condition AS Condition, 
+        ci.quantity AS Quantity, 
+        b.coverImage, 
+        ISNULL(s.SellerName, '') AS SellerName, 
+        ISNULL(s.SellerSurname, '') AS SellerSurname
+    FROM Cart c
+    INNER JOIN CartItems ci ON c.cartID = ci.cartID
+    LEFT JOIN Book b ON b.bookISBN = ci.bookISBN
+    LEFT JOIN Seller s ON s.sellerID = b.sellerID
+    WHERE c.buyerID = @buyerID", con);
 
                 cmd.Parameters.Add("@buyerID", SqlDbType.Int).Value = buyerID;
 
@@ -182,7 +187,7 @@ namespace NMU_BookTrade
 
         protected void btnPurchase_Click(object sender, EventArgs e)
         {
-            if (!Page.IsValid) 
+            if (!Page.IsValid)
             {
                 return;
             }
@@ -198,7 +203,6 @@ namespace NMU_BookTrade
             Guid orderGroupId = Guid.NewGuid(); // one ID per purchase batch
             DateTime purchaseDate = DateTime.Now;
 
-            // collect cart items first (ISBN + qty)
             List<(string ISBN, int Qty)> cartBooks = new List<(string, int)>();
             int cartID = 0;
 
@@ -207,7 +211,6 @@ namespace NMU_BookTrade
             {
                 con.Open();
 
-                // get cartID (defensive)
                 using (SqlCommand getCartCmd = new SqlCommand("SELECT cartID FROM Cart WHERE buyerID = @buyerID", con))
                 {
                     getCartCmd.Parameters.AddWithValue("@buyerID", buyerID);
@@ -240,18 +243,15 @@ namespace NMU_BookTrade
                     return;
                 }
 
-                // process each item (you can wrap in a transaction if desired)
                 foreach (var item in cartBooks)
                 {
                     string bookISBN = item.ISBN;
                     int qty = item.Qty;
 
-                    // Generate next saleID
                     using (SqlCommand getNextSaleIDCmd = new SqlCommand("SELECT ISNULL(MAX(saleID), 0) + 1 FROM Sale", con))
                     {
                         int nextSaleID = Convert.ToInt32(getNextSaleIDCmd.ExecuteScalar());
 
-                        // Get book price + seller
                         decimal price = 0;
                         int sellerID = 0;
                         using (SqlCommand getBookCmd = new SqlCommand("SELECT price, sellerID FROM Book WHERE bookISBN = @bookISBN", con))
@@ -269,7 +269,6 @@ namespace NMU_BookTrade
 
                         decimal totalAmount = price * qty;
 
-                        // Insert into Sale with orderGroupId
                         using (SqlCommand insertSaleCmd = new SqlCommand(@"
                     INSERT INTO Sale (saleID, buyerID, sellerID, bookISBN, amount, saleDate, orderGroupId)
                     VALUES (@saleID, @buyerID, @sellerID, @bookISBN, @amount, @saleDate, @orderGroupId)", con))
@@ -284,7 +283,6 @@ namespace NMU_BookTrade
                             insertSaleCmd.ExecuteNonQuery();
                         }
 
-                        // Insert into Delivery
                         using (SqlCommand getNextDeliveryIDCmd = new SqlCommand("SELECT ISNULL(MAX(deliveryID), 0) + 1 FROM Delivery", con))
                         {
                             int nextDeliveryID = Convert.ToInt32(getNextDeliveryIDCmd.ExecuteScalar());
@@ -297,7 +295,6 @@ namespace NMU_BookTrade
                             }
                         }
 
-                        // Link CartItems → Sale
                         using (SqlCommand updateCartItemsCmd = new SqlCommand(
                             "UPDATE CartItems SET saleID = @saleID WHERE cartID = @cartID AND bookISBN = @bookISBN", con))
                         {
@@ -307,7 +304,6 @@ namespace NMU_BookTrade
                             updateCartItemsCmd.ExecuteNonQuery();
                         }
 
-                        // Mark book unavailable
                         using (SqlCommand updateBookStatusCmd = new SqlCommand("UPDATE Book SET status = 'unavailable' WHERE bookISBN = @bookISBN", con))
                         {
                             updateBookStatusCmd.Parameters.AddWithValue("@bookISBN", bookISBN);
@@ -316,7 +312,6 @@ namespace NMU_BookTrade
                     }
                 }
 
-                // Clear the cart items for this cart
                 using (SqlCommand clearCartCmd = new SqlCommand("DELETE FROM CartItems WHERE cartID = @cartID", con))
                 {
                     clearCartCmd.Parameters.AddWithValue("@cartID", cartID);

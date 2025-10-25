@@ -171,7 +171,7 @@
     <!-- Thank You & Order Summary Panel -->
 <asp:Panel ID="pnlOrderSummary" runat="server" CssClass="thankyou-card" Visible="false">
     <div class="thankyou-header">
-        <h2>🎉 Thank You for Purchasing with NMUBookTrade!</h2>
+        <h2> Thank You for Purchasing with NMUBookTrade!</h2>
         <p>We appreciate your trust in us.</p>
     </div>
 

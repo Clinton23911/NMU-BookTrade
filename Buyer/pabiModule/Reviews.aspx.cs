@@ -117,7 +117,6 @@ namespace NMU_BookTrade
 
         private void LoadReviewHistory(int buyerId)
         {
-            // Hide messages on every page load
             lblSuccess.Visible = false;
             lblError.Visible = false;
             string filter = ddlReviewFilter.SelectedValue;
@@ -187,7 +186,6 @@ namespace NMU_BookTrade
 
         private void LoadReviews(string bookISBN)
         {
-            // Hide messages on every page load
             lblSuccess.Visible = false;
             lblError.Visible = false;
             var reviews = new List<dynamic>();
@@ -394,7 +392,7 @@ namespace NMU_BookTrade
                 ddlRating.SelectedValue = "5";
                 pnlReviewPanel.CssClass = "side-panel";
 
-                lblSuccess.Text = "✅ Your review has been submitted successfully!";
+                lblSuccess.Text = " Your review has been submitted successfully!";
                 lblSuccess.Visible = true;
                 lblError.Visible = false;
                 // Hide after 5 seconds using JavaScript
@@ -404,12 +402,11 @@ namespace NMU_BookTrade
             }
             catch (Exception ex)
             {
-                lblError.Text = "⚠️ Error: " + ex.Message;
+                lblError.Text = " Error: " + ex.Message;
                 lblError.Visible = true;
             }
         }
 
-        // --- DELETE REVIEW SECTION ---
 
         protected void btnDeleteReview_Click(object sender, EventArgs e)
         {
@@ -422,7 +419,7 @@ namespace NMU_BookTrade
             }
             catch (Exception ex)
             {
-                lblError.Text = "⚠️ Error preparing delete: " + ex.Message;
+                lblError.Text = " Error preparing delete: " + ex.Message;
                 lblError.Visible = true;
             }
         }
@@ -431,7 +428,7 @@ namespace NMU_BookTrade
         {
             if (string.IsNullOrEmpty(hfDeleteReviewID.Value))
             {
-                lblError.Text = "⚠️ No review selected for deletion.";
+                lblError.Text = " No review selected for deletion.";
                 lblError.Visible = true;
                 pnlDeleteConfirm.Visible = false;
                 return;
@@ -449,7 +446,7 @@ namespace NMU_BookTrade
                     int rowsAffected = cmd.ExecuteNonQuery();
                     if (rowsAffected == 0)
                     {
-                        lblError.Text = "⚠️ Review not found or already deleted.";
+                        lblError.Text = " Review not found or already deleted.";
                         lblError.Visible = true;
                         pnlDeleteConfirm.Visible = false;
                         return;
@@ -471,7 +468,7 @@ namespace NMU_BookTrade
             }
             catch (Exception ex)
             {
-                lblError.Text = "⚠️ Error deleting review: " + ex.Message;
+                lblError.Text = " Error deleting review: " + ex.Message;
                 lblError.Visible = true;
                 pnlDeleteConfirm.Visible = false;
             }

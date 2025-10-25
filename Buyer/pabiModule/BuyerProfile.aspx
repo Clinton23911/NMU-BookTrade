@@ -46,7 +46,16 @@
             <div class="form-group">
                 <label>Email</label>
                 <asp:TextBox ID="txtEmail" runat="server" CssClass="input-field" TextMode="Email" />
-                <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="txtEmail" ErrorMessage="Email is required." CssClass="form_errormessage" ForeColor="Red" Display="Dynamic" />
+                <asp:RequiredFieldValidator ID="rfvEmail" runat="server"
+        ControlToValidate="txtEmail"
+        ErrorMessage="Email is required."
+        CssClass="form_errormessage" Display="Dynamic" />
+
+    <asp:RegularExpressionValidator ID="revEmail" runat="server"
+        ControlToValidate="txtEmail"
+        ValidationExpression="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+        ErrorMessage="Please enter a valid email address."
+        CssClass="form_errormessage" Display="Dynamic" />
             </div>
 
             <div class="form-group">
@@ -82,8 +91,9 @@
 
     <br />
     <br />
+<asp:Button ID="btnUpdate" runat="server" Text="Update Profile"
+    CssClass="btn-update" OnClick="btnUpdate_Click" CausesValidation="true" />
 
-     <asp:Button ID="btnUpdate" runat="server" Text="Update Profile" CssClass="btn-update" OnClick="btnUpdate_Click" />
         <br />
         <br />
      <asp:Button ID="btnDeleteProfile" runat="server" Text="Delete My Account" CssClass="btn-delete" OnClientClick="return confirm('Are you sure you want to delete your account? This action cannot be undone.And you will be re-directed to the home page');" OnClick="btnDeleteProfile_Click" />

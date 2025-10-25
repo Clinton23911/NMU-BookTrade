@@ -121,6 +121,7 @@
     <Content Include="Seller\ClintonModule\SellerProfile.aspx" />
     <Content Include="StyleSheet1.css" />
     <Content Include="UserManagement\AboutUs.aspx" />
+    <Content Include="UserManagement\AccessDenied.aspx" />
     <Content Include="UserManagement\BookConditions.aspx" />
     <Content Include="UserManagement\Contact.aspx" />
     <Content Include="UserManagement\ForgotPassword.aspx" />
@@ -323,6 +324,13 @@
     </Compile>
     <Compile Include="UserManagement\AboutUs.aspx.designer.cs">
       <DependentUpon>AboutUs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserManagement\AccessDenied.aspx.cs">
+      <DependentUpon>AccessDenied.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserManagement\AccessDenied.aspx.designer.cs">
+      <DependentUpon>AccessDenied.aspx</DependentUpon>
     </Compile>
     <Compile Include="UserManagement\BookConditions.aspx.cs">
       <DependentUpon>BookConditions.aspx</DependentUpon>

@@ -56,6 +56,7 @@ namespace NMU_BookTrade
         // Now we want to update and store everything When the button update is clicked this event happens
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
+            if (!Page.IsValid) return;
 
             int buyerID = Convert.ToInt32(Session["UserID"]);
             string username = txtUsername.Text.Trim();

@@ -139,7 +139,41 @@ namespace NMU_BookTrade
 
                     
                 }
+
+
             }
+
+            if (Session["AccessID"] != null)
+            {
+                string role = Session["AccessID"].ToString();
+
+                switch (role)
+                {
+                    case "1": hlFooterHome.NavigateUrl = "~/Admin/GraceModule/AdminDashboard.aspx"; break;
+                    case "2": hlFooterHome.NavigateUrl = "~/Buyer/pabiModule/BuyerDashboard.aspx"; break;
+                    case "3": hlFooterHome.NavigateUrl = "~/Seller/ClintonModule/SellerDashboard.aspx"; break;
+                    case "4": hlFooterHome.NavigateUrl = "~/Driver/ClintonModule/DriverDashboard.aspx"; break;
+                }
+
+                hlFooterAbout.NavigateUrl = "~/UserManagement/AboutUs.aspx";
+                hlFooterConditions.NavigateUrl = "~/UserManagement/BookConditions.aspx";
+                hlFooterContact.NavigateUrl = "~/UserManagement/Contact.aspx";
+                hlFooterFAQ.NavigateUrl = "~/UserManagement/BookConditions.aspx";
+                hlFooterPrivacy.NavigateUrl = "~/UserManagement/BookConditions.aspx";
+                hlFooterWhatsApp.NavigateUrl = "~/UserManagement/Contact.aspx";
+            }
+            else
+            {
+                // Public mode
+                hlFooterHome.NavigateUrl = "~/UserManagement/Home.aspx";
+                hlFooterAbout.NavigateUrl = "~/UserManagement/AboutUs.aspx";
+                hlFooterConditions.NavigateUrl = "~/UserManagement/BookConditions.aspx";
+                hlFooterContact.NavigateUrl = "~/UserManagement/Contact.aspx";
+                hlFooterFAQ.NavigateUrl = "~/UserManagement/BookConditions.aspx";
+                hlFooterPrivacy.NavigateUrl = "~/UserManagement/BookConditions.aspx";
+                hlFooterWhatsApp.NavigateUrl = "~/UserManagement/Contact.aspx";
+            }
+        
         }
         public void UpdateCartCount()
         {

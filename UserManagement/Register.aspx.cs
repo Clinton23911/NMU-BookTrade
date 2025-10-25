@@ -67,6 +67,7 @@ namespace NMU_BookTrade
             string number = txtPhoneNumber.Text.Trim();
             string address = txtAddress.Text.Trim();
 
+
             // Check if the username or email exists in ANY role
             if (UserExistsAnywhere(username, email))
             {

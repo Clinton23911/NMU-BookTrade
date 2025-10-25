@@ -184,26 +184,26 @@
         <strong>NMU<br /><span>BookTrade</span></strong>
         <p>Thanks for choosing us!</p>
     </div>
+
     <div class="footer-links">
-      <div>
+        <div>
             <h4>Company</h4>
-            <asp:HyperLink runat="server" NavigateUrl="~/UserManagement/Home.aspx" Text="Home" /><br />
-            <asp:HyperLink runat="server" NavigateUrl="~/UserManagement/AboutUs.aspx" Text="About" /><br />
-            <asp:HyperLink runat="server" NavigateUrl="~/UserManagement/BookConditions.aspx" Text="Book Conditions" /><br />
-            <asp:HyperLink runat="server" NavigateUrl="~/UserManagement/Contact.aspx" Text="Contact Support" />
+            <asp:HyperLink ID="hlFooterHome" runat="server" Text="Home" /><br />
+            <asp:HyperLink ID="hlFooterAbout" runat="server" Text="About" /><br />
+            <asp:HyperLink ID="hlFooterConditions" runat="server" Text="Book Conditions" /><br />
+            <asp:HyperLink ID="hlFooterContact" runat="server" Text="Contact Support" />
         </div>
 
         <div>
             <h4>Documentation</h4>
-            <asp:HyperLink runat="server" NavigateUrl="~/UserManagement/BookConditions.aspx" Text="FAQ" /><br />
-            <asp:HyperLink runat="server" NavigateUrl="~/UserManagement/BookConditions.aspx" Text="Privacy Policy" />
+            <asp:HyperLink ID="hlFooterFAQ" runat="server" Text="FAQ" /><br />
+            <asp:HyperLink ID="hlFooterPrivacy" runat="server" Text="Privacy Policy" />
         </div>
 
         <div>
             <h4>Social</h4>
-            <asp:HyperLink runat="server" NavigateUrl="~/UserManagement/Contact.aspx" Text="WhatsApp" />
+            <asp:HyperLink ID="hlFooterWhatsApp" runat="server" Text="WhatsApp" />
         </div>
-
     </div>
 </footer>
 </body>

@@ -316,9 +316,19 @@ namespace NMU_BookTrade
 
             if (e.CommandName == "AddToCart")
             {
-                if (Session["buyerID"] == null)
+                // 🔒 1. Check if user is logged in
+                if (Session["AccessID"] == null)
                 {
-                    Response.Redirect("~/Login");
+                    // Redirect anonymous users to Login, with return URL
+                    Response.Redirect("~/UserManagement/Login.aspx?returnUrl=" + Request.RawUrl);
+                    return;
+                }
+
+                // 🔒 2. Check that only Buyers can add to cart
+                if (Session["AccessID"].ToString() != "2")
+                {
+                    // Logged in but wrong role → Access Denied
+                    Response.Redirect("~/UserManagement/AccessDenied.aspx");
                     return;
                 }
 

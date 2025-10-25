@@ -12,7 +12,17 @@
         <div class="form-group">
             <label for="txtEmail">Email Address</label>
             <asp:TextBox ID="txtEmail" runat="server" CssClass="input-field" TextMode="Email" />
-        </div>
+            <asp:RequiredFieldValidator ID="rfvEmailAdmin" runat="server"
+        ControlToValidate="txtEmail"
+        ErrorMessage="Email is required."
+        CssClass="form_errormessage" Display="Dynamic" />
+
+            <asp:RegularExpressionValidator ID="revEmailAdmin" runat="server"
+                ControlToValidate="txtEmail"
+                ValidationExpression="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+                ErrorMessage="Please enter a valid email address."
+                CssClass="form_errormessage" Display="Dynamic" />
+                </div>
 
         <!-- Username Field -->
         <div class="form-group">
@@ -27,7 +37,9 @@
         </div>
 
         <!-- Update Button -->
-        <asp:Button ID="btnUpdate" runat="server" Text="Update Profile" CssClass="btn-update" OnClick="btnUpdate_Click" />
+        <asp:Button ID="btnUpdate" runat="server" Text="Update Profile"
+    CssClass="btn-update" OnClick="btnUpdate_Click" CausesValidation="true" />
+
 
         <!-- Feedback Label -->
         <asp:Label ID="lblMessage" runat="server" CssClass="message" />

@@ -265,6 +265,9 @@ input#btnLogout3 {
     font-size: 0.85rem;
     color: red;
 }
+span#middle_section_lblMessage {
+    color: lime;
+}
 
 .right-side {
     /* align-items: center; */
@@ -1943,6 +1946,103 @@ textarea {
         display: block;
     }
 
+
+/* --- Access Denied Page background wrapper --- */
+.ad-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom right, #0f4957, #3fa1a9);
+    padding: 20px;
+}
+
+/* --- Access box --- */
+.ad-box {
+    background: #ffffff;
+    width: 500px;
+    max-width: 90%;
+    padding: 35px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+}
+
+/* --- Title --- */
+.ad-title {
+    color: #b80f0a;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+/* --- Main message --- */
+.ad-text {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.ad-text-small {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+/* --- Buttons --- */
+.ad-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.ad-btn-primary,
+.ad-btn-secondary {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+}
+
+.ad-btn-primary {
+    background-color: #007b8f;
+    color: white;
+}
+
+    .ad-btn-primary:hover {
+        background-color: #005f6b;
+    }
+
+.ad-btn-secondary {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+    .ad-btn-secondary:hover {
+        background-color: #ddd;
+    }
+
+/* --- Mobile responsiveness --- */
+@media screen and (max-width: 600px) {
+    .ad-box {
+        padding: 25px;
+    }
+
+    .ad-title {
+        font-size: 22px;
+    }
+
+    .ad-actions {
+        flex-direction: column;
+    }
+
+    .ad-btn-primary,
+    .ad-btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+}
 
 /*ForgotPassword and Resset Password Pages --------------------------------------------------------------------------------------------------------------------------------*/
 input#middle_section_btnSubmit {

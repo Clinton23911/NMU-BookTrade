@@ -69,6 +69,7 @@ namespace NMU_BookTrade
         // Called when the user clicks the "Update Profile" button
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
+            if (!Page.IsValid) return;
             // Get admin ID again from the session
             int adminID = Convert.ToInt32(Session["UserID"]);
 
